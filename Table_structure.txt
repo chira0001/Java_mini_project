@@ -1,0 +1,161 @@
+create table medical(
+med_id char(6),
+doctor_name varchar(50),
+reason varchar(200)
+);
+
+create table course_day(
+course_code char(7),
+day varchar(10)
+);
+
+create table student(
+tg_no char(6),
+stu_f_name varchar(20),
+stu_l_name varchar(20),
+stu_dob date,
+stu_email varchar(50),
+dep_id char(3)
+);
+
+create table department(
+dep_id char(3),
+dep_name varchar(50),
+lec_id char(3)
+);
+
+create table course(
+course_code char(7),
+course_name varchar(100),
+credits int,
+status varchar(20)
+);
+
+create table student_study_course(
+tg_no char(6),
+course_code char(7),
+course_grade char(2)
+);
+
+create table lecturer(
+lec_id char(3),
+lec_f_name varchar(20),
+lec_l_name varchar(20),
+residence varchar(20)
+);
+
+create table lecturer_designation(
+lec_id char(3),
+designation varchar(50),
+);
+
+create table lecturer_phone_no(
+lec_id char(3),
+lec_phone_no int(10),
+);
+
+create table lecturer_email(
+lec_id char(3),
+lec_email varchar(50),
+);
+
+create table tech_officer(
+to_id char(3),
+to_f_name varchar(20),
+to_l_name varchar(20)
+);
+
+create table course_teach_lecturer(
+course_code char(7),
+lec_id char(3),
+no_hours_per_week int
+);
+
+create table attendance(
+atten_id char(5),
+to_id char(3),
+tg_no char(6),
+course_code char(7),
+week_no int,
+atten_status varchar(20),
+med_id char(6)
+);
+
+create table attendance_eligibility(
+atten_eli_id char(5),
+atten_id char(4),
+to_id char(3)
+tg_no char(6)
+atten_eli_percentage float(3,2),
+atten_eli_status varchar(10)
+);
+
+create table ca_mark(
+cam_id char(5),
+tg_no char(6),
+course_code char(7),
+proj_marks int,
+assign_marks int,
+quiz_1 int,
+quiz_2 int,
+quiz_3 int
+);
+
+create table final_exam_eligibility(
+fee_id char(5),
+cam_id char(5),
+tg_no char(6),
+course_code char(7),
+fee_status varchar(20),
+);
+
+create table final_mark(
+fm_id char(4)
+tg_no char(6)
+course_code char(7)
+cam_id char(5)
+fee_id char(5)
+f_marks int
+);
+
+
+
+alter table student add primary key(tg_no);
+alter table student_study_course add primary key(tg_no,course_code);
+alter table course add primary key(course_code);
+alter table department add primary key(dep_id);
+alter table lecturer add primary key(lec_id);
+alter table lecturer_designation add primary key(lec_id,designation);
+alter table lecturer_email add primary key(lec_id,lec_email);
+alter table tech_officer add primary key(to_id);
+alter table final_mark add primary key(fm_id);
+alter table final_exam_eligibility add primary key(fee_id);
+alter table ca_mark add primary key(cam_id);
+alter table attendance_eligibility add primary key(atten_eli_id);
+alter table attendance add primary key(atten_id);
+alter table course_teach_lecturer add primary key(course_code,lec_id);
+
+alter table course_teach_lecturer add foreign key(course_code) references course(course_code) cascade on update;
+alter table course_teach_lecturer add foreign key(lec_id) references lecturer(lec_id) cascade on update;
+alter table attendance add foreign key(to_id) references tec_officer(to_id) cascade on update;
+alter table attendance add foreign key(tg_no) references student(tg_no) cascade on update;
+alter table attendance add foreign key(course_code) references course(course_code) cascade on update;
+alter table attendance_eligibility add foreign key(atten_id) references attendance(atten_id) cascade on update;
+alter table attendance_eligibility add foreign key(to_id) references tech_officer(to_id) cascade on update;
+alter table attendance_eligibility add foreign key(tg_no) references student(tg_no) cascade on update;
+alter table ca_mark add foreign key(tg_no) references student(tg_no) cascade on update;
+alter table ca_mark add foreign key(course_code) references course(course_code) cascade on update;
+alter table final_exam_eligibility add foreign key(cam_id) references ca_mark(cam_id) cascade on update;
+alter table final_exam_eligibility add foreign key(tg_no) references student(tg_no) cascade on update;
+alter table final_exam_eligibility add foreign key(course_code) references course(course_code) cascade on update;
+alter table final_mark add foreign key(tg_no) references student(tg_no) cascade on update;
+alter table final_mark add foreign key(course_code) references course(course_code) cascade on update;
+alter table final_mark add foreign key(cam_id) references ca_mark(cam_id) cascade on update;
+alter table final_mark add foreign key(fee_id) references final_exam_eligibility(fee_id) cascade on update;
+alter table lecturer_email add foreign key(lec_id) references lecturer(lec_id) cascade on update;
+alter table lecturer_designation add foreign key(lec_id) references lecturer(lec_id) cascade on update;
+alter table department add foreign key(lec_id) references lecturer(lec_id) cascade on update;
+alter table student add foreign key(dep_id) references department(dep_id) cascade on update;
+alter table student_study_course add foreign key(tg_no) referemces student(tg_no) cascade on update;
+alter table student_study_course add foreign key(course_code) referemces course(course_code) cascade on update;
+
