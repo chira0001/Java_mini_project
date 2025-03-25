@@ -1,9 +1,9 @@
 import javax.swing.*;
 
 public class Login {
-    private JPanel Login;
+    private JPanel panel1;
     private JTextField textField1;
-    private JTextField textField2;
+    private JPasswordField passwordField1;
     private JButton loginButton;
-    private JButton button1;
+    private JButton cancelButton;
 }
