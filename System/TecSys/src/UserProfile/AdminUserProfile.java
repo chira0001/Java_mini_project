@@ -23,9 +23,8 @@ public class AdminUserProfile extends JFrame{
         setContentPane(AdminUserProfile);
         setTitle("Admin User Profile");
         setDefaultCloseOperation(EXIT_ON_CLOSE);
-        setSize(500,300);
+        setSize(472, 218);
         setLocationRelativeTo(null);
         setVisible(true);
     }
-
 }
