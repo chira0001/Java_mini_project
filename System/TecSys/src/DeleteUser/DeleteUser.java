@@ -1,3 +1,5 @@
+package DeleteUser;
+
 import javax.swing.*;
 
 public class DeleteUser {

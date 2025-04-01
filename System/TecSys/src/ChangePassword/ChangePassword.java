@@ -1,3 +1,5 @@
+package ChangePassword;
+
 import javax.swing.*;
 
 public class ChangePassword {

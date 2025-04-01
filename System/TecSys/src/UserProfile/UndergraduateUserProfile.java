@@ -2,7 +2,7 @@ package UserProfile;
 
 import javax.swing.*;
 
-public class UndergraduateUserProfile {
+public class UndergraduateUserProfile extends JFrame{
     private JPanel UndergraduateUserProfile;
     private JTextField textField1;
     private JTextField textField2;
@@ -14,4 +14,13 @@ public class UndergraduateUserProfile {
     private JButton updateButton;
     private JButton changePasswordButton;
     private JButton homeButton;
+
+    public UndergraduateUserProfile(){
+        setContentPane(UndergraduateUserProfile);
+        setTitle("Undergraduate User Profile");
+        setDefaultCloseOperation(EXIT_ON_CLOSE);
+        setSize(472, 296);
+        setLocationRelativeTo(this);
+        setVisible(true);
+    }
 }
