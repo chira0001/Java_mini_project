@@ -1,5 +1,9 @@
+package Login;
+
 import HomePage.UndergraduateHomePage;
 import UserProfile.AdminUserProfile;
+import UserProfile.LecturerUserProfile;
+import UserProfile.TechnicalOfficerUserProfile;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -20,7 +24,7 @@ public class Login extends JFrame {
     private JTextField textField2;
 
     public Login() {
-        new DBConnection();
+        DBConnection();
 
         setContentPane(Login);
         setTitle("Login Form");
@@ -53,35 +57,41 @@ public class Login extends JFrame {
                     if(arr.length > 0){
                         user_identity = (arr[0] + "" + arr[1]);
 
-                        String loginQuery = "select * from users where username ='" + uname + "'";
+                        String loginQuery = "select * from users where id ='" + uname + "'";
 
-                        Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/JavaGUI","root","1234");
+                        Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/javatest","root","1234");
                         Statement statement = connection.createStatement();
                         ResultSet result = statement.executeQuery(loginQuery);
 
                         if (result.next()){
-                            dbUname = result.getString("username");
+                            dbUname = result.getString("id");
                             dbPassword = result.getString("password");
 
                             if(Objects.equals(uname, dbUname) && Objects.equals(pass, dbPassword)){
                                 switch (user_identity) {
                                     case "tg" :
                                         System.out.println("Undergraduate");
-                                        new UndergraduateHomePage();
+                                        System.out.println("uname:"+uname+", pass:"+pass+", dbname:"+dbUname+",dbpass:"+dbPassword);
                                         dispose();
+                                        new UndergraduateHomePage(uname);
                                         break;
+
                                     case "le" :
                                         System.out.println("Lecturer");
                                         dispose();
+                                        new LecturerUserProfile();
                                         break;
+
                                     case "to" :
                                         System.out.println("Technical Officer");
                                         dispose();
+                                        new TechnicalOfficerUserProfile();
                                         break;
+
                                     case "ad" :
                                         System.out.println("Admin");
-                                        new AdminUserProfile();
                                         dispose();
+                                        new AdminUserProfile();
                                         break;
                                 }
                             } else {
@@ -102,5 +112,32 @@ public class Login extends JFrame {
 
     public static void main(String[] args) {
         new Login();
+    }
+
+    void DBConnection(){
+        int count = 0;
+
+        String query = "create table if not exists users(username varchar(10) primary key,password varchar(50))";
+        String selectQuery = "Select * from users";
+        String admin = "admin";
+        String pass = "123";
+
+        try{
+            Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/JavaGUI","root","1234");
+            Statement statement = connection.createStatement();
+            statement.executeUpdate(query);
+            ResultSet result = statement.executeQuery(selectQuery);
+
+            while (result.next()){
+                count++;
+            }
+            if (!(count > 0)){
+                String admin_data = "insert into users(username,password) values ('" + admin + "','" + pass + "')";
+                statement.executeUpdate(admin_data);
+                //System.out.println("data entered");
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
     }
 }
