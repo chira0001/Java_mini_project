@@ -50,13 +50,13 @@ public class LecturerHomePage extends JFrame {
 
     private CardLayout cardLayout;
 
-    private String UGTgno;
-    private String UGFname;
-    private String UGLname;
-    private String UGAddress;
-    private String UGEmail;
-    private String UGPhno;
-    private String UGProfImg;
+    private String Lecno;
+    private String LecFname;
+    private String LecLname;
+    private String LecAddress;
+    private String LecEmail;
+    private String LecPhno;
+    private String LecProfImg;
 
     private String[] cardButtons = {"Profile", "Attendance", "Time Table", "Courses", "Medical", "Notices", "Grades", "Settings"};
     private String[] cardNames = {"UGProfileCard", "UGAttendanceCard", "UGTimeTableCard", "UGCoursesCard", "UGMedicalsCard", "UGNoticesCard", "UGGradesCard", "UGSettingsCard"};
@@ -131,24 +131,24 @@ public class LecturerHomePage extends JFrame {
             ResultSet DBresult = statement.executeQuery(selectQuery);
 
             if(DBresult.next()){
-                UGTgno = DBresult.getString("tgno");
-                UGFname = DBresult.getString("ugfname");
-                UGLname = DBresult.getString("uglname");
-                UGAddress = DBresult.getString("ugaddress");
-                UGEmail = DBresult.getString("ugemail");
-                UGPhno = DBresult.getString("ugphno");
-                UGProfImg = DBresult.getString("ugProfImg");
+                Lecno = DBresult.getString("tgno");
+                LecFname = DBresult.getString("ugfname");
+                LecLname = DBresult.getString("uglname");
+                LecAddress = DBresult.getString("ugaddress");
+                LecEmail = DBresult.getString("ugemail");
+                LecPhno = DBresult.getString("ugphno");
+                LecProfImg = DBresult.getString("ugProfImg");
 
-                txtLECNO.setText(UGTgno);
-                txtFNAME.setText(UGFname);
-                txtLNAME.setText(UGLname);
-                txtADDRESS.setText(UGAddress);
-                txtEMAIL.setText(UGEmail);
-                txtPHNO.setText(UGPhno);
+                txtLECNO.setText(Lecno);
+                txtFNAME.setText(LecFname);
+                txtLNAME.setText(LecLname);
+                txtADDRESS.setText(LecAddress);
+                txtEMAIL.setText(LecEmail);
+                txtPHNO.setText(LecPhno);
 
-                textField7.setText(UGAddress);
-                textField8.setText(UGEmail);
-                textField9.setText(UGPhno);
+                textField7.setText(LecAddress);
+                textField8.setText(LecEmail);
+                textField9.setText(LecPhno);
 
             }else{
                 JOptionPane.showMessageDialog(null,"Internal Error");
