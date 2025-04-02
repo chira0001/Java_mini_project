@@ -1,5 +1,6 @@
 package Login;
 
+import HomePage.LecturerHomePage;
 import HomePage.UndergraduateHomePage;
 import UserProfile.AdminUserProfile;
 import UserProfile.LecturerUserProfile;
@@ -79,7 +80,7 @@ public class Login extends JFrame {
                                     case "le" :
                                         System.out.println("Lecturer");
                                         dispose();
-                                        new LecturerUserProfile();
+                                        new LecturerHomePage(uname);
                                         break;
 
                                     case "to" :
