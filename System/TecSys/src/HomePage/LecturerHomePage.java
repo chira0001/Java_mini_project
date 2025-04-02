@@ -37,7 +37,7 @@ public class LecturerHomePage extends JFrame {
     private JPanel LECCourses;
     private JPanel LECMedicals;
     private JPanel LECNotices;
-    private JPanel LECGrades;
+    private JPanel LECMarks;
     private JPanel LECSettings;
     private JTextField textField7;
     private JTextField textField9;
@@ -58,10 +58,10 @@ public class LecturerHomePage extends JFrame {
     private String LecPhno;
     private String LecProfImg;
 
-    private String[] cardButtons = {"Profile", "Attendance", "Time Table", "Courses", "Medical", "Notices", "Grades", "Settings"};
-    private String[] cardNames = {"UGProfileCard", "UGAttendanceCard", "UGTimeTableCard", "UGCoursesCard", "UGMedicalsCard", "UGNoticesCard", "UGGradesCard", "UGSettingsCard"};
+    private String[] cardButtons = {"Profile", "Attendance", "Time Table", "Courses", "Medical", "Notices", "Marks", "Settings"};
+    private String[] cardNames = {"LECProfile", "LECAttendance", "LECTimeTable", "LECCourses", "LECMedicals", "LECNotices", "LECMarks", "LECSettings"};
     JButton[] btnFieldNames = {profileButton,attendanceButton,timeTableButton,coursesButton,medicalButton,noticesButton,marksButton,settingsButton};
-    private String[] cardTitles = {"Welcome..!", "Attendance Details", "Undergraduate Time Table","Your Courses","Medical Information", "Notices", "Grades and GPA","Settings Configuration"};;
+    private String[] cardTitles = {"Welcome..!", "Attendance Details", "Undergraduate Time Table","Your Courses","Medical Information", "Notices", "Marks","Settings Configuration"};;
 
     public LecturerHomePage(String userIdentity){
         dbConnection(userIdentity);
@@ -123,21 +123,21 @@ public class LecturerHomePage extends JFrame {
         }
     }
 
-    private void dbConnection(String tgno){
+    private void dbConnection(String lecno){
         try{
-            String selectQuery = "select * from lecturer where tgno = '" + tgno + "'";
+            String selectQuery = "select * from lecturer where lecno = '" + lecno + "'";
             Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/javatest","root","1234");
             Statement statement = connection.createStatement();
             ResultSet DBresult = statement.executeQuery(selectQuery);
 
             if(DBresult.next()){
-                Lecno = DBresult.getString("tgno");
-                LecFname = DBresult.getString("ugfname");
-                LecLname = DBresult.getString("uglname");
-                LecAddress = DBresult.getString("ugaddress");
-                LecEmail = DBresult.getString("ugemail");
-                LecPhno = DBresult.getString("ugphno");
-                LecProfImg = DBresult.getString("ugProfImg");
+                Lecno = DBresult.getString("lecno");
+                LecFname = DBresult.getString("lecfname");
+                LecLname = DBresult.getString("leclname");
+                LecAddress = DBresult.getString("lecaddress");
+                LecEmail = DBresult.getString("lecemail");
+                LecPhno = DBresult.getString("lecphno");
+                LecProfImg = DBresult.getString("lecProfImg");
 
                 txtLECNO.setText(Lecno);
                 txtFNAME.setText(LecFname);
@@ -146,6 +146,8 @@ public class LecturerHomePage extends JFrame {
                 txtEMAIL.setText(LecEmail);
                 txtPHNO.setText(LecPhno);
 
+                textField1.setText(LecFname);
+                textField2.setText(LecLname);
                 textField7.setText(LecAddress);
                 textField8.setText(LecEmail);
                 textField9.setText(LecPhno);
@@ -158,13 +160,15 @@ public class LecturerHomePage extends JFrame {
         }
     }
 
-    private void UGUpdateCredentials(String tgno){
+    private void UGUpdateCredentials(String lecno){
         try{
-            String UGaddress = textField7.getText();
-            String UGemail = textField8.getText();
-            String UGphno = textField9.getText();
+            String LecFname=textField1.getText();
+            String LecLname=textField2.getText();
+            String Lecaddress = textField7.getText();
+            String Lecemail = textField8.getText();
+            String Lecphno = textField9.getText();
 
-            String UGCredentialupdateQuery = "Update lecturer set ugaddress = '" + UGaddress + "', ugemail = '"+ UGemail +"',ugphno = '"+ UGphno+"' where tgno = '" + tgno + "'";
+            String UGCredentialupdateQuery = "Update lecturer set lecfname = '"+LecFname + "',leclname = '" + LecLname +"',lecaddress = '" + Lecaddress + "', lecemail = '"+ Lecemail +"',lecphno = '"+ Lecphno+"' where lecno = '" + lecno + "'";
 
             Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/javatest","root","1234");
             Statement statement = connection.createStatement();
