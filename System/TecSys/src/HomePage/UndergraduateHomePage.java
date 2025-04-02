@@ -5,6 +5,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
+import java.nio.file.Files;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -46,6 +48,7 @@ public class UndergraduateHomePage extends JFrame {
     private JButton updateButton;
     private JLabel CardTittleLabel;
     private JButton uploadImageButton;
+    private JLabel UGProfileImage;
 
     private CardLayout cardLayout;
 
@@ -65,6 +68,8 @@ public class UndergraduateHomePage extends JFrame {
 
     public UndergraduateHomePage(String userIdentity){
         dbConnection(userIdentity);
+
+//        UGsaveProfileImage();
 
         setContentPane(UndergraduateHomePage);
         setTitle("Undergraduate User Profile");
@@ -104,6 +109,12 @@ public class UndergraduateHomePage extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 UGUpdateCredentials(userIdentity);
+            }
+        });
+        uploadImageButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                UGsaveProfileImage();
             }
         });
     }
@@ -178,6 +189,37 @@ public class UndergraduateHomePage extends JFrame {
 
         }catch (Exception e){
             e.printStackTrace();
+        }
+    }
+
+    private void UGsaveProfileImage(){
+        try{
+            JFileChooser UGFileChooser = new JFileChooser();
+            UGFileChooser.showOpenDialog(null);
+            File f = UGFileChooser.getSelectedFile();
+            UGProfileImage.setIcon(new ImageIcon(f.toString()));
+            String filename = f.getAbsolutePath();
+
+            String UGSaveImagePath = "Resources/ProfileImages/";
+            File UGSaveImageDirectory = new File(UGSaveImagePath);
+            if (!UGSaveImageDirectory.exists()){
+                UGSaveImageDirectory.mkdirs();
+            }
+
+            File UGSourceFile = null;
+
+
+            String extension = filename.substring(filename.lastIndexOf('.') + 1 );
+            UGSourceFile = new File("NewImage" +"."+ extension);
+
+            File UGDestinationFile = new File(UGSaveImagePath + UGSourceFile);
+
+            System.out.println(UGDestinationFile);
+
+            Files.copy(UGSourceFile.toPath(),UGDestinationFile.toPath());
+
+        }catch (Exception ex){
+            ex.printStackTrace();
         }
     }
 
