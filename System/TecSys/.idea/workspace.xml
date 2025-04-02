@@ -5,35 +5,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="72d0b1f3-e6cb-4eaf-bf31-777105475ddb" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/src/Main/Main.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/TecSys/ChangePassword.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/TecSys/DeleteUser.class" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/out/production/TecSys/HomePage/UndergraduateHomePage.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/TecSys/HomePage/UndergraduateHomePage.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/TecSys/Login$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/TecSys/Login$2.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/TecSys/Login.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/TecSys/Main.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/TecSys/Register$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/TecSys/Register.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/TecSys/UserProfile/AdminUserProfile.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/TecSys/UserProfile/AdminUserProfile.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/TecSys/UserProfile/LecturerUserProfile.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/TecSys/UserProfile/LecturerUserProfile.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/TecSys/UserProfile/TechnicalOfficerUserProfile.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/TecSys/UserProfile/TechnicalOfficerUserProfile.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/TecSys/UserProfile/UndergraduateUserProfile.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/TecSys/UserProfile/UndergraduateUserProfile.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/ChangePassword.form" beforeDir="false" afterPath="$PROJECT_DIR$/src/ChangePassword/ChangePassword.form" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/ChangePassword.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ChangePassword/ChangePassword.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/DBConnection.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/DeleteUser.form" beforeDir="false" afterPath="$PROJECT_DIR$/src/DeleteUser/DeleteUser.form" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/DeleteUser.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/DeleteUser/DeleteUser.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/HomePage/UndergraduateHomePage.form" beforeDir="false" afterPath="$PROJECT_DIR$/src/HomePage/UndergraduateHomePage.form" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/HomePage/UndergraduateHomePage.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/HomePage/UndergraduateHomePage.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Login.form" beforeDir="false" afterPath="$PROJECT_DIR$/src/Login/Login.form" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Login.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Login/Login.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Main.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Register.form" beforeDir="false" afterPath="$PROJECT_DIR$/src/Register/Register.form" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Register.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Register/Register.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Test.form" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Test.java" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -71,9 +46,9 @@
     "Application.UndergraduateHomePage.executor": "Run",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.git.unshallow": "true",
-    "UI_DESIGNER_EDITOR_MODE.PaletteManager.SHOW": "false",
+    "UI_DESIGNER_EDITOR_MODE.PaletteManager.SHOW": "true",
     "UI_DESIGNER_EDITOR_MODE.UIDesignerToolWindowManager.SHOW": "true",
-    "UI_DESIGNER_EDITOR_MODE.UIDesignerToolWindowManager.WIDTH": "400",
+    "UI_DESIGNER_EDITOR_MODE.UIDesignerToolWindowManager.WIDTH": "457",
     "git-widget-placeholder": "Chirath",
     "kotlin-language-version-configured": "true",
     "last_opened_file_path": "E:/E Drive/University Project/Java_mini_project/System/TecSys",
