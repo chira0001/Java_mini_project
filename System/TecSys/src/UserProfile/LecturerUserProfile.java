@@ -17,7 +17,7 @@ public class LecturerUserProfile extends JFrame{
 
     public LecturerUserProfile(){
         setContentPane(LecturerUserProfile);
-        setTitle("Admin User Profile");
+        setTitle("Lecturer User Profile");
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setSize(476, 296);
         setLocationRelativeTo(null);
