@@ -24,21 +24,21 @@ public class LecturerHomePage extends JFrame {
     private JButton attendanceButton;
     private JLabel CardTittleLabel;
     private JButton logoutButton;
-    private JPanel UGHomeCard;
-    private JPanel UGProfile;
+    private JPanel LECHomeCard;
+    private JPanel LECProfile;
     private JTextField txtLECNO;
     private JTextField txtPHNO;
     private JTextField txtEMAIL;
     private JTextField txtADDRESS;
     private JTextField txtLNAME;
     private JTextField txtFNAME;
-    private JPanel UGAttendance;
-    private JPanel UGTimeTable;
-    private JPanel UGCourses;
-    private JPanel UGMedicals;
-    private JPanel UGNotices;
-    private JPanel UGGrades;
-    private JPanel UGSettings;
+    private JPanel LECAttendance;
+    private JPanel LECTimeTable;
+    private JPanel LECCourses;
+    private JPanel LECMedicals;
+    private JPanel LECNotices;
+    private JPanel LECGrades;
+    private JPanel LECSettings;
     private JTextField textField7;
     private JTextField textField9;
     private JTextField textField8;
@@ -73,7 +73,7 @@ public class LecturerHomePage extends JFrame {
         setLocationRelativeTo(this);
         setVisible(true);
 
-        cardLayout = (CardLayout)(UGHomeCard.getLayout());
+        cardLayout = (CardLayout)(LECHomeCard.getLayout());
         profileButton.setEnabled(false);
         CardTittleLabel.setText(cardTitles[0]);
 
@@ -114,7 +114,7 @@ public class LecturerHomePage extends JFrame {
         for (int i = 0; i < noOfButtons; i++){
             if (cardButtons[i].equals(btn)){
                 dbConnection(tgno);
-                cardLayout.show(UGHomeCard,cardNames[i]);
+                cardLayout.show(LECHomeCard,cardNames[i]);
                 CardTittleLabel.setText(cardTitles[i]);
                 btnFieldNames[i].setEnabled(false);
             }else {

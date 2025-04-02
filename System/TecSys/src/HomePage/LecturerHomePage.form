@@ -354,7 +354,7 @@
                   </component>
                 </children>
               </grid>
-              <grid id="58fad" binding="UGHomeCard" layout-manager="CardLayout" hgap="0" vgap="0">
+              <grid id="58fad" binding="LECHomeCard" layout-manager="CardLayout" hgap="0" vgap="0">
                 <constraints>
                   <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false">
                     <minimum-size width="800" height="420"/>
@@ -365,7 +365,7 @@
                 </properties>
                 <border type="none"/>
                 <children>
-                  <grid id="a9113" binding="UGProfile" layout-manager="GridLayoutManager" row-count="1" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="0" vgap="-1">
+                  <grid id="a9113" binding="LECProfile" layout-manager="GridLayoutManager" row-count="1" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="0" vgap="-1">
                     <margin top="25" left="25" bottom="25" right="50"/>
                     <constraints>
                       <card name="UGProfileCard"/>
@@ -720,7 +720,7 @@
                       </grid>
                     </children>
                   </grid>
-                  <grid id="aa459" binding="UGAttendance" layout-manager="GridLayoutManager" row-count="1" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+                  <grid id="aa459" binding="LECAttendance" layout-manager="GridLayoutManager" row-count="1" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
                     <margin top="25" left="25" bottom="25" right="50"/>
                     <constraints>
                       <card name="UGAttendanceCard"/>
@@ -744,7 +744,7 @@
                       </grid>
                     </children>
                   </grid>
-                  <grid id="f6d50" binding="UGTimeTable" layout-manager="GridLayoutManager" row-count="1" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+                  <grid id="f6d50" binding="LECTimeTable" layout-manager="GridLayoutManager" row-count="1" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
                     <margin top="25" left="25" bottom="25" right="50"/>
                     <constraints>
                       <card name="UGTimeTableCard"/>
@@ -767,7 +767,7 @@
                       </grid>
                     </children>
                   </grid>
-                  <grid id="ce460" binding="UGCourses" layout-manager="GridLayoutManager" row-count="1" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+                  <grid id="ce460" binding="LECCourses" layout-manager="GridLayoutManager" row-count="1" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
                     <margin top="25" left="25" bottom="25" right="50"/>
                     <constraints>
                       <card name="UGCoursesCard"/>
@@ -790,7 +790,7 @@
                       </grid>
                     </children>
                   </grid>
-                  <grid id="d8" binding="UGMedicals" layout-manager="GridLayoutManager" row-count="1" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+                  <grid id="d8" binding="LECMedicals" layout-manager="GridLayoutManager" row-count="1" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
                     <margin top="25" left="25" bottom="25" right="50"/>
                     <constraints>
                       <card name="UGMedicalsCard"/>
@@ -813,7 +813,7 @@
                       </grid>
                     </children>
                   </grid>
-                  <grid id="6f9c0" binding="UGNotices" layout-manager="GridLayoutManager" row-count="1" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+                  <grid id="6f9c0" binding="LECNotices" layout-manager="GridLayoutManager" row-count="1" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
                     <margin top="25" left="25" bottom="25" right="50"/>
                     <constraints>
                       <card name="UGNoticesCard"/>
@@ -836,7 +836,7 @@
                       </grid>
                     </children>
                   </grid>
-                  <grid id="2fc01" binding="UGGrades" layout-manager="GridLayoutManager" row-count="1" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+                  <grid id="2fc01" binding="LECGrades" layout-manager="GridLayoutManager" row-count="1" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
                     <margin top="25" left="25" bottom="25" right="50"/>
                     <constraints>
                       <card name="UGGradesCard"/>
@@ -859,7 +859,7 @@
                       </grid>
                     </children>
                   </grid>
-                  <grid id="bcb0e" binding="UGSettings" layout-manager="GridLayoutManager" row-count="1" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+                  <grid id="bcb0e" binding="LECSettings" layout-manager="GridLayoutManager" row-count="1" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
                     <margin top="25" left="25" bottom="25" right="50"/>
                     <constraints>
                       <card name="UGSettingsCard"/>
