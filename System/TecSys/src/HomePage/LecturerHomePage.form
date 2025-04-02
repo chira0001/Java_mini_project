@@ -368,7 +368,7 @@
                   <grid id="a9113" binding="LECProfile" layout-manager="GridLayoutManager" row-count="1" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="0" vgap="-1">
                     <margin top="25" left="25" bottom="25" right="50"/>
                     <constraints>
-                      <card name="UGProfileCard"/>
+                      <card name="LECProfileCard"/>
                     </constraints>
                     <properties>
                       <enabled value="true"/>
@@ -723,7 +723,7 @@
                   <grid id="aa459" binding="LECAttendance" layout-manager="GridLayoutManager" row-count="1" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
                     <margin top="25" left="25" bottom="25" right="50"/>
                     <constraints>
-                      <card name="UGAttendanceCard"/>
+                      <card name="LECAttendanceCard"/>
                     </constraints>
                     <properties>
                       <enabled value="true"/>
@@ -747,7 +747,7 @@
                   <grid id="f6d50" binding="LECTimeTable" layout-manager="GridLayoutManager" row-count="1" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
                     <margin top="25" left="25" bottom="25" right="50"/>
                     <constraints>
-                      <card name="UGTimeTableCard"/>
+                      <card name="LECTimeTableCard"/>
                     </constraints>
                     <properties>
                       <enabled value="true"/>
@@ -770,7 +770,7 @@
                   <grid id="ce460" binding="LECCourses" layout-manager="GridLayoutManager" row-count="1" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
                     <margin top="25" left="25" bottom="25" right="50"/>
                     <constraints>
-                      <card name="UGCoursesCard"/>
+                      <card name="LECCoursesCard"/>
                     </constraints>
                     <properties>
                       <enabled value="true"/>
@@ -793,7 +793,7 @@
                   <grid id="d8" binding="LECMedicals" layout-manager="GridLayoutManager" row-count="1" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
                     <margin top="25" left="25" bottom="25" right="50"/>
                     <constraints>
-                      <card name="UGMedicalsCard"/>
+                      <card name="LECMedicalsCard"/>
                     </constraints>
                     <properties>
                       <enabled value="true"/>
@@ -816,7 +816,7 @@
                   <grid id="6f9c0" binding="LECNotices" layout-manager="GridLayoutManager" row-count="1" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
                     <margin top="25" left="25" bottom="25" right="50"/>
                     <constraints>
-                      <card name="UGNoticesCard"/>
+                      <card name="LECNoticesCard"/>
                     </constraints>
                     <properties>
                       <enabled value="true"/>
@@ -839,7 +839,7 @@
                   <grid id="2fc01" binding="LECMarks" layout-manager="GridLayoutManager" row-count="1" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
                     <margin top="25" left="25" bottom="25" right="50"/>
                     <constraints>
-                      <card name="UGGradesCard"/>
+                      <card name="LECGradesCard"/>
                     </constraints>
                     <properties>
                       <enabled value="true"/>
@@ -862,7 +862,7 @@
                   <grid id="bcb0e" binding="LECSettings" layout-manager="GridLayoutManager" row-count="1" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
                     <margin top="25" left="25" bottom="25" right="50"/>
                     <constraints>
-                      <card name="UGSettingsCard"/>
+                      <card name="LECSettingsCard"/>
                     </constraints>
                     <properties/>
                     <border type="none"/>

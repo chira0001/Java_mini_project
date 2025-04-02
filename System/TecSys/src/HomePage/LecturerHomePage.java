@@ -59,7 +59,7 @@ public class LecturerHomePage extends JFrame {
     private String LecProfImg;
 
     private String[] cardButtons = {"Profile", "Attendance", "Time Table", "Courses", "Medical", "Notices", "Marks", "Settings"};
-    private String[] cardNames = {"LECProfile", "LECAttendance", "LECTimeTable", "LECCourses", "LECMedicals", "LECNotices", "LECMarks", "LECSettings"};
+    private String[] cardNames = {"LECProfileCard", "LECAttendanceCard", "LECTimeTableCard", "LECCoursesCard", "LECMedicalsCard", "LECNoticesCard", "LECMarksCard", "LECSettingsCard"};
     JButton[] btnFieldNames = {profileButton,attendanceButton,timeTableButton,coursesButton,medicalButton,noticesButton,marksButton,settingsButton};
     private String[] cardTitles = {"Welcome..!", "Attendance Details", "Undergraduate Time Table","Your Courses","Medical Information", "Notices", "Marks","Settings Configuration"};;
 
