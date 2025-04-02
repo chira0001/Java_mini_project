@@ -5,20 +5,33 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.File;
-import java.nio.file.Files;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.Statement;
 
-public class UndergraduateHomePage extends JFrame {
-
+public class LecturerHomePage extends JFrame {
     private String cardCommand;
 
-    private JPanel UndergraduateHomePage;
+    private JPanel Lecturer;
+    private JButton profileButton;
+    private JButton settingsButton;
+    private JButton marksButton;
+    private JButton noticesButton;
+    private JButton medicalButton;
+    private JButton coursesButton;
+    private JButton timeTableButton;
+    private JButton attendanceButton;
+    private JLabel CardTittleLabel;
+    private JButton logoutButton;
     private JPanel UGHomeCard;
     private JPanel UGProfile;
+    private JTextField txtLECNO;
+    private JTextField txtPHNO;
+    private JTextField txtEMAIL;
+    private JTextField txtADDRESS;
+    private JTextField txtLNAME;
+    private JTextField txtFNAME;
     private JPanel UGAttendance;
     private JPanel UGTimeTable;
     private JPanel UGCourses;
@@ -26,29 +39,14 @@ public class UndergraduateHomePage extends JFrame {
     private JPanel UGNotices;
     private JPanel UGGrades;
     private JPanel UGSettings;
-    private JButton profileButton;
-    private JButton attendanceButton;
-    private JButton timeTableButton;
-    private JButton coursesButton;
-    private JButton medicalButton;
-    private JButton noticesButton;
-    private JButton gradesButton;
-    private JButton settingsButton;
-    private JButton logoutButton;
-    private JTextField txtTGNO;
-    private JTextField txtFNAME;
-    private JTextField txtLNAME;
-    private JTextField txtADDRESS;
-    private JTextField txtEMAIL;
-    private JTextField txtPHNO;
     private JTextField textField7;
-    private JTextField textField8;
     private JTextField textField9;
+    private JTextField textField8;
+    private JButton uploadImageButton;
     private JButton cancelButton;
     private JButton updateButton;
-    private JLabel CardTittleLabel;
-    private JButton uploadImageButton;
-    private JLabel UGProfileImage;
+    private JTextField textField1;
+    private JTextField textField2;
 
     private CardLayout cardLayout;
 
@@ -60,19 +58,16 @@ public class UndergraduateHomePage extends JFrame {
     private String UGPhno;
     private String UGProfImg;
 
-
     private String[] cardButtons = {"Profile", "Attendance", "Time Table", "Courses", "Medical", "Notices", "Grades", "Settings"};
     private String[] cardNames = {"UGProfileCard", "UGAttendanceCard", "UGTimeTableCard", "UGCoursesCard", "UGMedicalsCard", "UGNoticesCard", "UGGradesCard", "UGSettingsCard"};
-    JButton[] btnFieldNames = {profileButton,attendanceButton,timeTableButton,coursesButton,medicalButton,noticesButton,gradesButton,settingsButton};
+    JButton[] btnFieldNames = {profileButton,attendanceButton,timeTableButton,coursesButton,medicalButton,noticesButton,marksButton,settingsButton};
     private String[] cardTitles = {"Welcome..!", "Attendance Details", "Undergraduate Time Table","Your Courses","Medical Information", "Notices", "Grades and GPA","Settings Configuration"};;
 
-    public UndergraduateHomePage(String userIdentity){
+    public LecturerHomePage(String userIdentity){
         dbConnection(userIdentity);
 
-//        UGsaveProfileImage();
-
-        setContentPane(UndergraduateHomePage);
-        setTitle("Undergraduate User Profile");
+        setContentPane(Lecturer);
+        setTitle("Lecturer User Profile");
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setSize(1100, 570);
         setLocationRelativeTo(this);
@@ -91,7 +86,7 @@ public class UndergraduateHomePage extends JFrame {
         };
         profileButton.addActionListener(listener);
         settingsButton.addActionListener(listener);
-        gradesButton.addActionListener(listener);
+        marksButton.addActionListener(listener);
         noticesButton.addActionListener(listener);
         medicalButton.addActionListener(listener);
         coursesButton.addActionListener(listener);
@@ -109,12 +104,6 @@ public class UndergraduateHomePage extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 UGUpdateCredentials(userIdentity);
-            }
-        });
-        uploadImageButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                UGsaveProfileImage();
             }
         });
     }
@@ -136,7 +125,7 @@ public class UndergraduateHomePage extends JFrame {
 
     private void dbConnection(String tgno){
         try{
-            String selectQuery = "select * from undergraduate where tgno = '" + tgno + "'";
+            String selectQuery = "select * from lecturer where tgno = '" + tgno + "'";
             Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/javatest","root","1234");
             Statement statement = connection.createStatement();
             ResultSet DBresult = statement.executeQuery(selectQuery);
@@ -150,7 +139,7 @@ public class UndergraduateHomePage extends JFrame {
                 UGPhno = DBresult.getString("ugphno");
                 UGProfImg = DBresult.getString("ugProfImg");
 
-                txtTGNO.setText(UGTgno);
+                txtLECNO.setText(UGTgno);
                 txtFNAME.setText(UGFname);
                 txtLNAME.setText(UGLname);
                 txtADDRESS.setText(UGAddress);
@@ -175,7 +164,7 @@ public class UndergraduateHomePage extends JFrame {
             String UGemail = textField8.getText();
             String UGphno = textField9.getText();
 
-            String UGCredentialupdateQuery = "Update undergraduate set ugaddress = '" + UGaddress + "', ugemail = '"+ UGemail +"',ugphno = '"+ UGphno+"' where tgno = '" + tgno + "'";
+            String UGCredentialupdateQuery = "Update lecturer set ugaddress = '" + UGaddress + "', ugemail = '"+ UGemail +"',ugphno = '"+ UGphno+"' where tgno = '" + tgno + "'";
 
             Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/javatest","root","1234");
             Statement statement = connection.createStatement();
@@ -189,37 +178,6 @@ public class UndergraduateHomePage extends JFrame {
 
         }catch (Exception e){
             e.printStackTrace();
-        }
-    }
-
-    private void UGsaveProfileImage(){
-        try{
-            JFileChooser UGFileChooser = new JFileChooser();
-            UGFileChooser.showOpenDialog(null);
-            File f = UGFileChooser.getSelectedFile();
-            UGProfileImage.setIcon(new ImageIcon(f.toString()));
-            String filename = f.getAbsolutePath();
-
-            String UGSaveImagePath = "Resources/ProfileImages/";
-            File UGSaveImageDirectory = new File(UGSaveImagePath);
-            if (!UGSaveImageDirectory.exists()){
-                UGSaveImageDirectory.mkdirs();
-            }
-
-            File UGSourceFile = null;
-
-
-            String extension = filename.substring(filename.lastIndexOf('.') + 1 );
-            UGSourceFile = new File("NewImage" +"."+ extension);
-
-            File UGDestinationFile = new File(UGSaveImagePath + UGSourceFile);
-
-            System.out.println(UGDestinationFile);
-
-            Files.copy(UGSourceFile.toPath(),UGDestinationFile.toPath());
-
-        }catch (Exception ex){
-            ex.printStackTrace();
         }
     }
 
