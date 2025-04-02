@@ -1,3 +1,6 @@
+Create Database javateach;
+use javateach;
+
 create table undergraduate(
 tgno varchar(6),
 ugfname varchar(20),
