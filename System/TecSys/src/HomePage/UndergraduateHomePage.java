@@ -2,11 +2,13 @@ package HomePage;
 import Login.Login;
 
 import javax.swing.*;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -49,6 +51,7 @@ public class UndergraduateHomePage extends JFrame {
     private JLabel CardTittleLabel;
     private JButton uploadImageButton;
     private JLabel UGProfileImage;
+    private JPanel UGProfImgPanel;
 
     private CardLayout cardLayout;
 
@@ -114,7 +117,7 @@ public class UndergraduateHomePage extends JFrame {
         uploadImageButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                UGsaveProfileImage();
+                UGsaveProfileImage(userIdentity);
             }
         });
     }
@@ -174,8 +177,9 @@ public class UndergraduateHomePage extends JFrame {
             String UGaddress = textField7.getText();
             String UGemail = textField8.getText();
             String UGphno = textField9.getText();
+            String UGProfileImagePath = "";
 
-            String UGCredentialupdateQuery = "Update undergraduate set ugaddress = '" + UGaddress + "', ugemail = '"+ UGemail +"',ugphno = '"+ UGphno+"' where tgno = '" + tgno + "'";
+            String UGCredentialupdateQuery = "Update undergraduate set ugaddress = '" + UGaddress + "', ugemail = '"+ UGemail +"',ugphno = '"+ UGphno+"',ugProfImg ='" + UGProfileImagePath + "' where tgno = '" + tgno + "'";
 
             Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/javatest","root","1234");
             Statement statement = connection.createStatement();
@@ -192,31 +196,58 @@ public class UndergraduateHomePage extends JFrame {
         }
     }
 
-    private void UGsaveProfileImage(){
+    private void UGsaveProfileImage(String tgno){
         try{
             JFileChooser UGFileChooser = new JFileChooser();
-            UGFileChooser.showOpenDialog(null);
-            File f = UGFileChooser.getSelectedFile();
-            UGProfileImage.setIcon(new ImageIcon(f.toString()));
-            String filename = f.getAbsolutePath();
+            UGFileChooser.addChoosableFileFilter(new FileNameExtensionFilter("Images","jpg","png","jpeg","gif"));
+//            UGFileChooser.showOpenDialog(null);
 
-            String UGSaveImagePath = "Resources/ProfileImages/";
-            File UGSaveImageDirectory = new File(UGSaveImagePath);
-            if (!UGSaveImageDirectory.exists()){
-                UGSaveImageDirectory.mkdirs();
+//                ############################################################
+
+            if(UGFileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION){
+
+                ImageIcon icon = new ImageIcon(UGFileChooser.getSelectedFile().getPath());
+                Image scaled = icon.getImage().getScaledInstance(
+                        UGProfImgPanel.getWidth() - 50,
+                        UGProfImgPanel.getHeight() - 50,
+                        Image.SCALE_SMOOTH
+                );
+                UGProfileImage.setIcon(new ImageIcon(scaled));
+                UGProfileImage.setText("");
+
+//                ############################################################
+
+//                File f = UGFileChooser.getSelectedFile();
+//                UGProfileImage.setIcon(new ImageIcon(f.toString()));
+
+                String filename = UGFileChooser.getSelectedFile().getAbsolutePath();
+
+                String UGSaveImagePath = "Resources/ProfileImages/";
+                File UGSaveImageDirectory = new File(UGSaveImagePath);
+                if (!UGSaveImageDirectory.exists()){
+                    UGSaveImageDirectory.mkdirs();
+                }
+
+                File UGSourceFile = null;
+
+                String extension = filename.substring(filename.lastIndexOf('.') + 1 );
+                UGSourceFile = new File(tgno +"."+ extension);
+
+                File UGDestinationFile = new File(UGSaveImagePath + UGSourceFile);
+
+                System.out.println(UGDestinationFile);
+
+                Path fromFile = UGFileChooser.getSelectedFile().toPath();
+                Path toFile = UGDestinationFile.toPath();
+
+                if (UGDestinationFile.exists()){
+//                System.out.println("File exists");
+                    UGDestinationFile.delete();
+                    Files.copy(fromFile,toFile);
+                }else{
+                    Files.copy(fromFile,toFile);
+                }
             }
-
-            File UGSourceFile = null;
-
-
-            String extension = filename.substring(filename.lastIndexOf('.') + 1 );
-            UGSourceFile = new File("NewImage" +"."+ extension);
-
-            File UGDestinationFile = new File(UGSaveImagePath + UGSourceFile);
-
-            System.out.println(UGDestinationFile);
-
-            Files.copy(UGSourceFile.toPath(),UGDestinationFile.toPath());
 
         }catch (Exception ex){
             ex.printStackTrace();
