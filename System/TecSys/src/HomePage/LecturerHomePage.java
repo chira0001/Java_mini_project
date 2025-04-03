@@ -103,7 +103,7 @@ public class LecturerHomePage extends JFrame {
         updateButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                UGUpdateCredentials(userIdentity);
+                LECUpdateCredentials(userIdentity);
             }
         });
     }
@@ -160,7 +160,7 @@ public class LecturerHomePage extends JFrame {
         }
     }
 
-    private void UGUpdateCredentials(String lecno){
+    private void LECUpdateCredentials(String lecno){
         try{
             String LecFname=textField1.getText();
             String LecLname=textField2.getText();
@@ -168,11 +168,11 @@ public class LecturerHomePage extends JFrame {
             String Lecemail = textField8.getText();
             String Lecphno = textField9.getText();
 
-            String UGCredentialupdateQuery = "Update lecturer set lecfname = '"+LecFname + "',leclname = '" + LecLname +"',lecaddress = '" + Lecaddress + "', lecemail = '"+ Lecemail +"',lecphno = '"+ Lecphno+"' where lecno = '" + lecno + "'";
+            String LECCredentialupdateQuery = "Update lecturer set lecfname = '"+LecFname + "',leclname = '" + LecLname +"',lecaddress = '" + Lecaddress + "', lecemail = '"+ Lecemail +"',lecphno = '"+ Lecphno+"' where lecno = '" + lecno + "'";
 
             Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/javatest","root","1234");
             Statement statement = connection.createStatement();
-            int resultSet = statement.executeUpdate(UGCredentialupdateQuery);
+            int resultSet = statement.executeUpdate(LECCredentialupdateQuery);
 
             if(resultSet > 0){
                 JOptionPane.showMessageDialog(null,"Credentials updated successfully");
