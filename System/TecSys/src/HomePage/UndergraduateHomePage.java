@@ -52,6 +52,8 @@ public class UndergraduateHomePage extends JFrame {
     private JButton uploadImageButton;
     private JLabel UGProfileImage;
     private JPanel UGProfImgPanel;
+    private JLabel HomePageUserProfileLable;
+    private JPanel HomePageUserProfile;
 
     private CardLayout cardLayout;
 
@@ -69,7 +71,7 @@ public class UndergraduateHomePage extends JFrame {
     JButton[] btnFieldNames = {profileButton,attendanceButton,timeTableButton,coursesButton,medicalButton,noticesButton,gradesButton,settingsButton};
     private String[] cardTitles = {"Welcome..!", "Attendance Details", "Undergraduate Time Table","Your Courses","Medical Information", "Notices", "Grades and GPA","Settings Configuration"};;
 
-    private Object[] filePathValues = new Object[3];
+    private Object[] filePathValues = new Object[4];
 
     public UndergraduateHomePage(String userIdentity){
 
@@ -85,6 +87,7 @@ public class UndergraduateHomePage extends JFrame {
         cardLayout = (CardLayout)(UGHomeCard.getLayout());
         profileButton.setEnabled(false);
         CardTittleLabel.setText(cardTitles[0]);
+        loadUGProfImage(userIdentity);
 
         ActionListener listener = new ActionListener() {
             @Override
@@ -166,6 +169,7 @@ public class UndergraduateHomePage extends JFrame {
                 textField8.setText(UGEmail);
                 textField9.setText(UGPhno);
 
+                loadUGProfImage(tgno);
             }else{
                 JOptionPane.showMessageDialog(null,"Internal Error");
             }
@@ -179,7 +183,11 @@ public class UndergraduateHomePage extends JFrame {
             String UGaddress = textField7.getText();
             String UGemail = textField8.getText();
             String UGphno = textField9.getText();
-            String UGProfileImagePath = "";
+
+            String extension = (String) filePathValues[3];
+
+            String UGProfileImagePath = "Resources/ProfileImages/" + tgno + "." + extension;
+            System.out.println(UGProfileImagePath);
 
             String UGCredentialupdateQuery = "Update undergraduate set ugaddress = '" + UGaddress + "', ugemail = '"+ UGemail +"',ugphno = '"+ UGphno+"',ugProfImg ='" + UGProfileImagePath + "' where tgno = '" + tgno + "'";
 
@@ -199,10 +207,35 @@ public class UndergraduateHomePage extends JFrame {
         }
     }
 
+    private void loadUGProfImage(String tgno){
+        try{
+            String UGProfImageSearchQuery = "select * from undergraduate where tgno = '" + tgno + "'";
+            Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/javatest","root","1234");
+            Statement statement = connection.createStatement();
+            ResultSet result = statement.executeQuery(UGProfImageSearchQuery);
+
+            while (result.next()){
+                Path UGSaveImagePath = Path.of(result.getString("ugProfImg"));
+                ImageIcon icon = new ImageIcon(UGSaveImagePath.toString());
+                Image scaled = icon.getImage().getScaledInstance(
+                        HomePageUserProfile.getWidth() - 50,
+                        HomePageUserProfile.getHeight() - 50,
+                        Image.SCALE_SMOOTH
+                );
+                HomePageUserProfileLable.setIcon(new ImageIcon(scaled));
+                HomePageUserProfileLable.setText("");
+            }
+        }catch (Exception ex){
+            ex.printStackTrace();
+        }
+    }
+
     private void UGUploadToPreviewProfileImage(String tgno) {
         try {
             JFileChooser UGFileChooser = new JFileChooser();
-            UGFileChooser.addChoosableFileFilter(new FileNameExtensionFilter("Images", "jpg", "png", "jpeg", "gif"));
+            UGFileChooser.setDialogTitle("Select Profile Picture");
+            UGFileChooser.setAcceptAllFileFilterUsed(false);
+            UGFileChooser.addChoosableFileFilter(new FileNameExtensionFilter("Images", "jpg", "jpeg"));
 
             if (UGFileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
 
@@ -238,6 +271,7 @@ public class UndergraduateHomePage extends JFrame {
                 filePathValues[0] = fromFile;
                 filePathValues[1] = toFile;
                 filePathValues[2] = UGDestinationFile;
+                filePathValues[3] = extension;
             }
 
         } catch (Exception ex) {
