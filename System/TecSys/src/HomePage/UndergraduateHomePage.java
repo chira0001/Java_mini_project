@@ -222,6 +222,8 @@ public class UndergraduateHomePage extends JFrame {
 
                 String filename = UGFileChooser.getSelectedFile().getAbsolutePath();
 
+// Pass the filename for the next method as parameter, Instantiate JFilechooser as UGFileChooser in UGSAveProfile
+                
                 String UGSaveImagePath = "Resources/ProfileImages/";
                 File UGSaveImageDirectory = new File(UGSaveImagePath);
                 if (!UGSaveImageDirectory.exists()){
