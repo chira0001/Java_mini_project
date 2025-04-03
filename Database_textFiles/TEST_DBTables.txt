@@ -1,5 +1,5 @@
-Create Database javateach;
-use javateach;
+Create Database javatest;
+use javatest;
 
 create table undergraduate(
 tgno varchar(6),
