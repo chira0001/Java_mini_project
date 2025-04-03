@@ -48,10 +48,11 @@
   "keyToString": {
     "Application.Login.executor": "Run",
     "Application.Main.executor": "Run",
+    "Application.MainRun.executor": "Run",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.git.unshallow": "true",
     "UI_DESIGNER_EDITOR_MODE.PaletteManager.WIDTH": "227",
-    "UI_DESIGNER_EDITOR_MODE.UIDesignerToolWindowManager.WIDTH": "215",
+    "UI_DESIGNER_EDITOR_MODE.UIDesignerToolWindowManager.WIDTH": "274",
     "git-widget-placeholder": "<unknown>",
     "kotlin-language-version-configured": "true",
     "last_opened_file_path": "C:/Users/DELL/Desktop/Java Project/Java_mini_project/System/TecSys/mysql-connector-j-9.2.0.jar",
@@ -92,7 +93,8 @@
       <option name="presentableId" value="Default" />
       <updated>1743164047704</updated>
       <workItem from="1743596359503" duration="22220000" />
-      <workItem from="1743699074204" duration="349000" />
+      <workItem from="1743699074204" duration="2390000" />
+      <workItem from="1743703451387" duration="4464000" />
     </task>
     <servers />
   </component>

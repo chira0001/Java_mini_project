@@ -47,6 +47,11 @@ public class LecturerHomePage extends JFrame {
     private JButton updateButton;
     private JTextField textField1;
     private JTextField textField2;
+    private JList list1;
+    private JList list2;
+    private JButton addFilesButton;
+    private JButton renameFilesButton;
+    private JButton removeFilesButton;
 
     private CardLayout cardLayout;
 
