@@ -117,7 +117,7 @@ public class UndergraduateHomePage extends JFrame {
         uploadImageButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                UGsaveProfileImage(userIdentity);
+                UGpreviewProfileImage(userIdentity);
             }
         });
     }
@@ -196,11 +196,10 @@ public class UndergraduateHomePage extends JFrame {
         }
     }
 
-    private void UGsaveProfileImage(String tgno){
+    private void UGpreviewProfileImage(String tgno){
         try{
             JFileChooser UGFileChooser = new JFileChooser();
             UGFileChooser.addChoosableFileFilter(new FileNameExtensionFilter("Images","jpg","png","jpeg","gif"));
-//            UGFileChooser.showOpenDialog(null);
 
 //                ############################################################
 
@@ -217,36 +216,9 @@ public class UndergraduateHomePage extends JFrame {
 
 //                ############################################################
 
-//                File f = UGFileChooser.getSelectedFile();
-//                UGProfileImage.setIcon(new ImageIcon(f.toString()));
-
                 String filename = UGFileChooser.getSelectedFile().getAbsolutePath();
-
-                String UGSaveImagePath = "Resources/ProfileImages/";
-                File UGSaveImageDirectory = new File(UGSaveImagePath);
-                if (!UGSaveImageDirectory.exists()){
-                    UGSaveImageDirectory.mkdirs();
-                }
-
-                File UGSourceFile = null;
-
-                String extension = filename.substring(filename.lastIndexOf('.') + 1 );
-                UGSourceFile = new File(tgno +"."+ extension);
-
-                File UGDestinationFile = new File(UGSaveImagePath + UGSourceFile);
-
-                System.out.println(UGDestinationFile);
-
-                Path fromFile = UGFileChooser.getSelectedFile().toPath();
-                Path toFile = UGDestinationFile.toPath();
-
-                if (UGDestinationFile.exists()){
-//                System.out.println("File exists");
-                    UGDestinationFile.delete();
-                    Files.copy(fromFile,toFile);
-                }else{
-                    Files.copy(fromFile,toFile);
-                }
+                Path selectedFile = UGFileChooser.getSelectedFile().toPath();
+//              tgno;
             }
 
         }catch (Exception ex){
@@ -254,7 +226,35 @@ public class UndergraduateHomePage extends JFrame {
         }
     }
 
-//    private void UGFillUpdateFields(String tgno){
-//        String UpdateFillQuery = "select ";
-//    }
+    private void UGsaveProfileImage(String filename, String tgno, Path selectedFile){
+        try{
+            String UGSaveImagePath = "Resources/ProfileImages/";
+            File UGSaveImageDirectory = new File(UGSaveImagePath);
+            if (!UGSaveImageDirectory.exists()){
+                UGSaveImageDirectory.mkdirs();
+            }
+
+            File UGSourceFile = null;
+
+            String extension = filename.substring(filename.lastIndexOf('.') + 1 );
+            UGSourceFile = new File(tgno +"."+ extension);
+
+            File UGDestinationFile = new File(UGSaveImagePath + UGSourceFile);
+
+            System.out.println(UGDestinationFile);
+
+            Path fromFile = selectedFile;
+            Path toFile = UGDestinationFile.toPath();
+
+            if (UGDestinationFile.exists()){
+                UGDestinationFile.delete();
+                Files.copy(fromFile,toFile);
+            }else{
+                Files.copy(fromFile,toFile);
+            }
+
+        }catch(Exception ex){
+            ex.printStackTrace();
+        }
+    }
 }
