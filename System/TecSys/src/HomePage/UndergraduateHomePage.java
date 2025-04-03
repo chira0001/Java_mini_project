@@ -217,8 +217,52 @@ public class UndergraduateHomePage extends JFrame {
 //                ############################################################
 
                 String filename = UGFileChooser.getSelectedFile().getAbsolutePath();
-                Path selectedFile = UGFileChooser.getSelectedFile().toPath();
-//              tgno;
+
+
+// Pass the filename for the next method as parameter, Instantiate JFilechooser as UGFileChooser in UGSAveProfile
+
+//Reference use this
+
+/*public class CheckedExample{
+	public static void main(String[] args){
+		Object[] myarr = object_get();
+		System.out.println(myarr[0]);
+		System.out.println(myarr[1]);
+	}
+		
+	public static Object[] object_get (){
+		String h = "Hello";
+		String g = "Chirath";
+		return new Object[]{h,g};
+	}
+}*/
+                
+                
+                String UGSaveImagePath = "Resources/ProfileImages/";
+                File UGSaveImageDirectory = new File(UGSaveImagePath);
+                if (!UGSaveImageDirectory.exists()){
+                    UGSaveImageDirectory.mkdirs();
+                }
+
+                File UGSourceFile = null;
+
+                String extension = filename.substring(filename.lastIndexOf('.') + 1 );
+                UGSourceFile = new File(tgno +"."+ extension);
+
+                File UGDestinationFile = new File(UGSaveImagePath + UGSourceFile);
+
+                System.out.println(UGDestinationFile);
+
+                Path fromFile = UGFileChooser.getSelectedFile().toPath();
+                Path toFile = UGDestinationFile.toPath();
+
+                if (UGDestinationFile.exists()){
+//                System.out.println("File exists");
+                    UGDestinationFile.delete();
+                    Files.copy(fromFile,toFile);
+                }else{
+                    Files.copy(fromFile,toFile);
+                }
             }
 
         }catch (Exception ex){
