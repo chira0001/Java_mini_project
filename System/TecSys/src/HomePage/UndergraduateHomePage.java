@@ -125,6 +125,16 @@ public class UndergraduateHomePage extends JFrame {
                 UGUpdateCredentials(userIdentity);
             }
         });
+        cancelButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                int noOfButtons = cardButtons.length;
+
+                cardLayout.show(UGHomeCard,cardNames[0]);
+                btnFieldNames[0].setEnabled(false);
+                btnFieldNames[noOfButtons-1].setEnabled(true);
+            }
+        });
     }
 
     public void changeBtnState(String btn, String tgno){
@@ -188,8 +198,12 @@ public class UndergraduateHomePage extends JFrame {
 
             String UGProfileImagePath = "Resources/ProfileImages/" + tgno + "." + extension;
             System.out.println(UGProfileImagePath);
-
-            String UGCredentialupdateQuery = "Update undergraduate set ugaddress = '" + UGaddress + "', ugemail = '"+ UGemail +"',ugphno = '"+ UGphno+"',ugProfImg ='" + UGProfileImagePath + "' where tgno = '" + tgno + "'";
+            String UGCredentialupdateQuery;
+            if (extension == null){
+                 UGCredentialupdateQuery = "Update undergraduate set ugaddress = '" + UGaddress + "', ugemail = '"+ UGemail +"',ugphno = '"+ UGphno+"' where tgno = '" + tgno + "'";
+            }else {
+                 UGCredentialupdateQuery = "Update undergraduate set ugaddress = '" + UGaddress + "', ugemail = '"+ UGemail +"',ugphno = '"+ UGphno+"',ugProfImg ='" + UGProfileImagePath + "' where tgno = '" + tgno + "'";
+            }
 
             Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/javatest","root","1234");
             Statement statement = connection.createStatement();
