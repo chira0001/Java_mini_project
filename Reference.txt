@@ -1,0 +1,47 @@
+Scope of the Faculty Management System
+The Faculty Management System (FMS) is a comprehensive, role-based software solution designed to streamline academic and administrative processes within the Faculty of Technology. The system will be implemented as a centralized, MySQL-based platform, ensuring seamless data management, security, and accessibility for various stakeholders.
+
+
+
+
+System Features and Functionalities
+User Profile Management
+
+Secure authentication and role-based access control for Admins, Lecturers, Students, and Technical Officers.
+Profile creation, updates, and management for each user type.
+Course Management
+
+Storage and retrieval of course details, including course codes, descriptions, credit values, and assigned lecturers.
+Management of course enrollments for students.
+Undergraduate Marks Management
+
+Entry and modification of student marks by lecturers.
+Secure storage of grades and computation of final results.
+Role-based access to marks for students and faculty members.
+Undergraduate Attendance Tracking
+
+Recording and monitoring student attendance.
+Generating reports for attendance-based assessments and eligibility tracking.
+Notices and Announcements
+
+Faculty-wide announcements from authorized users.
+Categorization of notices for academics, administration, and student affairs.
+Timetable Management
+
+Scheduling and management of class and examination timetables.
+Availability of timetables to students and faculty members.
+Medical Records Management
+
+Submission of medical certificates by students.
+Verification and approval by administrators or medical officers.
+Consideration of medical records in academic assessments.
+System Users and Access Control
+Admin: Full access to manage users, courses, and system settings.
+Lecturers: Access to course details, attendance, marks entry, and notices.
+Students: View personal details, notices, timetables, and submit medicals.
+Technical Officers: Limited access to manage technical aspects and faculty operations.
+Limitations and Exclusions
+The system does not include financial transactions (e.g., student fee payments).
+It will be designed only for the Faculty of Technology and not for other faculties.
+Integration with external Learning Management Systems (LMS) will not be included in the initial phase.
+By implementing this Faculty Management System, the Faculty of Technology aims to enhance efficiency, accuracy, and user experience in academic and administrative operations.

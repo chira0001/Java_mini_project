@@ -1,0 +1,20 @@
+create table if not exists users(
+	username varchar(10),
+	password varchar(50)
+);
+##################################################################  ----> Data Insert
+
+insert into users(username,password) values
+("admin","123"),
+("tg1354","123"),
+("lec1","123"),
+("to1","123");
+
+##################################################################  ----> Primary keys
+
+alter table users add primary key(username);
+
+
+
+##################################################################  ----> For Java IDE
+create table if not exists users(username varchar(10),password varchar(50))
