@@ -1,14 +1,17 @@
 package HomePage;
+import DBCONNECTION.DBCONNECTION;
 import Login.Login;
 
 import javax.swing.*;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.Statement;
+import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.sql.*;
+import java.util.Scanner;
 
 public class UndergraduateHomePage extends JFrame {
 
@@ -46,6 +49,12 @@ public class UndergraduateHomePage extends JFrame {
     private JButton updateButton;
     private JLabel CardTittleLabel;
     private JButton uploadImageButton;
+    private JLabel UGProfileImage;
+    private JPanel UGProfImgPanel;
+    private JLabel HomePageUserProfileLable;
+    private JPanel HomePageUserProfile;
+    private JComboBox noticeTitleDropDown;
+    private JTextArea noticeDisplayArea;
 
     private CardLayout cardLayout;
 
@@ -57,14 +66,23 @@ public class UndergraduateHomePage extends JFrame {
     private String UGPhno;
     private String UGProfImg;
 
-
     private String[] cardButtons = {"Profile", "Attendance", "Time Table", "Courses", "Medical", "Notices", "Grades", "Settings"};
     private String[] cardNames = {"UGProfileCard", "UGAttendanceCard", "UGTimeTableCard", "UGCoursesCard", "UGMedicalsCard", "UGNoticesCard", "UGGradesCard", "UGSettingsCard"};
     JButton[] btnFieldNames = {profileButton,attendanceButton,timeTableButton,coursesButton,medicalButton,noticesButton,gradesButton,settingsButton};
     private String[] cardTitles = {"Welcome..!", "Attendance Details", "Undergraduate Time Table","Your Courses","Medical Information", "Notices", "Grades and GPA","Settings Configuration"};;
 
+    private Object[] filePathValues = new Object[4];
+
+    DBCONNECTION _dbconn = new DBCONNECTION();
+    Connection conn = _dbconn.Conn();
+    private PreparedStatement prepStatement;
+
+    private Scanner input;
+
     public UndergraduateHomePage(String userIdentity){
+
         dbConnection(userIdentity);
+        LoadNotices();
 
         setContentPane(UndergraduateHomePage);
         setTitle("Undergraduate User Profile");
@@ -76,6 +94,7 @@ public class UndergraduateHomePage extends JFrame {
         cardLayout = (CardLayout)(UGHomeCard.getLayout());
         profileButton.setEnabled(false);
         CardTittleLabel.setText(cardTitles[0]);
+        loadUGProfImage(userIdentity);
 
         ActionListener listener = new ActionListener() {
             @Override
@@ -100,10 +119,40 @@ public class UndergraduateHomePage extends JFrame {
                 new Login();
             }
         });
+        uploadImageButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                UGUploadToPreviewProfileImage(userIdentity);
+            }
+        });
+
         updateButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 UGUpdateCredentials(userIdentity);
+            }
+        });
+        cancelButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                int noOfButtons = cardButtons.length;
+
+                cardLayout.show(UGHomeCard,cardNames[0]);
+                btnFieldNames[0].setEnabled(false);
+                btnFieldNames[noOfButtons-1].setEnabled(true);
+                loadUGProfImage(userIdentity);
+                dbConnection(userIdentity);
+
+
+            }
+        });
+        noticeTitleDropDown.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+                String notice = (String) noticeTitleDropDown.getSelectedItem();
+                System.out.println(notice);
+                viewNotice(notice);
             }
         });
     }
@@ -125,10 +174,11 @@ public class UndergraduateHomePage extends JFrame {
 
     private void dbConnection(String tgno){
         try{
-            String selectQuery = "select * from undergraduate where tgno = '" + tgno + "'";
-            Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/javatest","root","1234");
-            Statement statement = connection.createStatement();
-            ResultSet DBresult = statement.executeQuery(selectQuery);
+            String selectQuery = "select * from undergraduate where tgno = ?";
+
+            prepStatement = conn.prepareStatement(selectQuery);
+            prepStatement.setString(1,tgno);
+            ResultSet DBresult = prepStatement.executeQuery();
 
             if(DBresult.next()){
                 UGTgno = DBresult.getString("tgno");
@@ -150,6 +200,7 @@ public class UndergraduateHomePage extends JFrame {
                 textField8.setText(UGEmail);
                 textField9.setText(UGPhno);
 
+                loadUGProfImage(tgno);
             }else{
                 JOptionPane.showMessageDialog(null,"Internal Error");
             }
@@ -164,13 +215,22 @@ public class UndergraduateHomePage extends JFrame {
             String UGemail = textField8.getText();
             String UGphno = textField9.getText();
 
-            String UGCredentialupdateQuery = "Update undergraduate set ugaddress = '" + UGaddress + "', ugemail = '"+ UGemail +"',ugphno = '"+ UGphno+"' where tgno = '" + tgno + "'";
+            String extension = (String) filePathValues[3];
 
-            Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/javatest","root","1234");
-            Statement statement = connection.createStatement();
+            String UGProfileImagePath = "Resources/ProfileImages/" + tgno + "." + extension;
+            System.out.println(UGProfileImagePath);
+            String UGCredentialupdateQuery;
+            if (extension == null){
+                 UGCredentialupdateQuery = "Update undergraduate set ugaddress = '" + UGaddress + "', ugemail = '"+ UGemail +"',ugphno = '"+ UGphno+"' where tgno = '" + tgno + "'";
+            }else {
+                 UGCredentialupdateQuery = "Update undergraduate set ugaddress = '" + UGaddress + "', ugemail = '"+ UGemail +"',ugphno = '"+ UGphno+"',ugProfImg ='" + UGProfileImagePath + "' where tgno = '" + tgno + "'";
+            }
+
+            Statement statement = conn.createStatement();
             int resultSet = statement.executeUpdate(UGCredentialupdateQuery);
 
             if(resultSet > 0){
+                UGSaveProfileImage(tgno);
                 JOptionPane.showMessageDialog(null,"Credentials updated successfully");
             }else {
                 JOptionPane.showMessageDialog(null,"Error in credential updation");
@@ -181,7 +241,144 @@ public class UndergraduateHomePage extends JFrame {
         }
     }
 
-//    private void UGFillUpdateFields(String tgno){
-//        String UpdateFillQuery = "select ";
-//    }
+    private void loadUGProfImage(String tgno){
+        try{
+            String UGProfImageSearchQuery = "select * from undergraduate where tgno = ?";
+
+            prepStatement = conn.prepareStatement(UGProfImageSearchQuery);
+            prepStatement.setString(1,tgno);
+            ResultSet result = prepStatement.executeQuery();
+
+            while (result.next()){
+                Path UGSaveImagePath = Path.of(result.getString("ugProfImg"));
+                ImageIcon icon = new ImageIcon(UGSaveImagePath.toString());
+                Image scaled = icon.getImage().getScaledInstance(
+                        HomePageUserProfile.getWidth() - 50,
+                        HomePageUserProfile.getHeight() - 50,
+                        Image.SCALE_SMOOTH
+                );
+                HomePageUserProfileLable.setIcon(new ImageIcon(scaled));
+                HomePageUserProfileLable.setText("");
+            }
+        }catch (Exception ex){
+            ex.printStackTrace();
+        }
+    }
+
+    private void UGUploadToPreviewProfileImage(String tgno) {
+        try {
+            JFileChooser UGFileChooser = new JFileChooser();
+            UGFileChooser.setDialogTitle("Select Profile Picture");
+            UGFileChooser.setAcceptAllFileFilterUsed(false);
+            UGFileChooser.addChoosableFileFilter(new FileNameExtensionFilter("Images", "jpg", "jpeg"));
+
+            if (UGFileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
+
+                ImageIcon icon = new ImageIcon(UGFileChooser.getSelectedFile().getPath());
+                Image scaled = icon.getImage().getScaledInstance(
+                        UGProfImgPanel.getWidth() - 50,
+                        UGProfImgPanel.getHeight() - 50,
+                        Image.SCALE_SMOOTH
+                );
+                UGProfileImage.setIcon(new ImageIcon(scaled));
+                UGProfileImage.setText("");
+
+                String filename = UGFileChooser.getSelectedFile().getAbsolutePath();
+
+                String UGSaveImagePath = "Resources/ProfileImages/";
+                File UGSaveImageDirectory = new File(UGSaveImagePath);
+                if (!UGSaveImageDirectory.exists()) {
+                    UGSaveImageDirectory.mkdirs();
+                }
+
+                File UGSourceFile = null;
+
+                String extension = filename.substring(filename.lastIndexOf('.') + 1);
+
+                UGSourceFile = new File(tgno + "." + extension);
+
+                File UGDestinationFile = new File(UGSaveImagePath + UGSourceFile);
+
+                System.out.println(UGDestinationFile);
+
+                Path fromFile = UGFileChooser.getSelectedFile().toPath();
+                Path toFile = UGDestinationFile.toPath();
+
+                filePathValues[0] = fromFile;
+                filePathValues[1] = toFile;
+                filePathValues[2] = UGDestinationFile;
+                filePathValues[3] = extension;
+            }
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    private void UGSaveProfileImage(String tgno){
+
+        try{
+            Path fromFile = (Path) filePathValues[0];
+            Path toFile = (Path) filePathValues[1];
+            File UGDestinationFile = (File) filePathValues[2];
+
+            if (UGDestinationFile.exists()){
+                UGDestinationFile.delete();
+                Files.copy(fromFile,toFile);
+            }else{
+                Files.copy(fromFile,toFile);
+            }
+
+        }catch(Exception exc){
+
+        }
+    }
+
+    private void LoadNotices(){
+
+        String notice_Title;
+
+        try{
+            String noticeLoadQuery = "select * from notice";
+
+            Statement statement = conn.createStatement();
+            ResultSet result = statement.executeQuery(noticeLoadQuery);
+
+            while(result.next()){
+                notice_Title = result.getString("noticeTitle");
+
+                noticeTitleDropDown.addItem(notice_Title);
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    private void viewNotice(String selected_notice_title){
+        String view_notice_Query_details = "Select * from notice where noticeTitle = ?";
+        try{
+            prepStatement = conn.prepareStatement(view_notice_Query_details);
+            prepStatement.setString(1,selected_notice_title);
+
+            ResultSet resultSet = prepStatement.executeQuery();
+            while (resultSet.next()){
+                String notice_FilePath = resultSet.getString("noticeFilePath");
+
+                System.out.println(notice_FilePath);
+
+                File notice = new File(notice_FilePath);
+                input = new Scanner(notice);
+
+                StringBuilder noticeContent = new StringBuilder();
+
+                while (input.hasNextLine()){
+                    noticeContent.append(input.nextLine()).append("\n");
+                }
+                noticeDisplayArea.setText(noticeContent.toString());
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
 }

@@ -1,5 +1,5 @@
-Create Database javateach;
-use javateach;
+Create Database javatest;
+use javatest;
 
 create table undergraduate(
 tgno varchar(6),
@@ -45,6 +45,7 @@ topassword varchar(50),
 toProfImg varchar(200)
 );
 
+
 create table courses(
 course_id varchar(7),
 course_name varchar(50));
@@ -52,6 +53,14 @@ course_name varchar(50));
 create table lecture_course(
 lecno varchar(7),
 course_id varchar(7));
+
+INSERT INTO notice (noticeTitle, noticeFilePath) VALUES
+("Semester Timetable", "Resources/Notices/1.txt"),
+("Holiday Announcement", "Resources/Notices/2.txt"),
+("Workshop on AI", "Resources/Notices/3.txt"),
+("Library Renovation Notice", "Resources/Notices/4.txt"),
+("Internship Opportunities", "Resources/Notices/5.txt");
+
 
 
 create view users as 
@@ -62,6 +71,9 @@ UNION
 SELECT lecno AS id, lecpassword as password FROM lecturer
 UNION
 SELECT tono AS id, topassword as password FROM technical_officer;
+
+insert into notice (noticeTitle,noticeFilePath) values
+("End Exam Marks","Resources/Notices/1.txt");
 
 INSERT INTO undergraduate VALUES
 ("tg5432", "Athula", "Nihan", "Matara", "athula@gmail.com", 987004321, "123","./Resources/Images/5267.jpg"),
@@ -90,6 +102,7 @@ INSERT INTO technical_officer VALUES
 INSERT INTO admin VALUES
 ("admin1", "Subash", "Jayasinghe", "Matara", "subash@gmail.com", 981111321, "123","./Resources/Images/5267.jpg");
 
+
 INSERT INTO courses VALUES
 ("ICT2132","Object Oriented Programming Practicum"),
 ("ICT2122","Object Oriented Programming"),
@@ -110,4 +123,5 @@ VALUES("lec1234","ICT2132"),
 ("lec3141","ENG2122"),
 ("lec5121","TSC2122"),
 ("lec1357","TSC2112");
+
 
