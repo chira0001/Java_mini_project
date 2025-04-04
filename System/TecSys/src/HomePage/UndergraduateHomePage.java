@@ -1,4 +1,5 @@
 package HomePage;
+import DBCONNECTION.DBCONNECTION;
 import Login.Login;
 
 import javax.swing.*;
@@ -9,10 +10,8 @@ import java.awt.event.ActionListener;
 import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.Statement;
+import java.sql.*;
+import java.util.Scanner;
 
 public class UndergraduateHomePage extends JFrame {
 
@@ -54,6 +53,8 @@ public class UndergraduateHomePage extends JFrame {
     private JPanel UGProfImgPanel;
     private JLabel HomePageUserProfileLable;
     private JPanel HomePageUserProfile;
+    private JComboBox noticeTitleDropDown;
+    private JTextArea noticeDisplayArea;
 
     private CardLayout cardLayout;
 
@@ -65,7 +66,6 @@ public class UndergraduateHomePage extends JFrame {
     private String UGPhno;
     private String UGProfImg;
 
-
     private String[] cardButtons = {"Profile", "Attendance", "Time Table", "Courses", "Medical", "Notices", "Grades", "Settings"};
     private String[] cardNames = {"UGProfileCard", "UGAttendanceCard", "UGTimeTableCard", "UGCoursesCard", "UGMedicalsCard", "UGNoticesCard", "UGGradesCard", "UGSettingsCard"};
     JButton[] btnFieldNames = {profileButton,attendanceButton,timeTableButton,coursesButton,medicalButton,noticesButton,gradesButton,settingsButton};
@@ -73,9 +73,16 @@ public class UndergraduateHomePage extends JFrame {
 
     private Object[] filePathValues = new Object[4];
 
+    DBCONNECTION _dbconn = new DBCONNECTION();
+    Connection conn = _dbconn.Conn();
+    private PreparedStatement prepStatement;
+
+    private Scanner input;
+
     public UndergraduateHomePage(String userIdentity){
 
         dbConnection(userIdentity);
+        LoadNotices();
 
         setContentPane(UndergraduateHomePage);
         setTitle("Undergraduate User Profile");
@@ -133,6 +140,19 @@ public class UndergraduateHomePage extends JFrame {
                 cardLayout.show(UGHomeCard,cardNames[0]);
                 btnFieldNames[0].setEnabled(false);
                 btnFieldNames[noOfButtons-1].setEnabled(true);
+                loadUGProfImage(userIdentity);
+                dbConnection(userIdentity);
+
+
+            }
+        });
+        noticeTitleDropDown.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+                String notice = (String) noticeTitleDropDown.getSelectedItem();
+                System.out.println(notice);
+                viewNotice(notice);
             }
         });
     }
@@ -154,10 +174,11 @@ public class UndergraduateHomePage extends JFrame {
 
     private void dbConnection(String tgno){
         try{
-            String selectQuery = "select * from undergraduate where tgno = '" + tgno + "'";
-            Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/javatest","root","1234");
-            Statement statement = connection.createStatement();
-            ResultSet DBresult = statement.executeQuery(selectQuery);
+            String selectQuery = "select * from undergraduate where tgno = ?";
+
+            prepStatement = conn.prepareStatement(selectQuery);
+            prepStatement.setString(1,tgno);
+            ResultSet DBresult = prepStatement.executeQuery();
 
             if(DBresult.next()){
                 UGTgno = DBresult.getString("tgno");
@@ -205,8 +226,7 @@ public class UndergraduateHomePage extends JFrame {
                  UGCredentialupdateQuery = "Update undergraduate set ugaddress = '" + UGaddress + "', ugemail = '"+ UGemail +"',ugphno = '"+ UGphno+"',ugProfImg ='" + UGProfileImagePath + "' where tgno = '" + tgno + "'";
             }
 
-            Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/javatest","root","1234");
-            Statement statement = connection.createStatement();
+            Statement statement = conn.createStatement();
             int resultSet = statement.executeUpdate(UGCredentialupdateQuery);
 
             if(resultSet > 0){
@@ -223,10 +243,11 @@ public class UndergraduateHomePage extends JFrame {
 
     private void loadUGProfImage(String tgno){
         try{
-            String UGProfImageSearchQuery = "select * from undergraduate where tgno = '" + tgno + "'";
-            Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/javatest","root","1234");
-            Statement statement = connection.createStatement();
-            ResultSet result = statement.executeQuery(UGProfImageSearchQuery);
+            String UGProfImageSearchQuery = "select * from undergraduate where tgno = ?";
+
+            prepStatement = conn.prepareStatement(UGProfImageSearchQuery);
+            prepStatement.setString(1,tgno);
+            ResultSet result = prepStatement.executeQuery();
 
             while (result.next()){
                 Path UGSaveImagePath = Path.of(result.getString("ugProfImg"));
@@ -273,6 +294,7 @@ public class UndergraduateHomePage extends JFrame {
                 File UGSourceFile = null;
 
                 String extension = filename.substring(filename.lastIndexOf('.') + 1);
+
                 UGSourceFile = new File(tgno + "." + extension);
 
                 File UGDestinationFile = new File(UGSaveImagePath + UGSourceFile);
@@ -308,7 +330,55 @@ public class UndergraduateHomePage extends JFrame {
             }
 
         }catch(Exception exc){
-            exc.printStackTrace();
+
         }
     }
+
+    private void LoadNotices(){
+
+        String notice_Title;
+
+        try{
+            String noticeLoadQuery = "select * from notice";
+
+            Statement statement = conn.createStatement();
+            ResultSet result = statement.executeQuery(noticeLoadQuery);
+
+            while(result.next()){
+                notice_Title = result.getString("noticeTitle");
+
+                noticeTitleDropDown.addItem(notice_Title);
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    private void viewNotice(String selected_notice_title){
+        String view_notice_Query_details = "Select * from notice where noticeTitle = ?";
+        try{
+            prepStatement = conn.prepareStatement(view_notice_Query_details);
+            prepStatement.setString(1,selected_notice_title);
+
+            ResultSet resultSet = prepStatement.executeQuery();
+            while (resultSet.next()){
+                String notice_FilePath = resultSet.getString("noticeFilePath");
+
+                System.out.println(notice_FilePath);
+
+                File notice = new File(notice_FilePath);
+                input = new Scanner(notice);
+
+                StringBuilder noticeContent = new StringBuilder();
+
+                while (input.hasNextLine()){
+                    noticeContent.append(input.nextLine()).append("\n");
+                }
+                noticeDisplayArea.setText(noticeContent.toString());
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
 }

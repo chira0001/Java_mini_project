@@ -45,6 +45,14 @@ topassword varchar(50),
 toProfImg varchar(200)
 );
 
+INSERT INTO notice (noticeTitle, noticeFilePath) VALUES
+("Semester Timetable", "Resources/Notices/1.txt"),
+("Holiday Announcement", "Resources/Notices/2.txt"),
+("Workshop on AI", "Resources/Notices/3.txt"),
+("Library Renovation Notice", "Resources/Notices/4.txt"),
+("Internship Opportunities", "Resources/Notices/5.txt");
+
+
 create view users as 
 SELECT adno AS id, adpassword as password FROM admin
 UNION
@@ -53,6 +61,9 @@ UNION
 SELECT lecno AS id, lecpassword as password FROM lecturer
 UNION
 SELECT tono AS id, topassword as password FROM technical_officer;
+
+insert into notice (noticeTitle,noticeFilePath) values
+("End Exam Marks","Resources/Notices/1.txt");
 
 INSERT INTO undergraduate VALUES
 ("tg5432", "Athula", "Nihan", "Matara", "athula@gmail.com", 987004321, "123","./Resources/Images/5267.jpg"),
@@ -78,3 +89,6 @@ INSERT INTO technical_officer VALUES
 
 INSERT INTO admin VALUES
 ("admin1", "Subash", "Jayasinghe", "Matara", "subash@gmail.com", 981111321, "123","./Resources/Images/5267.jpg");
+
+
+
