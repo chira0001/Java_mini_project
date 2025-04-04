@@ -4,15 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="72d0b1f3-e6cb-4eaf-bf31-777105475ddb" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Resources/ProfileImages/tg1234.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/Resources/ProfileImages/tg1234.jpg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/TecSys/HomePage/UndergraduateHomePage.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/TecSys/HomePage/UndergraduateHomePage.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/HomePage/UndergraduateHomePage.form" beforeDir="false" afterPath="$PROJECT_DIR$/src/HomePage/UndergraduateHomePage.form" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/HomePage/UndergraduateHomePage.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/HomePage/UndergraduateHomePage.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Login/Login.form" beforeDir="false" afterPath="$PROJECT_DIR$/src/Login/Login.form" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Login/Login.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Login/Login.java" afterDir="false" />
-    </list>
+    <list default="true" id="72d0b1f3-e6cb-4eaf-bf31-777105475ddb" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -56,11 +48,13 @@
     "UI_DESIGNER_EDITOR_MODE.PaletteManager.WIDTH": "171",
     "UI_DESIGNER_EDITOR_MODE.UIDesignerToolWindowManager.SHOW": "true",
     "UI_DESIGNER_EDITOR_MODE.UIDesignerToolWindowManager.WIDTH": "404",
-    "git-widget-placeholder": "Chirath",
+    "git-widget-placeholder": "Lalithya",
     "kotlin-language-version-configured": "true",
     "last_opened_file_path": "E:/E Drive/University Project/Java_mini_project/System/TecSys",
+    "nodejs_package_manager_path": "npm",
     "onboarding.tips.debug.path": "E:/E Drive/University Project/Java_mini_project/System/TecSys/src/Main.java",
-    "settings.editor.selected.configurable": "preferences.lookFeel"
+    "settings.editor.selected.configurable": "preferences.pluginManager",
+    "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
   <component name="RecentsManager">
@@ -93,6 +87,14 @@
       </list>
     </recent_temporary>
   </component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-jdk-9823dce3aa75-a94e463ab2e7-intellij.indexing.shared.core-IU-243.25659.59" />
+        <option value="bundled-js-predefined-d6986cc7102b-1632447f56bf-JavaScript-IU-243.25659.59" />
+      </set>
+    </attachedChunks>
+  </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
@@ -101,7 +103,11 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1742930417022</updated>
+      <workItem from="1743758726676" duration="99000" />
     </task>
     <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
   </component>
 </project>

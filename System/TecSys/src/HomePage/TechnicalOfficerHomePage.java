@@ -5,7 +5,7 @@ import javax.swing.*;
 public class TechnicalOfficerHomePage {
     private JButton profileButton;
     private JButton settingsButton;
-    private JButton gradesButton;
+    private JButton DEMOButton;
     private JButton noticesButton;
     private JButton medicalButton;
     private JButton coursesButton;
