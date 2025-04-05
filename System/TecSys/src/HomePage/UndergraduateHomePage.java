@@ -1,18 +1,20 @@
 package HomePage;
+import DBCONNECTION.DBCONNECTION;
 import Login.Login;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
+import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableColumnModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.Statement;
+import java.sql.*;
+import java.util.Scanner;
 
 public class UndergraduateHomePage extends JFrame {
 
@@ -54,6 +56,11 @@ public class UndergraduateHomePage extends JFrame {
     private JPanel UGProfImgPanel;
     private JLabel HomePageUserProfileLable;
     private JPanel HomePageUserProfile;
+    private JComboBox noticeTitleDropDown;
+    private JTextArea noticeDisplayArea;
+    private JTable tableTimeTable;
+    private JComboBox SemesterNoDropDown;
+    private JComboBox LevelNoDropDown;
 
     private CardLayout cardLayout;
 
@@ -65,7 +72,6 @@ public class UndergraduateHomePage extends JFrame {
     private String UGPhno;
     private String UGProfImg;
 
-
     private String[] cardButtons = {"Profile", "Attendance", "Time Table", "Courses", "Medical", "Notices", "Grades", "Settings"};
     private String[] cardNames = {"UGProfileCard", "UGAttendanceCard", "UGTimeTableCard", "UGCoursesCard", "UGMedicalsCard", "UGNoticesCard", "UGGradesCard", "UGSettingsCard"};
     JButton[] btnFieldNames = {profileButton,attendanceButton,timeTableButton,coursesButton,medicalButton,noticesButton,gradesButton,settingsButton};
@@ -73,9 +79,19 @@ public class UndergraduateHomePage extends JFrame {
 
     private Object[] filePathValues = new Object[4];
 
+    DBCONNECTION _dbconn = new DBCONNECTION();
+    Connection conn = _dbconn.Conn();
+    private PreparedStatement prepStatement;
+
+    private Scanner input;
+
+    private int SemeterNumber;
+    private int LevelNumber;
+
     public UndergraduateHomePage(String userIdentity){
 
         dbConnection(userIdentity);
+        LoadNotices();
 
         setContentPane(UndergraduateHomePage);
         setTitle("Undergraduate User Profile");
@@ -85,6 +101,7 @@ public class UndergraduateHomePage extends JFrame {
         setVisible(true);
 
         cardLayout = (CardLayout)(UGHomeCard.getLayout());
+
         profileButton.setEnabled(false);
         CardTittleLabel.setText(cardTitles[0]);
         loadUGProfImage(userIdentity);
@@ -133,8 +150,94 @@ public class UndergraduateHomePage extends JFrame {
                 cardLayout.show(UGHomeCard,cardNames[0]);
                 btnFieldNames[0].setEnabled(false);
                 btnFieldNames[noOfButtons-1].setEnabled(true);
+                loadUGProfImage(userIdentity);
+                dbConnection(userIdentity);
             }
         });
+        noticeTitleDropDown.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+                String notice = (String) noticeTitleDropDown.getSelectedItem();
+                System.out.println(notice);
+                viewNotice(notice);
+            }
+        });
+
+        TimeTableSetModelMethod();
+
+        LevelNoDropDown.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                TimeTableSetModelMethod();
+
+                String level_no = (String) LevelNoDropDown.getSelectedItem();
+                int LevelNo = Integer.parseInt(level_no);
+                valuesForCourseTable(LevelNo,SemeterNumber);
+                System.out.println(LevelNo);
+                valuesForCourseTable(LevelNo,1);
+            }
+        });
+
+        SemesterNoDropDown.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                TimeTableSetModelMethod();
+
+                String semester_no = (String) SemesterNoDropDown.getSelectedItem();
+                int SemesterNo = Integer.parseInt(semester_no);
+                valuesForCourseTable(LevelNumber,SemesterNo);
+                valuesForCourseTable(2,SemesterNo);
+                System.out.println(SemesterNo);
+            }
+        });
+    }
+
+    private void TimeTableSetModelMethod(){
+        tableTimeTable.setModel(new DefaultTableModel(
+                null,
+                new String[]{"Day", "Course Code", "Course Module","Time"}
+        ));
+
+        TableColumnModel timeTableColumns = tableTimeTable.getColumnModel();
+        timeTableColumns.getColumn(2).setMinWidth(100);
+
+        DefaultTableCellRenderer timeTableCells = new DefaultTableCellRenderer();
+        timeTableCells.setHorizontalAlignment(JLabel.CENTER);
+
+        timeTableColumns.getColumn(1).setCellRenderer(timeTableCells);
+    }
+
+    private void valuesForCourseTable(int level_no, int semester_no){
+
+        String TimeTableValues = "select time_table_id, Courses.course_id, module_day, course_name, time from timeTable join Courses where timeTable.course_id = Courses.course_id and level_no = ? and semester_no = ? ORDER BY CASE module_day WHEN 'Monday' THEN 1 WHEN 'Tuesday' THEN 2 WHEN 'Wednesday' THEN 3 WHEN 'Thursday' THEN 4 WHEN 'Friday' THEN 5 WHEN 'Saturday' THEN 6 WHEN 'Sunday' THEN 7 END";
+
+        DefaultTableModel tblmodel = (DefaultTableModel) tableTimeTable.getModel();
+        try{
+            prepStatement = conn.prepareStatement(TimeTableValues);
+            prepStatement.setInt(1,level_no);
+            prepStatement.setInt(2,semester_no);
+            ResultSet result = prepStatement.executeQuery();
+
+            while (result.next()){
+                String courseID = result.getString("course_id");
+                String moduleDay = result.getString("module_day");
+                String courseName = result.getString("course_name");
+                String courseTime = result.getString("time");
+
+                Object[] timeTableData = new Object[4];
+
+                timeTableData[0] = moduleDay;
+                timeTableData[1] = courseID;
+                timeTableData[2] = courseName;
+                timeTableData[3] = courseTime;
+
+                tblmodel.addRow(timeTableData);
+            }
+
+        }catch (Exception e){
+            e.printStackTrace();
+        }
     }
 
     public void changeBtnState(String btn, String tgno){
@@ -154,10 +257,11 @@ public class UndergraduateHomePage extends JFrame {
 
     private void dbConnection(String tgno){
         try{
-            String selectQuery = "select * from undergraduate where tgno = '" + tgno + "'";
-            Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/javatest","root","1234");
-            Statement statement = connection.createStatement();
-            ResultSet DBresult = statement.executeQuery(selectQuery);
+            String selectQuery = "select * from undergraduate where tgno = ?";
+
+            prepStatement = conn.prepareStatement(selectQuery);
+            prepStatement.setString(1,tgno);
+            ResultSet DBresult = prepStatement.executeQuery();
 
             if(DBresult.next()){
                 UGTgno = DBresult.getString("tgno");
@@ -205,8 +309,7 @@ public class UndergraduateHomePage extends JFrame {
                  UGCredentialupdateQuery = "Update undergraduate set ugaddress = '" + UGaddress + "', ugemail = '"+ UGemail +"',ugphno = '"+ UGphno+"',ugProfImg ='" + UGProfileImagePath + "' where tgno = '" + tgno + "'";
             }
 
-            Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/javatest","root","1234");
-            Statement statement = connection.createStatement();
+            Statement statement = conn.createStatement();
             int resultSet = statement.executeUpdate(UGCredentialupdateQuery);
 
             if(resultSet > 0){
@@ -223,10 +326,11 @@ public class UndergraduateHomePage extends JFrame {
 
     private void loadUGProfImage(String tgno){
         try{
-            String UGProfImageSearchQuery = "select * from undergraduate where tgno = '" + tgno + "'";
-            Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/javatest","root","1234");
-            Statement statement = connection.createStatement();
-            ResultSet result = statement.executeQuery(UGProfImageSearchQuery);
+            String UGProfImageSearchQuery = "select * from undergraduate where tgno = ?";
+
+            prepStatement = conn.prepareStatement(UGProfImageSearchQuery);
+            prepStatement.setString(1,tgno);
+            ResultSet result = prepStatement.executeQuery();
 
             while (result.next()){
                 Path UGSaveImagePath = Path.of(result.getString("ugProfImg"));
@@ -273,6 +377,7 @@ public class UndergraduateHomePage extends JFrame {
                 File UGSourceFile = null;
 
                 String extension = filename.substring(filename.lastIndexOf('.') + 1);
+
                 UGSourceFile = new File(tgno + "." + extension);
 
                 File UGDestinationFile = new File(UGSaveImagePath + UGSourceFile);
@@ -308,7 +413,54 @@ public class UndergraduateHomePage extends JFrame {
             }
 
         }catch(Exception exc){
-            exc.printStackTrace();
+
+        }
+    }
+
+    private void LoadNotices(){
+
+        String notice_Title;
+
+        try{
+            String noticeLoadQuery = "select * from notice";
+
+            Statement statement = conn.createStatement();
+            ResultSet result = statement.executeQuery(noticeLoadQuery);
+
+            while(result.next()){
+                notice_Title = result.getString("noticeTitle");
+
+                noticeTitleDropDown.addItem(notice_Title);
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    private void viewNotice(String selected_notice_title){
+        String view_notice_Query_details = "Select * from notice where noticeTitle = ?";
+        try{
+            prepStatement = conn.prepareStatement(view_notice_Query_details);
+            prepStatement.setString(1,selected_notice_title);
+
+            ResultSet resultSet = prepStatement.executeQuery();
+            while (resultSet.next()){
+                String notice_FilePath = resultSet.getString("noticeFilePath");
+
+                System.out.println(notice_FilePath);
+
+                File notice = new File(notice_FilePath);
+                input = new Scanner(notice);
+
+                StringBuilder noticeContent = new StringBuilder();
+
+                while (input.hasNextLine()){
+                    noticeContent.append(input.nextLine()).append("\n");
+                }
+                noticeDisplayArea.setText(noticeContent.toString());
+            }
+        }catch (Exception e){
+            e.printStackTrace();
         }
     }
 }

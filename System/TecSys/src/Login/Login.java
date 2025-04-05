@@ -1,5 +1,6 @@
 package Login;
 
+import DBCONNECTION.DBCONNECTION;
 import HomePage.LecturerHomePage;
 import HomePage.TechnicalOfficerHomePage;
 import HomePage.UndergraduateHomePage;
@@ -10,10 +11,7 @@ import UserProfile.TechnicalOfficerUserProfile;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.Objects;
 
 public class Login extends JFrame {
@@ -23,6 +21,10 @@ public class Login extends JFrame {
     private JButton loginButton;
     private JButton cancelButton;
     private JTextField textField2;
+
+    DBCONNECTION _dbconn = new DBCONNECTION();
+    Connection conn = _dbconn.Conn();
+    private PreparedStatement prepStatement;
 
     public Login() {
         DBConnection();
@@ -60,8 +62,7 @@ public class Login extends JFrame {
 
                         String loginQuery = "select * from users where id ='" + uname + "'";
 
-                        Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/javatest","root","1234");
-                        Statement statement = connection.createStatement();
+                        Statement statement = conn.createStatement();
                         ResultSet result = statement.executeQuery(loginQuery);
 
                         if (result.next()){
@@ -125,8 +126,8 @@ public class Login extends JFrame {
         String pass = "123";
 
         try{
-            Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/Javatest","root","1234");
-            Statement statement = connection.createStatement();
+            Statement statement = conn.createStatement();
+
             statement.executeUpdate(query);
             ResultSet result = statement.executeQuery(selectQuery);
 

@@ -1,17 +1,6 @@
 Create Database javatest;
 use javatest;
 
-create table undergraduate(
-tgno varchar(6),
-ugfname varchar(20),
-uglname varchar(20),
-ugaddress varchar(100),
-ugemail varchar(50),
-ugphno int(10),
-ugpassword varchar(50),
-ugProfImg varchar(200)
-);
-
 create table admin(
 adno varchar(6),
 adfname varchar(20),
@@ -45,6 +34,10 @@ topassword varchar(50),
 toProfImg varchar(200)
 );
 
+create table lecture_course(
+lecno varchar(7),
+course_id varchar(7));
+
 create view users as 
 SELECT adno AS id, adpassword as password FROM admin
 UNION
@@ -54,20 +47,75 @@ SELECT lecno AS id, lecpassword as password FROM lecturer
 UNION
 SELECT tono AS id, topassword as password FROM technical_officer;
 
+create table notice(
+notice_no INT primary key auto_increment,
+noticeTitle varchar(75),
+noticeFilePath varchar(100)
+);
+
+create table timeTable(
+time_table_id INT primary key auto_increment,
+course_id varchar(7), 
+module_day varchar(20),
+time varchar(20)
+);
+
+create table courses(
+course_id varchar(7),
+course_name varchar(50),
+level_no int(1),
+semester_no int(1)
+);
+
+create table undergraduate(
+tgno varchar(6),
+ugfname varchar(20),
+uglname varchar(20),
+ugaddress varchar(100),
+ugemail varchar(50),
+ugphno int(10),
+ugpassword varchar(50),
+ugProfImg varchar(200),
+study_year int(1),
+study_semester int(1)
+);
+
 INSERT INTO undergraduate VALUES
-("tg5432", "Athula", "Nihan", "Matara", "athula@gmail.com", 987004321, "123","./Resources/Images/5267.jpg"),
-("tg1234", "Kavindu", "Perera", "Colombo", "kavindu@gmail.com", 987654321, "123","./Resources/Images/5267.jpg"),
-("tg5678", "Sahan", "Fernando", "Kandy", "sahan@gmail.com", 876543219, "123","./Resources/Images/5267.jpg"),
-("tg9101", "Nethmi", "Silva", "Galle", "nethmi@gmail.com", 765432198, "123","./Resources/Images/5267.jpg"),
-("tg1121", "Ravindu", "Bandara", "Kurunegala", "ravindu@gmail.com", 654321987, "123","./Resources/Images/5267.jpg"),
-("tg3141", "Dilini", "Weerasinghe", "Matara", "dilini@gmail.com", 543219876, "123","./Resources/Images/5267.jpg");
+("tg5432", "Athula", "Nihan", "Matara", "athula@gmail.com", 987004321, "123","Resources/Images/5432.jpg",2,1),
+("tg1234", "Kavindu", "Perera", "Colombo", "kavindu@gmail.com", 987654321, "123","Resources/Images/1234.jpg",2,1),
+("tg5678", "Sahan", "Fernando", "Kandy", "sahan@gmail.com", 876543219, "123","Resources/Images/5678.jpg",2,1),
+("tg9101", "Nethmi", "Silva", "Galle", "nethmi@gmail.com", 765432198, "123","Resources/Images/9101.jpg",2,1),
+("tg1121", "Ravindu", "Bandara", "Kurunegala", "ravindu@gmail.com", 654321987, "123","Resources/Images/1121.jpg",2,1),
+("tg3141", "Dilini", "Weerasinghe", "Matara", "dilini@gmail.com", 543219876, "123","Resources/Images/3141.jpg",2,1);
+
+INSERT INTO courses VALUES
+("ICT2132","Object Oriented Programming Practicum",2,1),
+("ICT2122","Object Oriented Programming",2,1),
+("ENG2122","English III",2,1),
+("ICT2113","Data Structures and Algorithms",2,1),
+("ICT2142","Object Oriented Analysis and Design",2,1),
+("ICT2152","E-Commerce Implementation Management and Security",2,1),
+("TCS2112","Business Economics",2,1),
+("TCS2122","Soft Skills",2,1);
+
+insert into timeTable(course_id,module_day,time) values
+("ICT2132","Thursday","8.00 - 12.00"),
+("ICT2122","Thursday","1.00 - 3.00"),
+("ENG2122","Tuesday","8.00 - 10.00"),
+("ICT2113","Monday","8.00 - 12.00"),
+("ICT2142","Tuesday","10.00 - 12.00"),
+("ICT2152","Wednesday","10.00 - 12.00"),
+("TCS2112","Friday","8.00 - 10.00"),
+("TCS2122","Wednesday","8.00 - 10.00");
 
 INSERT INTO lecturer VALUES
-("lec1234", "Anura", "Perera", "Colombo", "anura@gmail.com", 987654321, "pass123", "./Resources/Images/1234.jpg"),
-("lec5678", "Samantha", "Fernando", "Kandy", "samantha@gmail.com", 876543219, "secure456", "./Resources/Images/5678.jpg"),
-("lec9101", "Tharindu", "Silva", "Galle", "tharindu@gmail.com", 765432198, "mypassword", "./Resources/Images/9101.jpg"),
-("lec1121", "Nimal", "Bandara", "Kurunegala", "nimal@gmail.com", 654321987, "strong789", "./Resources/Images/1121.jpg"),
-("lec3141", "Dilshan", "Weerasinghe", "Matara", "dilshan@gmail.com", 543219876, "randomPwd", "./Resources/Images/3141.jpg");
+("lec1234", "Nuwan", "Laksiri", "Colombo", "nuwan@gmail.com", 0713828492, "pass123", "./Resources/Images/1234.jpg"),
+("lec5678", "Shashitha", "Lakal", "Kandy", "lakal@gmail.com", 0773589263, "secure456", "./Resources/Images/5678.jpg"),
+("lec9101", "Chanduni", "Gamage", "Galle", "chanduni@gmail.com", 0765432198, "mypassword", "./Resources/Images/9101.jpg"),
+("lec1121", "Akila", "Brahmana", "Kurunegala", "akila@gmail.com", 0742890716, "strong789", "./Resources/Images/1121.jpg"),
+("lec3141", "Novoda", "Weerasinghe", "Matara", "navoda@gmail.com", 0725893023, "randomPwd", "./Resources/Images/3141.jpg"),
+("lec5121","Rumeshika","Kumarihami","Bandarawela","rumeshika@gmail.com",0782342145,"word123","./Resources/Images/3142.jpg"),
+("lec1357","Chathuranga","Adhikari","Kaluthara","chathuranga@gmail.com",0752929832,"get098","./Resources/Images/3148.jpg");
 
 INSERT INTO technical_officer VALUES
 ("to2222", "Sunil", "Perera", "Colombo", "sunil@gmail.com", 987654321, "pass123", "./Resources/Images/2222.jpg"),
@@ -78,3 +126,25 @@ INSERT INTO technical_officer VALUES
 
 INSERT INTO admin VALUES
 ("admin1", "Subash", "Jayasinghe", "Matara", "subash@gmail.com", 981111321, "123","./Resources/Images/5267.jpg");
+
+INSERT INTO notice (noticeTitle, noticeFilePath) VALUES
+("Semester Timetable", "Resources/Notices/1.txt"),
+("Holiday Announcement", "Resources/Notices/2.txt"),
+("Workshop on AI", "Resources/Notices/3.txt"),
+("Library Renovation Notice", "Resources/Notices/4.txt"),
+("Internship Opportunities", "Resources/Notices/5.txt");
+
+INSERT INTO lecture_course(lecno,course_id) VALUES
+("lec1234","ICT2132"),
+("lec1234","ICT2122"),
+("lec5678","ICT2113"),
+("lec9101","ICT2142"),
+("lec1121","ICT2152"),
+("lec3141","ENG2122"),
+("lec5121","TSC2122"),
+("lec1357","TSC2112");
+
+
+SELECT * FROM timetable
+
+ORDER BY CASE module_day WHEN 'Monday' THEN 1 WHEN 'Tuesday' THEN 2 WHEN 'Wednesday' THEN 3 WHEN 'Thursday' THEN 4 WHEN 'Friday' THEN 5 WHEN 'Saturday' THEN 6 WHEN 'Sunday' THEN 7 END;
