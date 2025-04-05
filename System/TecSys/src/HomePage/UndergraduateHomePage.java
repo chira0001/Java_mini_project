@@ -4,6 +4,7 @@ import Login.Login;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
+import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -55,6 +56,9 @@ public class UndergraduateHomePage extends JFrame {
     private JPanel HomePageUserProfile;
     private JComboBox noticeTitleDropDown;
     private JTextArea noticeDisplayArea;
+    private JTable tableTimeTable;
+    private JComboBox comboBox1;
+    private JButton viewMaterialsButton;
 
     private CardLayout cardLayout;
 
@@ -72,6 +76,7 @@ public class UndergraduateHomePage extends JFrame {
     private String[] cardTitles = {"Welcome..!", "Attendance Details", "Undergraduate Time Table","Your Courses","Medical Information", "Notices", "Grades and GPA","Settings Configuration"};;
 
     private Object[] filePathValues = new Object[4];
+//    private Object[][] data;
 
     DBCONNECTION _dbconn = new DBCONNECTION();
     Connection conn = _dbconn.Conn();
@@ -92,6 +97,7 @@ public class UndergraduateHomePage extends JFrame {
         setVisible(true);
 
         cardLayout = (CardLayout)(UGHomeCard.getLayout());
+
         profileButton.setEnabled(false);
         CardTittleLabel.setText(cardTitles[0]);
         loadUGProfImage(userIdentity);
@@ -142,8 +148,6 @@ public class UndergraduateHomePage extends JFrame {
                 btnFieldNames[noOfButtons-1].setEnabled(true);
                 loadUGProfImage(userIdentity);
                 dbConnection(userIdentity);
-
-
             }
         });
         noticeTitleDropDown.addActionListener(new ActionListener() {
@@ -155,6 +159,18 @@ public class UndergraduateHomePage extends JFrame {
                 viewNotice(notice);
             }
         });
+
+        tableTimeTable.setModel(new DefaultTableModel(
+                null,
+                new String[]{"Day", "Course Module"}
+        ));
+    }
+
+    private void valuesForCourseTable(){
+        Object[][] data = {
+                {"hi"},
+                {"hi"}
+        };
     }
 
     public void changeBtnState(String btn, String tgno){
@@ -380,5 +396,4 @@ public class UndergraduateHomePage extends JFrame {
             e.printStackTrace();
         }
     }
-
 }
