@@ -65,13 +65,6 @@ module_day varchar(20),
 
 );
 
-INSERT INTO notice (noticeTitle, noticeFilePath) VALUES
-("Semester Timetable", "Resources/Notices/1.txt"),
-("Holiday Announcement", "Resources/Notices/2.txt"),
-("Workshop on AI", "Resources/Notices/3.txt"),
-("Library Renovation Notice", "Resources/Notices/4.txt"),
-("Internship Opportunities", "Resources/Notices/5.txt");
-
 create view users as 
 SELECT adno AS id, adpassword as password FROM admin
 UNION
@@ -108,6 +101,12 @@ INSERT INTO technical_officer VALUES
 INSERT INTO admin VALUES
 ("admin1", "Subash", "Jayasinghe", "Matara", "subash@gmail.com", 981111321, "123","./Resources/Images/5267.jpg");
 
+INSERT INTO notice (noticeTitle, noticeFilePath) VALUES
+("Semester Timetable", "Resources/Notices/1.txt"),
+("Holiday Announcement", "Resources/Notices/2.txt"),
+("Workshop on AI", "Resources/Notices/3.txt"),
+("Library Renovation Notice", "Resources/Notices/4.txt"),
+("Internship Opportunities", "Resources/Notices/5.txt");
 
 INSERT INTO courses VALUES
 ("ICT2132","Object Oriented Programming Practicum"),
@@ -120,8 +119,8 @@ INSERT INTO courses VALUES
 ("TCS2122","Soft Skills");
 
 
-INSERT INTO lecture_course(lecno,course_id)
-VALUES("lec1234","ICT2132"),
+INSERT INTO lecture_course(lecno,course_id) VALUES
+("lec1234","ICT2132"),
 ("lec1234","ICT2122"),
 ("lec5678","ICT2113"),
 ("lec9101","ICT2142"),
