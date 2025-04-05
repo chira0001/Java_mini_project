@@ -49,11 +49,12 @@ public class TechnicalOfficerHomePage extends JFrame {
     private JButton uploadImageButton;
     private JButton cancelButton;
     private JButton updateButton;
-    private JTextField textField1;
     private JPanel ProfileButton;
     private JPanel TechnicalOfficerHomePage;
     private JPanel HomePageUserProfile;
     private JLabel HomePageUserProfileLable;
+    private JComboBox TODepartment;
+    private JComboBox TOupdateDepartment;
 
     private CardLayout cardLayout;
 
@@ -105,6 +106,7 @@ public class TechnicalOfficerHomePage extends JFrame {
         timeTableButton.addActionListener(listener);
         attendanceButton.addActionListener(listener);
 
+
         logoutButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -112,7 +114,8 @@ public class TechnicalOfficerHomePage extends JFrame {
                 new Login();
             }
         });
-         uploadImageButton.addActionListener(new ActionListener() {
+
+        uploadImageButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 TOUploadToPreviewProfileImage(userIdentity);
@@ -125,6 +128,7 @@ public class TechnicalOfficerHomePage extends JFrame {
                 TOUpdateCredentials(userIdentity);
             }
         });
+
         cancelButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -137,12 +141,12 @@ public class TechnicalOfficerHomePage extends JFrame {
         });
     }
 
-    public void changeBtnState(String btn, String tgno){
+    public void changeBtnState(String btn, String tono){
 
         int noOfButtons = cardButtons.length;
         for (int i = 0; i < noOfButtons; i++){
             if (cardButtons[i].equals(btn)){
-                dbConnection(tgno);
+                dbConnection(tono);
                 cardLayout.show(TOHomeCard,cardNames[i]);
                 CardTittleLabel.setText(cardTitles[i]);
                 btnFieldNames[i].setEnabled(false);
@@ -152,7 +156,7 @@ public class TechnicalOfficerHomePage extends JFrame {
         }
     }
 
-    private void dbConnection(String tgno){
+    private void dbConnection(String tono){
         try{
             String selectQuery = "select * from technical_officer where tono = '" + tono + "'";
             Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/javatest","root","1234");
@@ -185,10 +189,11 @@ public class TechnicalOfficerHomePage extends JFrame {
             }
         }catch (Exception e){
             e.printStackTrace();
+
         }
     }
 
-    private void TOUpdateCredentials(String tgno){
+    private void TOUpdateCredentials(String tono){
         try{
             String TOaddress = textField7.getText();
             String TOemail = textField8.getText();
@@ -200,7 +205,7 @@ public class TechnicalOfficerHomePage extends JFrame {
             System.out.println(TOProfileImagePath);
             String TOCredentialupdateQuery;
             if (extension == null){
-                TOCredentialupdateQuery = "Update technical_officer set TOaddress = '" + TOaddress + "', TOemail = '"+ TOemail +"',TOphno = '"+ TOphno+"' where tgno = '" + tgno + "'";
+                TOCredentialupdateQuery = "Update technical_officer set toaddress = '" + toAddress + "', TOemail = '"+ TOemail +"',TOphno = '"+ TOphno+"' where tgno = '" + tono + "'";
             }else {
                 TOCredentialupdateQuery = "Update technical_officer set toaddress = '" + toAddress + "', toemail = '"+ toEmail +"',tophno = '"+ toPhno+"',toProfImg ='" + toProfImg + "' where tono = '" + tono + "'";
             }
@@ -210,7 +215,7 @@ public class TechnicalOfficerHomePage extends JFrame {
             int resultSet = statement.executeUpdate(TOCredentialupdateQuery);
 
             if(resultSet > 0){
-                TOSaveProfileImage(tgno);
+                TOSaveProfileImage(tono);
                 JOptionPane.showMessageDialog(null,"Credentials updated successfully");
             }else {
                 JOptionPane.showMessageDialog(null,"Error in credential updation");
@@ -221,7 +226,7 @@ public class TechnicalOfficerHomePage extends JFrame {
         }
     }
 
-    private void loadTOProfImage(String tgno){
+    private void loadTOProfImage(String tono){
         try{
             String UGProfImageSearchQuery = "select * from technical_officer where tono = '" + tono + "'";
             Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/javatest","root","1234");
@@ -246,14 +251,14 @@ public class TechnicalOfficerHomePage extends JFrame {
 
     private void TOUploadToPreviewProfileImage(String tgno) {
         try {
-            JFileChooser UGFileChooser = new JFileChooser();
-            UGFileChooser.setDialogTitle("Select Profile Picture");
-            UGFileChooser.setAcceptAllFileFilterUsed(false);
-            UGFileChooser.addChoosableFileFilter(new FileNameExtensionFilter("Images", "jpg", "jpeg"));
+            JFileChooser TOFileChooser = new JFileChooser();
+            TOFileChooser.setDialogTitle("Select Profile Picture");
+            TOFileChooser.setAcceptAllFileFilterUsed(false);
+            TOFileChooser.addChoosableFileFilter(new FileNameExtensionFilter("Images", "jpg", "jpeg"));
 
-            if (UGFileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
+            if (TOFileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
 
-                ImageIcon icon = new ImageIcon(UGFileChooser.getSelectedFile().getPath());
+                ImageIcon icon = new ImageIcon(TOFileChooser.getSelectedFile().getPath());
                 Image scaled = icon.getImage().getScaledInstance(
                         TOProfImgPanel.getWidth() - 50,
                         TOProfImgPanel.getHeight() - 50,
@@ -262,7 +267,7 @@ public class TechnicalOfficerHomePage extends JFrame {
                 TOProfileImage.setIcon(new ImageIcon(scaled));
                 TOProfileImage.setText("");
 
-                String filename = UGFileChooser.getSelectedFile().getAbsolutePath();
+                String filename = TOFileChooser.getSelectedFile().getAbsolutePath();
 
                 String UGSaveImagePath = "Resources/ProfileImages/";
                 File UGSaveImageDirectory = new File(UGSaveImagePath);
@@ -273,13 +278,13 @@ public class TechnicalOfficerHomePage extends JFrame {
                 File UGSourceFile = null;
 
                 String extension = filename.substring(filename.lastIndexOf('.') + 1);
-                UGSourceFile = new File(tgno + "." + extension);
+                UGSourceFile = new File(tono + "." + extension);
 
                 File UGDestinationFile = new File(UGSaveImagePath + UGSourceFile);
 
                 System.out.println(UGDestinationFile);
 
-                Path fromFile = UGFileChooser.getSelectedFile().toPath();
+                Path fromFile = TOFileChooser.getSelectedFile().toPath();
                 Path toFile = UGDestinationFile.toPath();
 
                 filePathValues[0] = fromFile;
@@ -311,5 +316,6 @@ public class TechnicalOfficerHomePage extends JFrame {
             exc.printStackTrace();
         }
     }
+
 
 }

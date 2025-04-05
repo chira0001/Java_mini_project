@@ -3,13 +3,13 @@
   <grid id="27dc6" binding="TechnicalOfficerHomePage" layout-manager="GridLayoutManager" row-count="1" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
     <margin top="0" left="0" bottom="0" right="0"/>
     <constraints>
-      <xy x="20" y="20" width="1120" height="629"/>
+      <xy x="20" y="20" width="1330" height="629"/>
     </constraints>
     <properties/>
     <border type="none"/>
     <children>
       <grid id="5aa46" layout-manager="GridLayoutManager" row-count="1" column-count="2" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
-        <margin top="0" left="0" bottom="0" right="0"/>
+        <margin top="0" left="0" bottom="0" right="50"/>
         <constraints>
           <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false">
             <minimum-size width="1000" height="500"/>
@@ -256,10 +256,12 @@
             <margin top="0" left="0" bottom="0" right="0"/>
             <constraints>
               <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false">
-                <minimum-size width="800" height="500"/>
+                <minimum-size width="900" height="500"/>
               </grid>
             </constraints>
-            <properties/>
+            <properties>
+              <font name="Arial" size="16" style="1"/>
+            </properties>
             <border type="none"/>
             <children>
               <grid id="e3803" layout-manager="GridLayoutManager" row-count="1" column-count="2" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
@@ -314,10 +316,11 @@
                   <grid id="8862b" binding="TOProfile" layout-manager="GridLayoutManager" row-count="1" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="0" vgap="-1">
                     <margin top="25" left="25" bottom="25" right="50"/>
                     <constraints>
-                      <card name="UGProfileCard"/>
+                      <card name="TOProfileCard"/>
                     </constraints>
                     <properties>
                       <enabled value="true"/>
+                      <preferredSize width="900" height="368"/>
                     </properties>
                     <border type="none"/>
                     <children>
@@ -399,7 +402,7 @@
                                         </constraints>
                                         <properties>
                                           <font size="20"/>
-                                          <text value="Department"/>
+                                          <text value="&#10;Department"/>
                                         </properties>
                                       </component>
                                     </children>
@@ -500,7 +503,7 @@
                                     <children>
                                       <component id="9104e" class="javax.swing.JTextField" binding="txtTGNO">
                                         <constraints>
-                                          <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="9" fill="1" indent="0" use-parent-layout="false">
+                                          <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="9" fill="1" indent="1" use-parent-layout="false">
                                             <minimum-size width="350" height="-1"/>
                                             <preferred-size width="150" height="-1"/>
                                           </grid>
@@ -543,17 +546,19 @@
                                     <properties/>
                                     <border type="none"/>
                                     <children>
-                                      <component id="dc8f3" class="javax.swing.JTextField" binding="textField1" default-binding="true">
+                                      <component id="58db5" class="javax.swing.JComboBox" binding="TODepartment">
                                         <constraints>
-                                          <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="9" fill="1" indent="0" use-parent-layout="false">
-                                            <minimum-size width="350" height="-1"/>
-                                            <preferred-size width="150" height="-1"/>
-                                          </grid>
+                                          <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="2" anchor="8" fill="3" indent="0" use-parent-layout="false"/>
                                         </constraints>
                                         <properties>
-                                          <editable value="false"/>
-                                          <font size="20"/>
-                                          <text value=""/>
+                                          <background color="-1"/>
+                                          <font name="Arial" size="16" style="1"/>
+                                          <model>
+                                            <item value="Department of Information and Communication Technology"/>
+                                            <item value="Department of Engineering Technology"/>
+                                            <item value="Department of Bio System Technology"/>
+                                            <item value="Department of Multidiscipliary"/>
+                                          </model>
                                         </properties>
                                       </component>
                                     </children>
@@ -836,7 +841,7 @@
                                 <properties/>
                                 <border type="none"/>
                                 <children>
-                                  <grid id="2d802" layout-manager="GridLayoutManager" row-count="3" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+                                  <grid id="2d802" layout-manager="GridLayoutManager" row-count="4" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
                                     <margin top="0" left="0" bottom="0" right="0"/>
                                     <constraints>
                                       <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
@@ -882,6 +887,25 @@
                                           </component>
                                         </children>
                                       </grid>
+                                      <grid id="cb61a" layout-manager="GridLayoutManager" row-count="1" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+                                        <margin top="0" left="0" bottom="0" right="0"/>
+                                        <constraints>
+                                          <grid row="3" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+                                        </constraints>
+                                        <properties/>
+                                        <border type="none"/>
+                                        <children>
+                                          <component id="5ff8d" class="javax.swing.JLabel">
+                                            <constraints>
+                                              <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                                            </constraints>
+                                            <properties>
+                                              <font size="20"/>
+                                              <text value="Department"/>
+                                            </properties>
+                                          </component>
+                                        </children>
+                                      </grid>
                                       <grid id="47139" layout-manager="GridLayoutManager" row-count="1" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
                                         <margin top="0" left="0" bottom="0" right="0"/>
                                         <constraints>
@@ -903,7 +927,7 @@
                                       </grid>
                                     </children>
                                   </grid>
-                                  <grid id="a303f" layout-manager="GridLayoutManager" row-count="3" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+                                  <grid id="a303f" layout-manager="GridLayoutManager" row-count="4" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
                                     <margin top="0" left="0" bottom="0" right="0"/>
                                     <constraints>
                                       <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
@@ -952,6 +976,31 @@
                                             <clientProperties>
                                               <caretWidth class="java.lang.Integer" value="0"/>
                                             </clientProperties>
+                                          </component>
+                                        </children>
+                                      </grid>
+                                      <grid id="98811" layout-manager="GridLayoutManager" row-count="1" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+                                        <margin top="0" left="0" bottom="0" right="0"/>
+                                        <constraints>
+                                          <grid row="3" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+                                        </constraints>
+                                        <properties/>
+                                        <border type="none"/>
+                                        <children>
+                                          <component id="9d236" class="javax.swing.JComboBox" binding="TOupdateDepartment">
+                                            <constraints>
+                                              <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="2" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                                            </constraints>
+                                            <properties>
+                                              <background color="-1"/>
+                                              <font name="Arial" size="16" style="0"/>
+                                              <model>
+                                                <item value="Department of Information and Communication Technology"/>
+                                                <item value="Department of Engineering Technology"/>
+                                                <item value="Department of Bio System Technology"/>
+                                                <item value="Department of Multidiscipliary"/>
+                                              </model>
+                                            </properties>
                                           </component>
                                         </children>
                                       </grid>
