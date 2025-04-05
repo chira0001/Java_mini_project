@@ -59,6 +59,8 @@ public class UndergraduateHomePage extends JFrame {
     private JComboBox noticeTitleDropDown;
     private JTextArea noticeDisplayArea;
     private JTable tableTimeTable;
+    private JComboBox SemesterNoDropDown;
+    private JComboBox LevelNoDropDown;
 
     private CardLayout cardLayout;
 
@@ -82,6 +84,9 @@ public class UndergraduateHomePage extends JFrame {
     private PreparedStatement prepStatement;
 
     private Scanner input;
+
+    private int SemeterNumber;
+    private int LevelNumber;
 
     public UndergraduateHomePage(String userIdentity){
 
@@ -159,26 +164,54 @@ public class UndergraduateHomePage extends JFrame {
             }
         });
 
+        TimeTableSetModelMethod();
+
+        LevelNoDropDown.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                TimeTableSetModelMethod();
+
+                String level_no = (String) LevelNoDropDown.getSelectedItem();
+                int LevelNo = Integer.parseInt(level_no);
+                valuesForCourseTable(LevelNo,SemeterNumber);
+                System.out.println(LevelNo);
+                valuesForCourseTable(LevelNo,1);
+            }
+        });
+
+        SemesterNoDropDown.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                TimeTableSetModelMethod();
+
+                String semester_no = (String) SemesterNoDropDown.getSelectedItem();
+                int SemesterNo = Integer.parseInt(semester_no);
+                valuesForCourseTable(LevelNumber,SemesterNo);
+                valuesForCourseTable(2,SemesterNo);
+                System.out.println(SemesterNo);
+            }
+        });
+    }
+
+    private void TimeTableSetModelMethod(){
         tableTimeTable.setModel(new DefaultTableModel(
                 null,
-                new String[]{"Day", "Course Code", "Course Module"}
+                new String[]{"Day", "Course Code", "Course Module","Time"}
         ));
 
-        valuesForCourseTable(2,1);
-
         TableColumnModel timeTableColumns = tableTimeTable.getColumnModel();
-        timeTableColumns.getColumn(0).setMinWidth(10);
+        timeTableColumns.getColumn(2).setMinWidth(100);
 
         DefaultTableCellRenderer timeTableCells = new DefaultTableCellRenderer();
         timeTableCells.setHorizontalAlignment(JLabel.CENTER);
 
         timeTableColumns.getColumn(1).setCellRenderer(timeTableCells);
-
     }
 
     private void valuesForCourseTable(int level_no, int semester_no){
 
-        String TimeTableValues = "select time_table_id, Courses.course_id, module_day, course_name from timeTable join Courses where timeTable.course_id = Courses.course_id and level_no = ? and semester_no = ?";
+        String TimeTableValues = "select time_table_id, Courses.course_id, module_day, course_name, time from timeTable join Courses where timeTable.course_id = Courses.course_id and level_no = ? and semester_no = ? ORDER BY CASE module_day WHEN 'Monday' THEN 1 WHEN 'Tuesday' THEN 2 WHEN 'Wednesday' THEN 3 WHEN 'Thursday' THEN 4 WHEN 'Friday' THEN 5 WHEN 'Saturday' THEN 6 WHEN 'Sunday' THEN 7 END";
+
         DefaultTableModel tblmodel = (DefaultTableModel) tableTimeTable.getModel();
         try{
             prepStatement = conn.prepareStatement(TimeTableValues);
@@ -190,12 +223,14 @@ public class UndergraduateHomePage extends JFrame {
                 String courseID = result.getString("course_id");
                 String moduleDay = result.getString("module_day");
                 String courseName = result.getString("course_name");
+                String courseTime = result.getString("time");
 
-                Object[] timeTableData = new Object[3];
+                Object[] timeTableData = new Object[4];
 
                 timeTableData[0] = moduleDay;
                 timeTableData[1] = courseID;
                 timeTableData[2] = courseName;
+                timeTableData[3] = courseTime;
 
                 tblmodel.addRow(timeTableData);
             }

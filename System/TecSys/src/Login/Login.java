@@ -61,7 +61,6 @@ public class Login extends JFrame {
 
                         String loginQuery = "select * from users where id ='" + uname + "'";
 
-//                        Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/javatest","root","1234");
                         Statement statement = conn.createStatement();
                         ResultSet result = statement.executeQuery(loginQuery);
 

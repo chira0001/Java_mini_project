@@ -56,7 +56,8 @@ noticeFilePath varchar(100)
 create table timeTable(
 time_table_id INT primary key auto_increment,
 course_id varchar(7), 
-module_day varchar(20)
+module_day varchar(20),
+time varchar(20)
 );
 
 create table courses(
@@ -97,15 +98,15 @@ INSERT INTO courses VALUES
 ("TCS2112","Business Economics",2,1),
 ("TCS2122","Soft Skills",2,1);
 
-insert into timeTable(course_id,module_day) values
-("ICT2132","Thursday"),
-("ICT2122","Thursday"),
-("ENG2122","Tuesday"),
-("ICT2113","Monday"),
-("ICT2142","Tuesday"),
-("ICT2152","Wednesday"),
-("TCS2112","Friday"),
-("TCS2122","Wednesday");
+insert into timeTable(course_id,module_day,time) values
+("ICT2132","Thursday","8.00 - 12.00"),
+("ICT2122","Thursday","1.00 - 3.00"),
+("ENG2122","Tuesday","8.00 - 10.00"),
+("ICT2113","Monday","8.00 - 12.00"),
+("ICT2142","Tuesday","10.00 - 12.00"),
+("ICT2152","Wednesday","10.00 - 12.00"),
+("TCS2112","Friday","8.00 - 10.00"),
+("TCS2122","Wednesday","8.00 - 10.00");
 
 INSERT INTO lecturer VALUES
 ("lec1234", "Nuwan", "Laksiri", "Colombo", "nuwan@gmail.com", 0713828492, "pass123", "./Resources/Images/1234.jpg"),
@@ -144,3 +145,6 @@ INSERT INTO lecture_course(lecno,course_id) VALUES
 ("lec1357","TSC2112");
 
 
+SELECT * FROM timetable
+
+ORDER BY CASE module_day WHEN 'Monday' THEN 1 WHEN 'Tuesday' THEN 2 WHEN 'Wednesday' THEN 3 WHEN 'Thursday' THEN 4 WHEN 'Friday' THEN 5 WHEN 'Saturday' THEN 6 WHEN 'Sunday' THEN 7 END;
