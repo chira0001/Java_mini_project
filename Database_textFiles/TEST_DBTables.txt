@@ -58,13 +58,6 @@ create table lecture_course(
 lecno varchar(7),
 course_id varchar(7));
 
-create table timeTable(
-time_table_id INT primary key,
-course_id varchar(7), 
-module_day varchar(20),
-
-);
-
 create view users as 
 SELECT adno AS id, adpassword as password FROM admin
 UNION
@@ -73,6 +66,28 @@ UNION
 SELECT lecno AS id, lecpassword as password FROM lecturer
 UNION
 SELECT tono AS id, topassword as password FROM technical_officer;
+
+create table notice(
+notice_no INT primary key auto_increment,
+noticeTitle varchar(75),
+noticeFilePath varchar(100)
+);
+
+create table timeTable(
+time_table_id INT primary key auto_increment,
+course_id varchar(7), 
+module_day varchar(20)
+);
+
+insert into timeTable(course_id,module_day) values
+("ICT2132","Thursday"),
+("ICT2122","Thursday"),
+("ENG2122","Tuesday"),
+("ICT2113","Monday"),
+("ICT2142","Tuesday"),
+("ICT2152","Wednesday"),
+("TCS2112","Friday"),
+("TCS2122","Wednesday");
 
 INSERT INTO undergraduate VALUES
 ("tg5432", "Athula", "Nihan", "Matara", "athula@gmail.com", 987004321, "123","Resources/Images/5432.jpg"),
