@@ -61,6 +61,12 @@ public class UndergraduateHomePage extends JFrame {
     private JTable tableTimeTable;
     private JComboBox SemesterNoDropDown;
     private JComboBox LevelNoDropDown;
+    private JTable UGGradeTable;
+    private JComboBox UGLevelNoforMarksDropDown;
+    private JComboBox UGSemesterNoforMarksDropDown;
+    private JLabel lblCGPA;
+    private JLabel lblSGPA;
+    private JLabel UGClass;
 
     private CardLayout cardLayout;
 
@@ -191,6 +197,38 @@ public class UndergraduateHomePage extends JFrame {
                 System.out.println(SemesterNo);
             }
         });
+
+        MarksTableSetModelMethod();
+
+        UGLevelNoforMarksDropDown.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                TimeTableSetModelMethod();
+
+                String level_no = (String) LevelNoDropDown.getSelectedItem();
+                int LevelNo = Integer.parseInt(level_no);
+                valuesForMarksTable(LevelNo,SemeterNumber);
+                valuesForMarksTable(LevelNo,1);
+            }
+        });
+        UGSemesterNoforMarksDropDown.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                TimeTableSetModelMethod();
+
+                String semester_no = (String) SemesterNoDropDown.getSelectedItem();
+                int SemesterNo = Integer.parseInt(semester_no);
+                valuesForMarksTable(LevelNumber,SemesterNo);
+                valuesForMarksTable(2,SemesterNo);
+            }
+        });
+    }
+
+    private void MarksTableSetModelMethod(){
+        UGGradeTable.setModel(new DefaultTableModel(
+                null,
+                new String[]{"Course Code", "Course Module","Grade"}
+        ));
     }
 
     private void TimeTableSetModelMethod(){
@@ -201,11 +239,28 @@ public class UndergraduateHomePage extends JFrame {
 
         TableColumnModel timeTableColumns = tableTimeTable.getColumnModel();
         timeTableColumns.getColumn(2).setMinWidth(100);
+        timeTableColumns.getColumn(3).setMinWidth(20);
 
         DefaultTableCellRenderer timeTableCells = new DefaultTableCellRenderer();
         timeTableCells.setHorizontalAlignment(JLabel.CENTER);
 
+        timeTableColumns.getColumn(0).setCellRenderer(timeTableCells);
         timeTableColumns.getColumn(1).setCellRenderer(timeTableCells);
+        timeTableColumns.getColumn(3).setCellRenderer(timeTableCells);
+    }
+
+    private void valuesForMarksTable(int level_no, int semester_no){
+
+    }
+    private void calculateGrade(){
+        int quiz1 = 75;
+        int quiz2 = 65;
+        int quiz3 = 55;
+        int assessment = 78;
+        int mid_term = 70;
+        int finalTheory = 80;
+        int finalPractical = 85;
+
     }
 
     private void valuesForCourseTable(int level_no, int semester_no){

@@ -60,13 +60,6 @@ module_day varchar(20),
 time varchar(20)
 );
 
-create table courses(
-course_id varchar(7),
-course_name varchar(50),
-level_no int(1),
-semester_no int(1)
-);
-
 create table undergraduate(
 tgno varchar(6),
 ugfname varchar(20),
@@ -80,6 +73,44 @@ study_year int(1),
 study_semester int(1)
 );
 
+create table courses(
+course_id varchar(7),
+course_name varchar(50),
+level_no int(1),
+semester_no int(1),
+status enum('theory','practical','theory/practical') default 'theory',
+final_theory_perc int(3) default 0,
+final_practical_perc int(3) default 0
+);
+
+INSERT INTO courses VALUES
+("ICT2113","Data Structures and Algorithms",2,1,'theory/practical',40,30),
+("ICT2122","Object Oriented Programming",2,1,'theory',60,0),
+("ICT2133","Object Oriented Programming Practicum III",2,1,'theory/practical',40,30),
+("ICT2142","Object Oriented Analysis and Design",2,1,'practical',0,60),
+("ICT2152","E-Commerce Implementation Management and Security",2,1,'theory',70,0);
+
+create table marks(
+mark_id INT primary key auto_increment,
+tgno varchar(6),
+course_id varchar(7),
+quiz_one int(3) default 0,
+quiz_second int(3) default 0,
+quiz_third int(3) default 0,
+quiz_fourth int(3) default 0,
+assessment int(3) default 0,
+mid_term int(3) default 0,
+final_theory int(3) default 0,
+final_practical int(3) default 0
+);
+
+insert into marks(tgno,course_id,quiz_one,quiz_second,quiz_third,quiz_fourth,assessment,mid_term,final_theory,final_practical) values
+("tg5678","ICT2113",75,65,55,55,78,70,80,85),
+("tg5432","ICT2122",75,65,55,55,78,70,80,0),
+("tg1234","ICT2133",75,65,55,55,78,70,80,85),
+("tg9101","ICT2142",75,65,55,55,78,70,0,85),
+("tg1121","ICT2152",75,65,55,55,78,70,80,0);
+
 INSERT INTO undergraduate VALUES
 ("tg5432", "Athula", "Nihan", "Matara", "athula@gmail.com", 987004321, "123","Resources/Images/5432.jpg",2,1),
 ("tg1234", "Kavindu", "Perera", "Colombo", "kavindu@gmail.com", 987654321, "123","Resources/Images/1234.jpg",2,1),
@@ -88,25 +119,6 @@ INSERT INTO undergraduate VALUES
 ("tg1121", "Ravindu", "Bandara", "Kurunegala", "ravindu@gmail.com", 654321987, "123","Resources/Images/1121.jpg",2,1),
 ("tg3141", "Dilini", "Weerasinghe", "Matara", "dilini@gmail.com", 543219876, "123","Resources/Images/3141.jpg",2,1);
 
-INSERT INTO courses VALUES
-("ICT2132","Object Oriented Programming Practicum",2,1),
-("ICT2122","Object Oriented Programming",2,1),
-("ENG2122","English III",2,1),
-("ICT2113","Data Structures and Algorithms",2,1),
-("ICT2142","Object Oriented Analysis and Design",2,1),
-("ICT2152","E-Commerce Implementation Management and Security",2,1),
-("TCS2112","Business Economics",2,1),
-("TCS2122","Soft Skills",2,1);
-
-insert into timeTable(course_id,module_day,time) values
-("ICT2132","Thursday","8.00 - 12.00"),
-("ICT2122","Thursday","1.00 - 3.00"),
-("ENG2122","Tuesday","8.00 - 10.00"),
-("ICT2113","Monday","8.00 - 12.00"),
-("ICT2142","Tuesday","10.00 - 12.00"),
-("ICT2152","Wednesday","10.00 - 12.00"),
-("TCS2112","Friday","8.00 - 10.00"),
-("TCS2122","Wednesday","8.00 - 10.00");
 
 INSERT INTO lecturer VALUES
 ("lec1234", "Nuwan", "Laksiri", "Colombo", "nuwan@gmail.com", 0713828492, "pass123", "./Resources/Images/1234.jpg"),
@@ -134,16 +146,20 @@ INSERT INTO notice (noticeTitle, noticeFilePath) VALUES
 ("Library Renovation Notice", "Resources/Notices/4.txt"),
 ("Internship Opportunities", "Resources/Notices/5.txt");
 
+insert into timeTable(course_id,module_day,time) values
+("ICT2113","Thursday","8.00 - 12.00"),
+("ICT2122","Thursday","1.00 - 3.00"),
+("ICT2133","Tuesday","8.00 - 10.00"),
+("ICT2142","Monday","8.00 - 12.00"),
+("ICT2152","Wednesday","10.00 - 12.00");
+
 INSERT INTO lecture_course(lecno,course_id) VALUES
-("lec1234","ICT2132"),
-("lec1234","ICT2122"),
 ("lec5678","ICT2113"),
+("lec1234","ICT2122"),
+("lec3141","ICT2133"),
 ("lec9101","ICT2142"),
 ("lec1121","ICT2152"),
-("lec3141","ENG2122"),
-("lec5121","TSC2122"),
-("lec1357","TSC2112");
-
+("lec5121","TSC2122");
 
 SELECT * FROM timetable
 
