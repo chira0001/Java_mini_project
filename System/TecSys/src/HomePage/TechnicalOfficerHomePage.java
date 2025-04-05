@@ -55,6 +55,7 @@ public class TechnicalOfficerHomePage extends JFrame {
     private JLabel HomePageUserProfileLable;
     private JComboBox TODepartment;
     private JComboBox TOupdateDepartment;
+    private JPanel attendenceButton;
 
     private CardLayout cardLayout;
 
