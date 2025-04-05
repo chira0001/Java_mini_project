@@ -4,7 +4,9 @@ import Login.Login;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableColumnModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -57,8 +59,6 @@ public class UndergraduateHomePage extends JFrame {
     private JComboBox noticeTitleDropDown;
     private JTextArea noticeDisplayArea;
     private JTable tableTimeTable;
-    private JComboBox comboBox1;
-    private JButton viewMaterialsButton;
 
     private CardLayout cardLayout;
 
@@ -76,7 +76,6 @@ public class UndergraduateHomePage extends JFrame {
     private String[] cardTitles = {"Welcome..!", "Attendance Details", "Undergraduate Time Table","Your Courses","Medical Information", "Notices", "Grades and GPA","Settings Configuration"};;
 
     private Object[] filePathValues = new Object[4];
-//    private Object[][] data;
 
     DBCONNECTION _dbconn = new DBCONNECTION();
     Connection conn = _dbconn.Conn();
@@ -162,15 +161,48 @@ public class UndergraduateHomePage extends JFrame {
 
         tableTimeTable.setModel(new DefaultTableModel(
                 null,
-                new String[]{"Day", "Course Module"}
+                new String[]{"Day", "Course Code", "Course Module"}
         ));
+
+        valuesForCourseTable(2,1);
+
+        TableColumnModel timeTableColumns = tableTimeTable.getColumnModel();
+        timeTableColumns.getColumn(0).setMinWidth(10);
+
+        DefaultTableCellRenderer timeTableCells = new DefaultTableCellRenderer();
+        timeTableCells.setHorizontalAlignment(JLabel.CENTER);
+
+        timeTableColumns.getColumn(1).setCellRenderer(timeTableCells);
+
     }
 
-    private void valuesForCourseTable(){
-        Object[][] data = {
-                {"hi"},
-                {"hi"}
-        };
+    private void valuesForCourseTable(int level_no, int semester_no){
+
+        String TimeTableValues = "select time_table_id, Courses.course_id, module_day, course_name from timeTable join Courses where timeTable.course_id = Courses.course_id and level_no = ? and semester_no = ?";
+        DefaultTableModel tblmodel = (DefaultTableModel) tableTimeTable.getModel();
+        try{
+            prepStatement = conn.prepareStatement(TimeTableValues);
+            prepStatement.setInt(1,level_no);
+            prepStatement.setInt(2,semester_no);
+            ResultSet result = prepStatement.executeQuery();
+
+            while (result.next()){
+                String courseID = result.getString("course_id");
+                String moduleDay = result.getString("module_day");
+                String courseName = result.getString("course_name");
+
+                Object[] timeTableData = new Object[3];
+
+                timeTableData[0] = moduleDay;
+                timeTableData[1] = courseID;
+                timeTableData[2] = courseName;
+
+                tblmodel.addRow(timeTableData);
+            }
+
+        }catch (Exception e){
+            e.printStackTrace();
+        }
     }
 
     public void changeBtnState(String btn, String tgno){

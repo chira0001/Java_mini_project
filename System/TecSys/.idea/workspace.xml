@@ -5,16 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="72d0b1f3-e6cb-4eaf-bf31-777105475ddb" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/.name" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/TecSys/HomePage/LecturerHomePage$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/TecSys/HomePage/LecturerHomePage$1.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/TecSys/HomePage/LecturerHomePage$2.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/TecSys/HomePage/LecturerHomePage$2.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/TecSys/HomePage/LecturerHomePage$3.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/TecSys/HomePage/LecturerHomePage$3.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/TecSys/HomePage/LecturerHomePage.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/TecSys/HomePage/LecturerHomePage.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/TecSys/HomePage/UndergraduateHomePage$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/TecSys/HomePage/UndergraduateHomePage$2.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/TecSys/HomePage/UndergraduateHomePage$3.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/TecSys/HomePage/UndergraduateHomePage$4.class" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/src/HomePage/UndergraduateHomePage.form" beforeDir="false" afterPath="$PROJECT_DIR$/src/HomePage/UndergraduateHomePage.form" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/HomePage/UndergraduateHomePage.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/HomePage/UndergraduateHomePage.java" afterDir="false" />
     </list>

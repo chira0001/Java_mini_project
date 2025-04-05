@@ -759,7 +759,7 @@
                     </properties>
                     <border type="none"/>
                     <children>
-                      <grid id="3df73" layout-manager="GridLayoutManager" row-count="2" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+                      <grid id="3df73" layout-manager="GridLayoutManager" row-count="1" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
                         <margin top="0" left="0" bottom="0" right="0"/>
                         <constraints>
                           <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
@@ -773,59 +773,29 @@
                             <constraints>
                               <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="7" hsize-policy="7" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
                             </constraints>
-                            <properties/>
+                            <properties>
+                              <font size="15"/>
+                            </properties>
                             <border type="none"/>
                             <children>
                               <component id="14932" class="javax.swing.JTable" binding="tableTimeTable">
                                 <constraints/>
-                                <properties/>
+                                <properties>
+                                  <autoCreateColumnsFromModel value="true"/>
+                                  <autoResizeMode value="3"/>
+                                  <cellSelectionEnabled value="false"/>
+                                  <columnSelectionAllowed value="false"/>
+                                  <dropMode value="USE_SELECTION"/>
+                                  <editingColumn value="0"/>
+                                  <editingRow value="0"/>
+                                  <enabled value="false"/>
+                                  <fillsViewportHeight value="true"/>
+                                  <font size="15"/>
+                                  <rowHeight value="40"/>
+                                </properties>
                               </component>
                             </children>
                           </scrollpane>
-                          <grid id="b0861" layout-manager="GridLayoutManager" row-count="1" column-count="2" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
-                            <margin top="0" left="0" bottom="0" right="0"/>
-                            <constraints>
-                              <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
-                            </constraints>
-                            <properties/>
-                            <border type="none"/>
-                            <children>
-                              <grid id="326fe" layout-manager="GridLayoutManager" row-count="1" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
-                                <margin top="0" left="0" bottom="0" right="0"/>
-                                <constraints>
-                                  <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
-                                </constraints>
-                                <properties/>
-                                <border type="none"/>
-                                <children>
-                                  <component id="839e6" class="javax.swing.JButton" binding="viewMaterialsButton" default-binding="true">
-                                    <constraints>
-                                      <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
-                                    </constraints>
-                                    <properties>
-                                      <text value="View Materials"/>
-                                    </properties>
-                                  </component>
-                                </children>
-                              </grid>
-                              <grid id="c3934" layout-manager="GridLayoutManager" row-count="1" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
-                                <margin top="0" left="0" bottom="0" right="0"/>
-                                <constraints>
-                                  <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
-                                </constraints>
-                                <properties/>
-                                <border type="none"/>
-                                <children>
-                                  <component id="7149b" class="javax.swing.JComboBox" binding="comboBox1" default-binding="true">
-                                    <constraints>
-                                      <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="2" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
-                                    </constraints>
-                                    <properties/>
-                                  </component>
-                                </children>
-                              </grid>
-                            </children>
-                          </grid>
                         </children>
                       </grid>
                     </children>
