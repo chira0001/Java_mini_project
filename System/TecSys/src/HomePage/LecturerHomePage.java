@@ -1,14 +1,14 @@
 package HomePage;
+import DBCONNECTION.DBCONNECTION;
 import Login.Login;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.Statement;
+import java.io.File;
+import java.sql.*;
+import java.util.Scanner;
 
 public class LecturerHomePage extends JFrame {
     private String cardCommand;
@@ -52,6 +52,8 @@ public class LecturerHomePage extends JFrame {
     private JButton addFilesButton;
     private JButton renameFilesButton;
     private JButton removeFilesButton;
+    private JComboBox noticeTitleDropDown;
+    private JTextArea noticeDisplayArea;
 
     private CardLayout cardLayout;
 
@@ -68,8 +70,15 @@ public class LecturerHomePage extends JFrame {
     JButton[] btnFieldNames = {profileButton,attendanceButton,timeTableButton,coursesButton,medicalButton,noticesButton,marksButton,settingsButton};
     private String[] cardTitles = {"Welcome..!", "Attendance Details", "Undergraduate Time Table","Your Courses","Medical Information", "Notices", "Marks","Settings Configuration"};;
 
+    DBCONNECTION dbconn = new DBCONNECTION();
+    Connection conn = dbconn.Conn();
+    private PreparedStatement prepStatement;
+
+    private Scanner input;
+
     public LecturerHomePage(String userIdentity){
         dbConnection(userIdentity);
+        LoadNotices();
 
         setContentPane(Lecturer);
         setTitle("Lecturer User Profile");
@@ -212,6 +221,53 @@ public class LecturerHomePage extends JFrame {
             leccourselist.setModel(model);
 
         } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void LoadNotices(){
+
+        String notice_Title;
+
+        try{
+            String noticeLoadQuery = "select * from notice";
+
+            Statement statement = conn.createStatement();
+            ResultSet result = statement.executeQuery(noticeLoadQuery);
+
+            while(result.next()){
+                notice_Title = result.getString("noticeTitle");
+
+                noticeTitleDropDown.addItem(notice_Title);
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    private void viewNotice(String selected_notice_title){
+        String view_notice_Query_details = "Select * from notice where noticeTitle = ?";
+        try{
+            prepStatement = conn.prepareStatement(view_notice_Query_details);
+            prepStatement.setString(1,selected_notice_title);
+
+            ResultSet resultSet = prepStatement.executeQuery();
+            while (resultSet.next()){
+                String notice_FilePath = resultSet.getString("noticeFilePath");
+
+                System.out.println(notice_FilePath);
+
+                File notice = new File(notice_FilePath);
+                input = new Scanner(notice);
+
+                StringBuilder noticeContent = new StringBuilder();
+
+                while (input.hasNextLine()){
+                    noticeContent.append(input.nextLine()).append("\n");
+                }
+                noticeDisplayArea.setText(noticeContent.toString());
+            }
+        }catch (Exception e){
             e.printStackTrace();
         }
     }
