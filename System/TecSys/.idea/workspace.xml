@@ -5,13 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="17ba9ef3-89f1-4144-9f6c-a7dabf43fa21" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/../../Database_textFiles/TEST_DBTables.txt" beforeDir="false" afterPath="$PROJECT_DIR$/../../Database_textFiles/TEST_DBTables.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/TecSys/Login/Login$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/TecSys/Login/Login$1.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/TecSys/Login/Login$2.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/TecSys/Login/Login$2.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/TecSys/Login/Login.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/TecSys/Login/Login.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/HomePage/UndergraduateHomePage.form" beforeDir="false" afterPath="$PROJECT_DIR$/src/HomePage/UndergraduateHomePage.form" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/HomePage/UndergraduateHomePage.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/HomePage/UndergraduateHomePage.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.name" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.name" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -24,6 +18,11 @@
   <component name="ProjectLevelVcsManager">
     <ConfirmationsSetting value="1" id="Add" />
   </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "git-widget-placeholder": "Lalithya"
+  }
+}]]></component>
   <component name="RunManager">
     <configuration name="Unnamed" type="Application" factoryName="Application" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="Main.Main" />
