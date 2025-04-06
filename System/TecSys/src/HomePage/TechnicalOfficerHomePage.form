@@ -934,7 +934,13 @@
                                 </constraints>
                                 <properties>
                                   <font size="16"/>
-                                  <model/>
+                                  <model>
+                                    <item value="Semester time table"/>
+                                    <item value="Holiday Announcement"/>
+                                    <item value="Workshop on AI"/>
+                                    <item value="Library Renovation Notice"/>
+                                    <item value="Internship Opportunities"/>
+                                  </model>
                                 </properties>
                               </component>
                               <grid id="1147b" layout-manager="GridLayoutManager" row-count="1" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
