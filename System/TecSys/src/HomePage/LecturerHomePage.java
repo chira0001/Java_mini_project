@@ -47,7 +47,7 @@ public class LecturerHomePage extends JFrame {
     private JButton updateButton;
     private JTextField textField1;
     private JTextField textField2;
-    private JList list1;
+    private JList leccourselist;
     private JList list2;
     private JButton addFilesButton;
     private JButton renameFilesButton;
@@ -113,16 +113,20 @@ public class LecturerHomePage extends JFrame {
         });
     }
 
-    public void changeBtnState(String btn, String tgno){
+    public void changeBtnState(String btn, String lecno){
 
         int noOfButtons = cardButtons.length;
         for (int i = 0; i < noOfButtons; i++){
             if (cardButtons[i].equals(btn)){
-                dbConnection(tgno);
+                dbConnection(lecno);
                 cardLayout.show(LECHomeCard,cardNames[i]);
                 CardTittleLabel.setText(cardTitles[i]);
                 btnFieldNames[i].setEnabled(false);
-            }else {
+            }
+            if (btn.equals("Courses")) {
+                LECCourse(lecno);
+            }
+            else {
                 btnFieldNames[i].setEnabled(true);
             }
         }
@@ -186,6 +190,28 @@ public class LecturerHomePage extends JFrame {
             }
 
         }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    private void LECCourse(String lecno){
+        try {
+            DefaultListModel<String> model = new DefaultListModel<>();
+            Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/javatest","root","1234");
+            Statement statement = connection.createStatement();
+            String query = "SELECT c.course_name FROM courses c " +
+                    "JOIN lecture_course lc ON c.course_id = lc.course_id " +
+                    "WHERE lc.lecno = '" + lecno + "'";
+            ResultSet resultSet = statement.executeQuery(query);
+
+            while (resultSet.next()) {
+                String courseName = resultSet.getString("course_name");
+                model.addElement(courseName);
+            }
+
+            leccourselist.setModel(model);
+
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
