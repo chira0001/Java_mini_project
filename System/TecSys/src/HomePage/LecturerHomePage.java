@@ -195,6 +195,8 @@ public class LecturerHomePage extends JFrame {
                 textField8.setText(LecEmail);
                 textField9.setText(LecPhno);
 
+                loadLECProfImage(lecno);
+
             }else{
                 JOptionPane.showMessageDialog(null,"Internal Error");
             }
@@ -203,12 +205,12 @@ public class LecturerHomePage extends JFrame {
         }
     }
 
-    private void loadLECProfImage(String tgno){
+    private void loadLECProfImage(String lecno){
         try{
-            String LECProfImageSearchQuery = "select * from undergraduate where lecno = ?";
+            String LECProfImageSearchQuery = "select * from lecturer where lecno = ?";
 
             prepStatement = conn.prepareStatement(LECProfImageSearchQuery);
-            prepStatement.setString(1,tgno);
+            prepStatement.setString(1,lecno);
             ResultSet result = prepStatement.executeQuery();
 
             while (result.next()){
@@ -322,6 +324,7 @@ public class LecturerHomePage extends JFrame {
             if(resultSet > 0){
                 LECSaveProfileImage(lecno);
                 JOptionPane.showMessageDialog(null,"Credentials updated successfully");
+                loadLECProfImage(lecno);
             }else {
                 JOptionPane.showMessageDialog(null,"Error in credential updation");
             }
