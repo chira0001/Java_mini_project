@@ -71,6 +71,8 @@ public class UndergraduateHomePage extends JFrame {
     private JLabel UGClass;
     private JButton viewMedicalsButton;
     private JTable AttendanceTable;
+    private JComboBox AttendanceLevelNo;
+    private JComboBox AttendanceSemesterNo;
 
     private CardLayout cardLayout;
 
@@ -226,12 +228,55 @@ public class UndergraduateHomePage extends JFrame {
                 valuesForMarksTable(2,SemesterNo);
             }
         });
+
+        AttendanceTableSetMethod();
+
+        viewMedicalsButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                cardLayout.show(UGHomeCard,cardNames[4]);
+                attendanceButton.setEnabled(true);
+                medicalButton.setEnabled(false);
+                CardTittleLabel.setText(cardTitles[4]);
+            }
+        });
+        AttendanceLevelNo.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                AttendanceTableSetMethod();
+
+                String level_no = (String) AttendanceLevelNo.getSelectedItem();
+                int LevelNo = Integer.parseInt(level_no);
+                valuesforAttendanceTable(LevelNo,SemeterNumber,userIdentity);
+                System.out.println(LevelNo);
+                valuesforAttendanceTable(LevelNo,1,userIdentity);
+            }
+        });
+        AttendanceSemesterNo.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                AttendanceTableSetMethod();
+
+                String semester_no = (String) AttendanceSemesterNo.getSelectedItem();
+                int SemesterNo = Integer.parseInt(semester_no);
+                valuesforAttendanceTable(LevelNumber,SemesterNo,userIdentity);
+                valuesforAttendanceTable(2,SemesterNo,userIdentity);
+                System.out.println(SemesterNo);
+            }
+        });
     }
 
     private void MarksTableSetModelMethod(){
         UGGradeTable.setModel(new DefaultTableModel(
                 null,
                 new String[]{"Course Code","Course Module","CA Marks","Eligibility for final exam","Final Marks","Grade"}
+        ));
+    }
+
+    private void AttendanceTableSetMethod(){
+        AttendanceTable.setModel(new DefaultTableModel(
+                null,
+                new String[]{"Week No","Course No","Course Name","Course Status","Attendance Status","Medical No"}
         ));
     }
 
@@ -268,16 +313,13 @@ public class UndergraduateHomePage extends JFrame {
     }
 
     private void valuesForCourseTable(int level_no, int semester_no){
-
         String TimeTableValues = "select time_table_id, Courses.course_id, module_day, course_name, time from timeTable join Courses where timeTable.course_id = Courses.course_id and level_no = ? and semester_no = ? ORDER BY CASE module_day WHEN 'Monday' THEN 1 WHEN 'Tuesday' THEN 2 WHEN 'Wednesday' THEN 3 WHEN 'Thursday' THEN 4 WHEN 'Friday' THEN 5 WHEN 'Saturday' THEN 6 WHEN 'Sunday' THEN 7 END";
-
         DefaultTableModel tblmodel = (DefaultTableModel) tableTimeTable.getModel();
         try{
             prepStatement = conn.prepareStatement(TimeTableValues);
             prepStatement.setInt(1,level_no);
             prepStatement.setInt(2,semester_no);
             ResultSet result = prepStatement.executeQuery();
-
             while (result.next()){
                 String courseID = result.getString("course_id");
                 String moduleDay = result.getString("module_day");
@@ -293,7 +335,41 @@ public class UndergraduateHomePage extends JFrame {
 
                 tblmodel.addRow(timeTableData);
             }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
 
+    private void valuesforAttendanceTable(int level_no, int semester_no, String tgno){
+//        String AttendanceTableValues = "select courses.course_id,course_name,course_status,week_no,atten_status,med_id from attendance join courses where attendance.course_id = courses.course_id and tgno = 'tg1234' and level_no = 2 and semester_no = 1";
+        String AttendanceTableValues = "select courses.course_id,course_name,course_status,week_no,atten_status,med_id from attendance join courses where attendance.course_id = courses.course_id and tgno = ? and level_no = ? and semester_no = ?";
+        DefaultTableModel tblmodel = (DefaultTableModel) AttendanceTable.getModel();
+        try{
+            prepStatement = conn.prepareStatement(AttendanceTableValues);
+            prepStatement.setString(1,tgno);
+            prepStatement.setInt(2,level_no);
+            prepStatement.setInt(3,semester_no);
+            ResultSet result = prepStatement.executeQuery();
+            while (result.next()){
+                String courseID = result.getString("course_id");
+                String courseName = result.getString("course_name");
+                String course_status = result.getString("course_status");
+                String week_no = result.getString("week_no");
+                String atten_status = result.getString("atten_status");
+                String med_id = result.getString("med_id");
+
+//                Object[] timeTableData = new Object[4];
+                Object[] AttendanceTableData = new Object[6];
+
+                AttendanceTableData[0] = week_no;
+                AttendanceTableData[1] = courseID;
+                AttendanceTableData[2] = courseName;
+                AttendanceTableData[3] = course_status;
+                AttendanceTableData[4] = atten_status;
+                AttendanceTableData[5] = med_id;
+
+                tblmodel.addRow(AttendanceTableData);
+            }
         }catch (Exception e){
             e.printStackTrace();
         }

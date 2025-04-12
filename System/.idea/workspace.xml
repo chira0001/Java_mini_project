@@ -7,22 +7,8 @@
     <list default="true" id="cc3bab98-1966-4d30-984b-b39ace1a34ce" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/../Database_textFiles/TEST_DBTables.txt" beforeDir="false" afterPath="$PROJECT_DIR$/../Database_textFiles/TEST_DBTables.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/TecSys/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/TecSys/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/TecSys/src/HomePage/UndergraduateHomePage.form" beforeDir="false" afterPath="$PROJECT_DIR$/TecSys/src/HomePage/UndergraduateHomePage.form" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/TecSys/src/HomePage/UndergraduateHomePage.java" beforeDir="false" afterPath="$PROJECT_DIR$/TecSys/src/HomePage/UndergraduateHomePage.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../out/production/Java_mini_project/HomePage/LecturerHomePage$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/../out/production/Java_mini_project/HomePage/LecturerHomePage$1.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../out/production/Java_mini_project/HomePage/LecturerHomePage$2.class" beforeDir="false" afterPath="$PROJECT_DIR$/../out/production/Java_mini_project/HomePage/LecturerHomePage$2.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../out/production/Java_mini_project/HomePage/LecturerHomePage$3.class" beforeDir="false" afterPath="$PROJECT_DIR$/../out/production/Java_mini_project/HomePage/LecturerHomePage$3.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../out/production/Java_mini_project/HomePage/LecturerHomePage.class" beforeDir="false" afterPath="$PROJECT_DIR$/../out/production/Java_mini_project/HomePage/LecturerHomePage.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../out/production/Java_mini_project/HomePage/UndergraduateHomePage$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/../out/production/Java_mini_project/HomePage/UndergraduateHomePage$1.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../out/production/Java_mini_project/HomePage/UndergraduateHomePage$2.class" beforeDir="false" afterPath="$PROJECT_DIR$/../out/production/Java_mini_project/HomePage/UndergraduateHomePage$2.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../out/production/Java_mini_project/HomePage/UndergraduateHomePage$3.class" beforeDir="false" afterPath="$PROJECT_DIR$/../out/production/Java_mini_project/HomePage/UndergraduateHomePage$3.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../out/production/Java_mini_project/HomePage/UndergraduateHomePage$4.class" beforeDir="false" afterPath="$PROJECT_DIR$/../out/production/Java_mini_project/HomePage/UndergraduateHomePage$4.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../out/production/Java_mini_project/HomePage/UndergraduateHomePage$5.class" beforeDir="false" afterPath="$PROJECT_DIR$/../out/production/Java_mini_project/HomePage/UndergraduateHomePage$5.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../out/production/Java_mini_project/HomePage/UndergraduateHomePage.class" beforeDir="false" afterPath="$PROJECT_DIR$/../out/production/Java_mini_project/HomePage/UndergraduateHomePage.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../out/production/Java_mini_project/Login/Login$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/../out/production/Java_mini_project/Login/Login$1.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../out/production/Java_mini_project/Login/Login$2.class" beforeDir="false" afterPath="$PROJECT_DIR$/../out/production/Java_mini_project/Login/Login$2.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../out/production/Java_mini_project/Login/Login.class" beforeDir="false" afterPath="$PROJECT_DIR$/../out/production/Java_mini_project/Login/Login.class" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -67,7 +53,7 @@
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.git.unshallow": "true",
     "UI_DESIGNER_EDITOR_MODE.PaletteManager.WIDTH": "227",
-    "UI_DESIGNER_EDITOR_MODE.UIDesignerToolWindowManager.WIDTH": "274",
+    "UI_DESIGNER_EDITOR_MODE.UIDesignerToolWindowManager.WIDTH": "259",
     "git-widget-placeholder": "Chirath",
     "kotlin-language-version-configured": "true",
     "last_opened_file_path": "C:/Users/DELL/Desktop/Java Project/Java_mini_project/System/TecSys/mysql-connector-j-9.2.0.jar",

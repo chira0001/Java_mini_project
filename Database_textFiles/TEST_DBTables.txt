@@ -135,18 +135,17 @@ atten_id INT primary key auto_increment,
 tono varchar(6),
 tgno varchar(6),
 course_id varchar(7),         
-course_status enum('theory','practical') default 'theory',
 week_no int(2),
 atten_status varchar(20),
 med_id char(6)
 );
 
 INSERT INTO attendance(tono,tgno,course_id,week_no,course_status,atten_status,med_id) VALUES
-("to2222", "tg1344", "ICT1222", 1, "theory", "present", ""),
-("to2222", "tg1345", "ICT1222", 1, "theory", "absent", ""),
-("to2222", "tg1346", "ICT1222", 1, "practical", "present", ""),
-("to2222", "tg1347", "ICT1222", 1, "practical", "present", ""),
-("to2222", "tg1354", "ICT1222", 1, "theory", "present", "");
+("to2222", "tg1234", "ICT2113", 1, "theory", "present", ""),
+("to2222", "tg1345", "ICT2113", 1, "theory", "absent", ""),
+("to2222", "tg1346", "ICT2113", 1, "practical", "present", ""),
+("to2222", "tg1347", "ICT2113", 1, "practical", "present", ""),
+("to2222", "tg1354", "ICT2113", 1, "theory", "present", "");
 
 create table medical(
 medical_no int primary key auto_increment,
@@ -230,6 +229,8 @@ select tgno, courses.course_id,quiz_one,quiz_second,quiz_third,assessment, mid_t
 
 select tgno,courses.course_id,quiz_one,quiz_second,quiz_third,quiz_fourth,assessment_one,assessment_second,mid_term,final_theory,final_practical,quizzes_perc,assessment_perc,mid_term_perc,final_theory_perc,final_practical_perc from marks join courses where marks.course_id = courses.course_id;
 
+for attendance table ->
+select courses.course_id,course_name,course_status,week_no,atten_status,med_id from attendance join courses where attendance.course_id = courses.course_id and tgno ="tg1234" and level_no = 2 and semester_no = 1;
 
 
 
