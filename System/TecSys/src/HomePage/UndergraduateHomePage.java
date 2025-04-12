@@ -16,6 +16,8 @@ import java.nio.file.Path;
 import java.sql.*;
 import java.util.Scanner;
 
+import static java.util.Arrays.sort;
+
 public class UndergraduateHomePage extends JFrame {
 
     private String cardCommand;
@@ -67,6 +69,8 @@ public class UndergraduateHomePage extends JFrame {
     private JLabel lblCGPA;
     private JLabel lblSGPA;
     private JLabel UGClass;
+    private JButton viewMedicalsButton;
+    private JTable AttendanceTable;
 
     private CardLayout cardLayout;
 
@@ -227,7 +231,7 @@ public class UndergraduateHomePage extends JFrame {
     private void MarksTableSetModelMethod(){
         UGGradeTable.setModel(new DefaultTableModel(
                 null,
-                new String[]{"Course Code", "Course Module","Grade"}
+                new String[]{"Course Code","Course Module","CA Marks","Eligibility for final exam","Final Marks","Grade"}
         ));
     }
 
@@ -513,6 +517,105 @@ public class UndergraduateHomePage extends JFrame {
                     noticeContent.append(input.nextLine()).append("\n");
                 }
                 noticeDisplayArea.setText(noticeContent.toString());
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    public void calculateGrade(String tgno){
+        int quiz_percentage,assessment_percentage,mid_term_percentage,final_theory_percentage,final_practical_percentage,
+                quiz1,quiz2,quiz3,quiz4,assessment1,assessment2,mid_term,finalTheory,finalPractical,ca_perc_max,final_mark_perc_max;
+
+        double quizSum, quizPercentage, assessmentPercentage, midPercentage, FinalTheoryPercentage,FinalPracticalPercentage, ca_mark_perc, final_mark_perc;
+
+        String c_id,c_grade = "";
+
+        try{
+            String selectMarkPercentage = "select tgno,courses.course_id,quiz_one,quiz_second,quiz_third,quiz_fourth,assessment_one,assessment_second,mid_term,final_theory,final_practical,quizzes_perc,assessment_perc,mid_term_perc,final_theory_perc,final_practical_perc from marks join courses where marks.course_id = courses.course_id and tgno = '" + tgno + "'";
+            Statement statement = conn.createStatement();
+            ResultSet resultSet = statement.executeQuery(selectMarkPercentage);
+
+            while (resultSet.next()){
+                c_id = resultSet.getString("course_id");
+
+                quiz1 = resultSet.getInt("quiz_one");
+                quiz2 = resultSet.getInt("quiz_second");
+                quiz3 = resultSet.getInt("quiz_third");
+                quiz4 = resultSet.getInt("quiz_fourth");
+                assessment1 = resultSet.getInt("assessment_one");
+                assessment2 = resultSet.getInt("assessment_second");
+                mid_term = resultSet.getInt("mid_term");
+                finalTheory = resultSet.getInt("final_theory");
+                finalPractical = resultSet.getInt("final_practical");
+
+                quiz_percentage = resultSet.getInt("quizzes_perc");
+                assessment_percentage = resultSet.getInt("assessment_perc");
+                mid_term_percentage = resultSet.getInt("mid_term_perc");
+                final_theory_percentage = resultSet.getInt("final_theory_perc");
+                final_practical_percentage = resultSet.getInt("final_practical_perc");
+
+                ca_perc_max = ((quiz_percentage + assessment_percentage + mid_term_percentage) * 50) / 100;
+                final_mark_perc_max = final_theory_percentage + final_practical_percentage;
+
+                int[] quizzes = {quiz1,quiz2,quiz3,quiz4};
+                sort(quizzes);
+                int arrLen = quizzes.length;
+
+                if(quizzes[0] == 0){
+                    quizPercentage = ((quizzes[arrLen - 1] * (quiz_percentage/2.0)) / 100) + ((quizzes[arrLen - 2] * (10/2.0)) / 100);
+                }else {
+                    quizPercentage = ((quizzes[arrLen - 1] * (quiz_percentage/3.0)) / 100) + ((quizzes[arrLen - 2] * (10/3.0)) / 100) + ((quizzes[arrLen - 3] * (10/3.0)) / 100);
+                }
+
+                if(assessment1 == 0 || assessment2 == 0){
+                    assessmentPercentage = (((assessment1 + assessment2) * assessment_percentage) / 100.0);
+                }else{
+                    assessmentPercentage = (((assessment1 + assessment2) * (assessment_percentage / 2.0) ) / 100.0);
+                }
+
+                midPercentage = ((mid_term * mid_term_percentage) / 100.0);
+
+                FinalTheoryPercentage = ((finalTheory * final_theory_percentage) / 100.0);
+                FinalPracticalPercentage = ((finalPractical * final_practical_percentage) / 100.0);
+
+                ca_mark_perc = quizPercentage + assessmentPercentage + midPercentage;
+                final_mark_perc = FinalTheoryPercentage + FinalPracticalPercentage;
+
+                if (ca_mark_perc > ca_perc_max){
+                    System.out.println("Eligible");
+                    if((ca_mark_perc + final_mark_perc) >= 90){
+                        c_grade = "A+";
+                    }else if((ca_mark_perc + final_mark_perc) >= 85){
+                        c_grade = "A";
+                    }else if((ca_mark_perc + final_mark_perc) >= 80){
+                        c_grade = "A-";
+                    }else if((ca_mark_perc + final_mark_perc) >= 75){
+                        c_grade = "B+";
+                    }else if((ca_mark_perc + final_mark_perc) >= 70){
+                        c_grade = "B";
+                    }else if((ca_mark_perc + final_mark_perc) >= 65){
+                        c_grade = "B-";
+                    }else if((ca_mark_perc + final_mark_perc) >= 60){
+                        c_grade = "C+";
+                    }else if((ca_mark_perc + final_mark_perc) >= 40){
+                        c_grade = "C";
+                    }else if((ca_mark_perc + final_mark_perc) >= 35){
+                        c_grade = "C-";
+                    }else if((ca_mark_perc + final_mark_perc) >= 30){
+                        c_grade = "D+";
+                    }else if((ca_mark_perc + final_mark_perc) >= 25){
+                        c_grade = "D";
+                    }else if((ca_mark_perc + final_mark_perc) >= 20){
+                        c_grade = "E";
+                    }else if((ca_mark_perc + final_mark_perc) >= 0){
+                        c_grade = "F";
+                    }
+                }else{
+                    System.out.println("Not Eligible");
+                }
+                System.out.println("Grade " + c_grade);
+                System.out.println("");
             }
         }catch (Exception e){
             e.printStackTrace();
