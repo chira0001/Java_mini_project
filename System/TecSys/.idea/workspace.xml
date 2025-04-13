@@ -5,7 +5,128 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="17ba9ef3-89f1-4144-9f6c-a7dabf43fa21" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/../../.idea/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../.idea/misc.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../.idea/modules.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../.idea/uiDesigner.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../.idea/vcs.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../B07-OOPmini-02_Class_Diagram.pdf" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Database_textFiles/DBTables.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Database_textFiles/TEST_DBTables.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../ICT2132 - Mini Project - B07.pdf" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../JAVA_ER.drawio" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../JAVA_ER.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Java Class Diagram.drawio" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Java_mini_project.iml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Reference.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Resources/ProfileImages/tg1234.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../.idea/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../.idea/misc.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../.idea/modules.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../.idea/uiDesigner.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../.idea/vcs.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../.idea/workspace.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../System.iml" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Resources/ProfileImages/tg1234.jpeg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Resources/ProfileImages/tg1234.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Resources/ProfileImages/tg5678.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../out/production/System/ChangePassword/ChangePassword.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../out/production/System/DBCONNECTION/DBCONNECTION.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../out/production/System/DeleteUser/DeleteUser.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../out/production/System/HomePage/LecturerHomePage$1.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../out/production/System/HomePage/LecturerHomePage$2.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../out/production/System/HomePage/LecturerHomePage$3.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../out/production/System/HomePage/LecturerHomePage.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../out/production/System/HomePage/TechnicalOfficerHomePage$1.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../out/production/System/HomePage/TechnicalOfficerHomePage$2.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../out/production/System/HomePage/TechnicalOfficerHomePage$3.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../out/production/System/HomePage/TechnicalOfficerHomePage$4.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../out/production/System/HomePage/TechnicalOfficerHomePage$5.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../out/production/System/HomePage/TechnicalOfficerHomePage.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../out/production/System/HomePage/UndergraduateHomePage$1.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../out/production/System/HomePage/UndergraduateHomePage$10.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../out/production/System/HomePage/UndergraduateHomePage$11.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../out/production/System/HomePage/UndergraduateHomePage$12.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../out/production/System/HomePage/UndergraduateHomePage$13.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../out/production/System/HomePage/UndergraduateHomePage$2.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../out/production/System/HomePage/UndergraduateHomePage$3.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../out/production/System/HomePage/UndergraduateHomePage$4.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../out/production/System/HomePage/UndergraduateHomePage$5.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../out/production/System/HomePage/UndergraduateHomePage$6.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../out/production/System/HomePage/UndergraduateHomePage$7.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../out/production/System/HomePage/UndergraduateHomePage$8.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../out/production/System/HomePage/UndergraduateHomePage$9.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../out/production/System/HomePage/UndergraduateHomePage.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../out/production/System/Login/Login$1.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../out/production/System/Login/Login$2.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../out/production/System/Login/Login.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../out/production/System/Main/Main.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../out/production/System/Register/Register$1.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../out/production/System/Register/Register.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../out/production/System/UserProfile/AdminUserProfile.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../out/production/System/UserProfile/LecturerUserProfile.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../out/production/System/UserProfile/TechnicalOfficerUserProfile.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../out/production/System/UserProfile/UndergraduateUserProfile.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../out/production/System/com/intellij/uiDesigner/core/AbstractLayout.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../out/production/System/com/intellij/uiDesigner/core/DimensionInfo.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../out/production/System/com/intellij/uiDesigner/core/GridConstraints.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../out/production/System/com/intellij/uiDesigner/core/GridLayoutManager.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../out/production/System/com/intellij/uiDesigner/core/HorizontalInfo.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../out/production/System/com/intellij/uiDesigner/core/LayoutState.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../out/production/System/com/intellij/uiDesigner/core/Spacer.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../out/production/System/com/intellij/uiDesigner/core/SupportCode$TextWithMnemonic.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../out/production/System/com/intellij/uiDesigner/core/SupportCode.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../out/production/System/com/intellij/uiDesigner/core/Util.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../out/production/System/com/intellij/uiDesigner/core/VerticalInfo.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../TecSys_SRS.docx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../TecSys_SRS.pdf" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../UGSave_Upload_ProfImage_Function.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../out/production/Java_mini_project/ChangePassword/ChangePassword.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../out/production/Java_mini_project/DBCONNECTION/DBCONNECTION.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../out/production/Java_mini_project/DeleteUser/DeleteUser.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../out/production/Java_mini_project/HomePage/LecturerHomePage$1.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../out/production/Java_mini_project/HomePage/LecturerHomePage$2.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../out/production/Java_mini_project/HomePage/LecturerHomePage$3.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../out/production/Java_mini_project/HomePage/LecturerHomePage.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../out/production/Java_mini_project/HomePage/TechnicalOfficerHomePage$1.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../out/production/Java_mini_project/HomePage/TechnicalOfficerHomePage$2.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../out/production/Java_mini_project/HomePage/TechnicalOfficerHomePage$3.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../out/production/Java_mini_project/HomePage/TechnicalOfficerHomePage$4.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../out/production/Java_mini_project/HomePage/TechnicalOfficerHomePage$5.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../out/production/Java_mini_project/HomePage/TechnicalOfficerHomePage.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../out/production/Java_mini_project/HomePage/UndergraduateHomePage$1.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../out/production/Java_mini_project/HomePage/UndergraduateHomePage$10.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../out/production/Java_mini_project/HomePage/UndergraduateHomePage$2.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../out/production/Java_mini_project/HomePage/UndergraduateHomePage$3.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../out/production/Java_mini_project/HomePage/UndergraduateHomePage$4.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../out/production/Java_mini_project/HomePage/UndergraduateHomePage$5.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../out/production/Java_mini_project/HomePage/UndergraduateHomePage$6.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../out/production/Java_mini_project/HomePage/UndergraduateHomePage$7.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../out/production/Java_mini_project/HomePage/UndergraduateHomePage$8.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../out/production/Java_mini_project/HomePage/UndergraduateHomePage$9.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../out/production/Java_mini_project/HomePage/UndergraduateHomePage.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../out/production/Java_mini_project/Login/Login$1.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../out/production/Java_mini_project/Login/Login$2.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../out/production/Java_mini_project/Login/Login.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../out/production/Java_mini_project/Main/Main.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../out/production/Java_mini_project/Register/Register$1.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../out/production/Java_mini_project/Register/Register.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../out/production/Java_mini_project/UserProfile/AdminUserProfile.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../out/production/Java_mini_project/UserProfile/LecturerUserProfile.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../out/production/Java_mini_project/UserProfile/TechnicalOfficerUserProfile.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../out/production/Java_mini_project/UserProfile/UndergraduateUserProfile.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../out/production/Java_mini_project/com/intellij/uiDesigner/core/AbstractLayout.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../out/production/Java_mini_project/com/intellij/uiDesigner/core/DimensionInfo.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../out/production/Java_mini_project/com/intellij/uiDesigner/core/GridConstraints.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../out/production/Java_mini_project/com/intellij/uiDesigner/core/GridLayoutManager.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../out/production/Java_mini_project/com/intellij/uiDesigner/core/HorizontalInfo.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../out/production/Java_mini_project/com/intellij/uiDesigner/core/LayoutState.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../out/production/Java_mini_project/com/intellij/uiDesigner/core/Spacer.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../out/production/Java_mini_project/com/intellij/uiDesigner/core/SupportCode$TextWithMnemonic.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../out/production/Java_mini_project/com/intellij/uiDesigner/core/SupportCode.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../out/production/Java_mini_project/com/intellij/uiDesigner/core/Util.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../out/production/Java_mini_project/com/intellij/uiDesigner/core/VerticalInfo.class" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -15,9 +136,9 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/../.." />
   </component>
-  <component name="ProjectColorInfo"><![CDATA[{
-  "associatedIndex": 3
-}]]></component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 3
+}</component>
   <component name="ProjectId" id="2vZJ2newWdTwItXHaQNUqvu7MvX" />
   <component name="ProjectLevelVcsManager">
     <ConfirmationsSetting value="1" id="Add" />
@@ -26,15 +147,16 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "Application.Unnamed.executor": "Run",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "git-widget-placeholder": "Chirath",
-    "kotlin-language-version-configured": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Application.Unnamed.executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;Chirath&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;E:/E Drive/University Project/Java_mini_project/System/TecSys&quot;
   }
-}]]></component>
+}</component>
   <component name="RunManager">
     <configuration name="Unnamed" type="Application" factoryName="Application" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="Main.Main" />
