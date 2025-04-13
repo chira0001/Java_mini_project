@@ -56,6 +56,12 @@ public class TechnicalOfficerHomePage extends JFrame {
     private JComboBox TODepartment;
     private JComboBox TOupdateDepartment;
     private JPanel attendenceButton;
+    private JPanel technicalofficerTimeTable;
+    private JTable tableTimeTable;
+    private JComboBox SemesterNoDropDown;
+    private JComboBox LevelNoDropDown;
+    private JComboBox noticeTitleDropDown;
+    private JTextArea noticeDisplayArea;
 
     private CardLayout cardLayout;
 
@@ -71,7 +77,7 @@ public class TechnicalOfficerHomePage extends JFrame {
     private String[] cardButtons = {"Profile", "Attendance", "Time Table", "Medical", "Notices", "Settings"};
     private String[] cardNames = {"TOProfileCard", "TOAttendanceCard", "TOTimeTableCard", "TOMedicalsCard", "TONoticesCard", "TOSettingsCard"};
     JButton[] btnFieldNames = {profileButton,attendanceButton,timeTableButton,medicalButton,noticesButton,settingsButton};
-    private String[] cardTitles = {"Welcome..!", "Attendance Details", "View Undergraduate Time Table","Medical Information", "Notices","Settings Configuration"};
+    private String[] cardTitles = {"Welcome..!", "Attendance Details", "View Technical Officer Time Table","Medical Information", "Notices","Settings Configuration"};
 
     private Object[] filePathValues = new Object[4];
 
@@ -119,6 +125,7 @@ public class TechnicalOfficerHomePage extends JFrame {
         uploadImageButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+
                 TOUploadToPreviewProfileImage(userIdentity);
             }
         });
@@ -126,6 +133,7 @@ public class TechnicalOfficerHomePage extends JFrame {
         updateButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+
                 TOUpdateCredentials(userIdentity);
             }
         });
