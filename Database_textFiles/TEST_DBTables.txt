@@ -79,16 +79,19 @@ course_name varchar(50),
 level_no int(1),
 semester_no int(1),
 status enum('theory','practical','theory/practical') default 'theory',
+quizzes_perc int(3) default 0,
+assessment_perc int(3) default 0,
+mid_term_perc int(3) default 0,
 final_theory_perc int(3) default 0,
 final_practical_perc int(3) default 0
 );
 
 INSERT INTO courses VALUES
-("ICT2113","Data Structures and Algorithms",2,1,'theory/practical',40,30),
-("ICT2122","Object Oriented Programming",2,1,'theory',60,0),
-("ICT2133","Object Oriented Programming Practicum III",2,1,'theory/practical',40,30),
-("ICT2142","Object Oriented Analysis and Design",2,1,'practical',0,60),
-("ICT2152","E-Commerce Implementation Management and Security",2,1,'theory',70,0);
+("ICT2113","Data Structures and Algorithms",2,1,'theory/practical',10,0,20,40,30),
+("ICT2122","Object Oriented Programming",2,1,'theory',10,10,20,60,0),
+("ICT2133","Object Oriented Programming Practicum III",2,1,'theory/practical',10,20,0,40,30),
+("ICT2142","Object Oriented Analysis and Design",2,1,'practical',0,20,20,0,60),
+("ICT2152","E-Commerce Implementation Management and Security",2,1,'theory',10,20,0,70,0);
 
 create table marks(
 mark_id INT primary key auto_increment,
@@ -98,18 +101,72 @@ quiz_one int(3) default 0,
 quiz_second int(3) default 0,
 quiz_third int(3) default 0,
 quiz_fourth int(3) default 0,
-assessment int(3) default 0,
+assessment_one int(3) default 0,
+assessment_second int(3) default 0,
 mid_term int(3) default 0,
 final_theory int(3) default 0,
 final_practical int(3) default 0
 );
 
-insert into marks(tgno,course_id,quiz_one,quiz_second,quiz_third,quiz_fourth,assessment,mid_term,final_theory,final_practical) values
-("tg5678","ICT2113",75,65,55,55,78,70,80,85),
-("tg5432","ICT2122",75,65,55,55,78,70,80,0),
-("tg1234","ICT2133",75,65,55,55,78,70,80,85),
-("tg9101","ICT2142",75,65,55,55,78,70,0,85),
-("tg1121","ICT2152",75,65,55,55,78,70,80,0);
+insert into marks(tgno,course_id,quiz_one,quiz_second,quiz_third,quiz_fourth,assessment_one,assessment_second,mid_term,final_theory,final_practical) values
+("tg5678","ICT2113",100,100,100,0,0,0,100,100,100),
+("tg5432","ICT2122",100,100,100,100,0,100,100,100,0),
+("tg1234","ICT2133",100,100,100,0,0,100,0,100,100),
+("tg9101","ICT2142",0,0,0,0,0,100,100,0,100),
+("tg1121","ICT2152",100,100,100,0,100,100,0,100,0);
+
+create table stu_marks(
+mark_id INT primary key auto_increment,
+tgno varchar(6),
+course_id varchar(7),
+ca_marks_perc decimal(3,2) default 0,
+final_marks_perc decimal(3,2) default 0
+);
+
+insert into stu_marks(tgno,course_id,ca_marks_perc,final_marks_perc) values
+("tg5678","ICT2113",0,0),
+("tg5432","ICT2122",0,0),
+("tg1234","ICT2133",0,0),
+("tg9101","ICT2142",0,0),
+("tg1121","ICT2152",0,0);
+
+create table attendance(
+atten_id INT primary key auto_increment,
+tono varchar(6),
+tgno varchar(6),
+course_id varchar(7),         
+week_no int(2),
+atten_status varchar(20),
+med_id char(6)
+);
+
+INSERT INTO attendance(tono,tgno,course_id,week_no,course_status,atten_status,med_id) VALUES
+("to2222", "tg1234", "ICT2113", 1, "theory", "present", ""),
+("to2222", "tg1345", "ICT2113", 1, "theory", "absent", ""),
+("to2222", "tg1346", "ICT2113", 1, "practical", "present", ""),
+("to2222", "tg1347", "ICT2113", 1, "practical", "present", ""),
+("to2222", "tg1354", "ICT2113", 1, "theory", "present", "");
+
+create table medical(
+medical_no int primary key auto_increment,
+tono varchar(6),
+tgno varchar(6),
+level_no int(1),
+semester_no int(1),
+course_id varchar(7), 
+week_no int(2),
+course_name varchar(50),
+course_status enum('theory','practical') default 'theory',
+med_reason varchar(100)
+);
+
+insert into medical(tono,tgno,level_no,semester_no,course_id,week_no,course_name,course_status,med_reason) values
+("to2222","tg1344","ICT1222", 2, 1, 2, "Data Structures and Algorithms", "theory", "Influenza"),
+("to2222","tg1344","ICT1222", 2, 1, 3, "Data Structures and Algorithms", "practical", "Influenza"),
+("to2222","tg1344","ICT1222", 2, 1, 4, "Data Structures and Algorithms", "theory", "Influenza"),
+("to2222","tg1344","ICT1222", 2, 1, 5, "Data Structures and Algorithms", "practical", "Influenza"),
+("to2222","tg1344","ICT1222", 2, 1, 6, "Data Structures and Algorithms", "theory", "Influenza");
+
 
 INSERT INTO undergraduate VALUES
 ("tg5432", "Athula", "Nihan", "Matara", "athula@gmail.com", 987004321, "123","Resources/Images/5432.jpg",2,1),
@@ -161,6 +218,20 @@ INSERT INTO lecture_course(lecno,course_id) VALUES
 ("lec1121","ICT2152"),
 ("lec5121","TSC2122");
 
+
+
+
 SELECT * FROM timetable
 
 ORDER BY CASE module_day WHEN 'Monday' THEN 1 WHEN 'Tuesday' THEN 2 WHEN 'Wednesday' THEN 3 WHEN 'Thursday' THEN 4 WHEN 'Friday' THEN 5 WHEN 'Saturday' THEN 6 WHEN 'Sunday' THEN 7 END;
+
+select tgno, courses.course_id,quiz_one,quiz_second,quiz_third,assessment, mid_term, final_theory, final_practical, status, final_theory_perc, final_practical_perc from marks join courses where marks.course_id = courses.course_id;
+
+select tgno,courses.course_id,quiz_one,quiz_second,quiz_third,quiz_fourth,assessment_one,assessment_second,mid_term,final_theory,final_practical,quizzes_perc,assessment_perc,mid_term_perc,final_theory_perc,final_practical_perc from marks join courses where marks.course_id = courses.course_id;
+
+for attendance table ->
+select courses.course_id,course_name,course_status,week_no,atten_status,med_id from attendance join courses where attendance.course_id = courses.course_id and tgno ="tg1234" and level_no = 2 and semester_no = 1;
+
+
+
+

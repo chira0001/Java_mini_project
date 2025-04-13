@@ -5,9 +5,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="cc3bab98-1966-4d30-984b-b39ace1a34ce" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/../Database_textFiles/TEST_DBTables.txt" beforeDir="false" afterPath="$PROJECT_DIR$/../Database_textFiles/TEST_DBTables.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/TecSys/src/Login.java" beforeDir="false" afterPath="$PROJECT_DIR$/TecSys/src/Login.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/TecSys/src/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/TecSys/src/Main.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/TecSys/src/HomePage/UndergraduateHomePage.form" beforeDir="false" afterPath="$PROJECT_DIR$/TecSys/src/HomePage/UndergraduateHomePage.form" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/TecSys/src/HomePage/UndergraduateHomePage.java" beforeDir="false" afterPath="$PROJECT_DIR$/TecSys/src/HomePage/UndergraduateHomePage.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -52,8 +53,8 @@
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.git.unshallow": "true",
     "UI_DESIGNER_EDITOR_MODE.PaletteManager.WIDTH": "227",
-    "UI_DESIGNER_EDITOR_MODE.UIDesignerToolWindowManager.WIDTH": "274",
-    "git-widget-placeholder": "<unknown>",
+    "UI_DESIGNER_EDITOR_MODE.UIDesignerToolWindowManager.WIDTH": "259",
+    "git-widget-placeholder": "Chirath",
     "kotlin-language-version-configured": "true",
     "last_opened_file_path": "C:/Users/DELL/Desktop/Java Project/Java_mini_project/System/TecSys/mysql-connector-j-9.2.0.jar",
     "node.js.detected.package.eslint": "true",
@@ -75,14 +76,6 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-  </component>
-  <component name="SharedIndexes">
-    <attachedChunks>
-      <set>
-        <option value="bundled-jdk-9823dce3aa75-a94e463ab2e7-intellij.indexing.shared.core-IU-243.25659.59" />
-        <option value="bundled-js-predefined-d6986cc7102b-1632447f56bf-JavaScript-IU-243.25659.59" />
-      </set>
-    </attachedChunks>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
