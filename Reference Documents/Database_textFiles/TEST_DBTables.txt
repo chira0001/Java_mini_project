@@ -151,12 +151,8 @@ create table medical(
 medical_no int primary key auto_increment,
 tono varchar(6),
 tgno varchar(6),
-level_no int(1),
-semester_no int(1),
 course_id varchar(7), 
 week_no int(2),
-course_name varchar(50),
-course_status enum('theory','practical') default 'theory',
 med_reason varchar(100)
 );
 

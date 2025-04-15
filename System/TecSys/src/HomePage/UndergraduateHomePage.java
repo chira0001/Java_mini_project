@@ -73,6 +73,8 @@ public class UndergraduateHomePage extends JFrame {
     private JTable AttendanceTable;
     private JComboBox AttendanceLevelNo;
     private JComboBox AttendanceSemesterNo;
+    private JComboBox AttendanceSubjectCode;
+    private JComboBox AttendanceSubjectStatus;
 
     private CardLayout cardLayout;
 
@@ -99,6 +101,9 @@ public class UndergraduateHomePage extends JFrame {
 
     private int SemeterNumber;
     private int LevelNumber;
+
+    private int Atten_Level_No_Global;
+    private int Atten_Semester_No_Global;
 
     public UndergraduateHomePage(String userIdentity){
 
@@ -171,7 +176,7 @@ public class UndergraduateHomePage extends JFrame {
             public void actionPerformed(ActionEvent e) {
 
                 String notice = (String) noticeTitleDropDown.getSelectedItem();
-                System.out.println(notice);
+//                System.out.println(notice);
                 viewNotice(notice);
             }
         });
@@ -248,8 +253,11 @@ public class UndergraduateHomePage extends JFrame {
                 String level_no = (String) AttendanceLevelNo.getSelectedItem();
                 int LevelNo = Integer.parseInt(level_no);
                 valuesforAttendanceTable(LevelNo,SemeterNumber,userIdentity);
-                System.out.println(LevelNo);
+
                 valuesforAttendanceTable(LevelNo,1,userIdentity);
+                LoadAttendanceCourseNumber(userIdentity, LevelNo,1);
+
+                Atten_Level_No_Global = LevelNo;
             }
         });
         AttendanceSemesterNo.addActionListener(new ActionListener() {
@@ -259,11 +267,80 @@ public class UndergraduateHomePage extends JFrame {
 
                 String semester_no = (String) AttendanceSemesterNo.getSelectedItem();
                 int SemesterNo = Integer.parseInt(semester_no);
+
                 valuesforAttendanceTable(LevelNumber,SemesterNo,userIdentity);
                 valuesforAttendanceTable(2,SemesterNo,userIdentity);
-                System.out.println(SemesterNo);
+
+                LoadAttendanceCourseNumber(userIdentity, 2, SemesterNo);
+
+                Atten_Semester_No_Global = SemesterNo;
             }
         });
+        AttendanceSubjectCode.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                AttendanceTableSetMethod();
+
+                String Atten_Subject_code = (String) AttendanceSubjectCode.getSelectedItem();
+                LoadAttendanceCourseStatus(userIdentity,Atten_Level_No_Global,Atten_Semester_No_Global,Atten_Subject_code);
+
+            }
+        });
+    }
+
+    private void LoadAttendanceTable() {
+        
+    }
+
+    private void LoadAttendanceCourseStatus(String tgno, int level_no, int semester_no, String course_id){
+
+        String Atten_Course_Status;
+
+        try{
+            String Atten_Course_StatusLoadQuery = "select distinct attendance.course_status from attendance join courses where attendance.course_id = courses.course_id and tgno = ? and level_no = ? and semester_no = ? and courses.course_id = ?";
+
+            prepStatement = conn.prepareStatement(Atten_Course_StatusLoadQuery);
+            prepStatement.setString(1,tgno);
+            prepStatement.setInt(2,level_no);
+            prepStatement.setInt(3,semester_no);
+            prepStatement.setString(4,course_id);
+
+            ResultSet result = prepStatement.executeQuery();
+
+            AttendanceSubjectStatus.removeAllItems();
+
+            while(result.next()){
+                Atten_Course_Status = result.getString("course_status");
+                AttendanceSubjectStatus.addItem(Atten_Course_Status);
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    private void LoadAttendanceCourseNumber(String tgno, int level_no, int semester_no){
+
+        String Atten_Course_Code;
+
+        try{
+            String noticeLoadQuery = "select distinct courses.course_id from attendance join courses where attendance.course_id = courses.course_id and tgno = ? and level_no = ? and semester_no = ?";
+
+            prepStatement = conn.prepareStatement(noticeLoadQuery);
+            prepStatement.setString(1,tgno);
+            prepStatement.setInt(2,level_no);
+            prepStatement.setInt(3,semester_no);
+
+            ResultSet result = prepStatement.executeQuery();
+
+            AttendanceSubjectCode.removeAllItems();
+
+            while(result.next()){
+                Atten_Course_Code = result.getString("course_id");
+                AttendanceSubjectCode.addItem(Atten_Course_Code);
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
     }
 
     private void MarksTableSetModelMethod(){
@@ -276,7 +353,7 @@ public class UndergraduateHomePage extends JFrame {
     private void AttendanceTableSetMethod(){
         AttendanceTable.setModel(new DefaultTableModel(
                 null,
-                new String[]{"Week No","Course No","Course Name","Course Status","Attendance Status","Medical No"}
+                new String[]{"Week No","Course No","Course Name","Attendance Status","Medical No","Medical Reason"}
         ));
     }
 
