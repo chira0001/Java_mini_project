@@ -770,6 +770,7 @@
                                     <properties>
                                       <font size="12"/>
                                       <model>
+                                        <item value=""/>
                                         <item value="1"/>
                                         <item value="2"/>
                                       </model>
@@ -802,6 +803,7 @@
                                     <properties>
                                       <font size="12"/>
                                       <model>
+                                        <item value=""/>
                                         <item value="1"/>
                                         <item value="2"/>
                                         <item value="3"/>
@@ -841,6 +843,7 @@
                                     </constraints>
                                     <properties>
                                       <font size="12"/>
+                                      <model/>
                                     </properties>
                                   </component>
                                 </children>

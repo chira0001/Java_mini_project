@@ -118,7 +118,7 @@ tono varchar(6),
 tgno varchar(6),
 course_id varchar(7), 
 week_no int(2),
-med_reason varchar(100)
+med_reason varchar(100) default ""
 );
 
 INSERT INTO admin VALUES
@@ -209,7 +209,7 @@ insert into marks(tgno,course_id,quiz_one,quiz_second,quiz_third,quiz_fourth,ass
 ("tg0005","ICT0005",100,100,100,0,100,100,0,100,0);
 
 INSERT INTO attendance(tono,tgno,course_id,week_no,course_status,atten_status,med_id) VALUES
-("to0001", "tg0001", "ICT0001", 1, "theory", "present", ""),
+("to0001", "tg0001", "ICT0001", 1, "theory", "absent", "6"),
 ("to0002", "tg0002", "ICT0001", 1, "theory", "present", ""),
 ("to0003", "tg0003", "ICT0001", 1, "theory", "present", ""),
 ("to0004", "tg0004", "ICT0001", 1, "theory", "present", ""),
@@ -295,8 +295,5 @@ INSERT INTO attendance(tono,tgno,course_id,week_no,course_status,atten_status,me
 ("to0005", "tg0005", "ICT0005", 2, "theory", "present", "");
 
 insert into medical(tono,tgno,course_id,week_no,med_reason) values
-("to0001","tg0001","ICT0001", 2, "Influenza"),
-("to0002","tg0002","ICT0002", 2, "Fever"),
-("to0003","tg0003","ICT0003", 2, "Cough"),
-("to0004","tg0004","ICT0004", 2, "Headach"),
-("to0005","tg0005","ICT0005", 2, "Toothach");
+("to0001","tg0001","ICT0001", 1, "Influenza")
+;
