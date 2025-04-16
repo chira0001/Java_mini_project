@@ -198,10 +198,21 @@ public class UndergraduateHomePage extends JFrame {
                 TimeTableSetModelMethod();
 
                 String level_no = (String) LevelNoDropDown.getSelectedItem();
+                assert level_no != null;
+                if(level_no.isEmpty()){
+                    level_no = "0";
+                }
                 int LevelNo = Integer.parseInt(level_no);
-                valuesForCourseTable(LevelNo,SemeterNumber);
-                System.out.println(LevelNo);
-                valuesForCourseTable(LevelNo,1);
+
+                String semester_no = (String) SemesterNoDropDown.getSelectedItem();
+                assert semester_no != null;
+                if(semester_no.isEmpty()){
+                    semester_no = "0";
+                }
+
+                int SemesterNo = Integer.parseInt(semester_no);
+
+                valuesForCourseTable(LevelNo,SemesterNo);
             }
         });
 
@@ -211,10 +222,20 @@ public class UndergraduateHomePage extends JFrame {
                 TimeTableSetModelMethod();
 
                 String semester_no = (String) SemesterNoDropDown.getSelectedItem();
+                assert semester_no != null;
+                if(semester_no.isEmpty()){
+                    semester_no = "0";
+                }
                 int SemesterNo = Integer.parseInt(semester_no);
-                valuesForCourseTable(LevelNumber,SemesterNo);
-                valuesForCourseTable(2,SemesterNo);
-                System.out.println(SemesterNo);
+
+                String level_no = (String) LevelNoDropDown.getSelectedItem();
+                assert level_no != null;
+                if(level_no.isEmpty()){
+                    level_no = "0";
+                }
+                int LevelNo = Integer.parseInt(level_no);
+
+                valuesForCourseTable(LevelNo,SemesterNo);
             }
         });
 
@@ -223,23 +244,45 @@ public class UndergraduateHomePage extends JFrame {
         UGLevelNoforMarksDropDown.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                TimeTableSetModelMethod();
+                MarksTableSetModelMethod();
 
-                String level_no = (String) LevelNoDropDown.getSelectedItem();
+                String level_no = (String) UGLevelNoforMarksDropDown.getSelectedItem();
+                assert level_no != null;
+                if(level_no.isEmpty()){
+                    level_no = "0";
+                }
                 int LevelNo = Integer.parseInt(level_no);
-                valuesForMarksTable(LevelNo,SemeterNumber);
-                valuesForMarksTable(LevelNo,1);
+
+                String semester_no = (String) UGSemesterNoforMarksDropDown.getSelectedItem();
+                assert semester_no != null;
+                if(semester_no.isEmpty()){
+                    semester_no = "0";
+                }
+                int SemesterNo = Integer.parseInt(semester_no);
+
+                calculateGrade(userIdentity,LevelNo,SemesterNo);
             }
         });
         UGSemesterNoforMarksDropDown.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                TimeTableSetModelMethod();
+                MarksTableSetModelMethod();
 
-                String semester_no = (String) SemesterNoDropDown.getSelectedItem();
+                String semester_no = (String) UGSemesterNoforMarksDropDown.getSelectedItem();
+                assert semester_no != null;
+                if(semester_no.isEmpty()){
+                    semester_no = "0";
+                }
                 int SemesterNo = Integer.parseInt(semester_no);
-                valuesForMarksTable(LevelNumber,SemesterNo);
-                valuesForMarksTable(2,SemesterNo);
+
+                String level_no = (String) UGLevelNoforMarksDropDown.getSelectedItem();
+                assert level_no != null;
+                if(level_no.isEmpty()){
+                    level_no = "0";
+                }
+                int LevelNo = Integer.parseInt(level_no);
+
+                calculateGrade(userIdentity,LevelNo,SemesterNo);
             }
         });
 
@@ -520,7 +563,7 @@ public class UndergraduateHomePage extends JFrame {
     private void MarksTableSetModelMethod(){
         UGGradeTable.setModel(new DefaultTableModel(
                 null,
-                new String[]{"Course Code","Course Module","CA Marks","Eligibility for final exam","Final Marks","Grade"}
+                new String[]{"Course Code","Course Name","CA Marks","Eligibility for Final Exam","Final Marks","Attendance Eligibility","Grade"}
         ));
     }
 
@@ -549,9 +592,6 @@ public class UndergraduateHomePage extends JFrame {
         timeTableColumns.getColumn(3).setCellRenderer(timeTableCells);
     }
 
-    private void valuesForMarksTable(int level_no, int semester_no){
-
-    }
     private void calculateGrade(){
         int quiz1 = 75;
         int quiz2 = 65;
@@ -564,6 +604,9 @@ public class UndergraduateHomePage extends JFrame {
     }
 
     private void valuesForCourseTable(int level_no, int semester_no){
+
+        System.out.println("Level " + level_no + " Semester " + semester_no);
+
         String TimeTableValues = "select time_table_id, Courses.course_id, module_day, course_name, time from timeTable join Courses where timeTable.course_id = Courses.course_id and level_no = ? and semester_no = ? ORDER BY CASE module_day WHEN 'Monday' THEN 1 WHEN 'Tuesday' THEN 2 WHEN 'Wednesday' THEN 3 WHEN 'Thursday' THEN 4 WHEN 'Friday' THEN 5 WHEN 'Saturday' THEN 6 WHEN 'Sunday' THEN 7 END";
         DefaultTableModel tblmodel = (DefaultTableModel) tableTimeTable.getModel();
         try{
@@ -585,40 +628,6 @@ public class UndergraduateHomePage extends JFrame {
                 timeTableData[3] = courseTime;
 
                 tblmodel.addRow(timeTableData);
-            }
-        }catch (Exception e){
-            e.printStackTrace();
-        }
-    }
-
-    private void valuesforAttendanceTable(int level_no, int semester_no, String tgno){
-//        String AttendanceTableValues = "select courses.course_id,course_name,course_status,week_no,atten_status,med_id from attendance join courses where attendance.course_id = courses.course_id and tgno = 'tg1234' and level_no = 2 and semester_no = 1";
-        String AttendanceTableValues = "select courses.course_id,course_name,course_status,week_no,atten_status,med_id from attendance join courses where attendance.course_id = courses.course_id and tgno = ? and level_no = ? and semester_no = ?";
-        DefaultTableModel tblmodel = (DefaultTableModel) AttendanceTable.getModel();
-        try{
-            prepStatement = conn.prepareStatement(AttendanceTableValues);
-            prepStatement.setString(1,tgno);
-            prepStatement.setInt(2,level_no);
-            prepStatement.setInt(3,semester_no);
-            ResultSet result = prepStatement.executeQuery();
-            while (result.next()){
-                String courseID = result.getString("course_id");
-                String courseName = result.getString("course_name");
-                String course_status = result.getString("course_status");
-                String week_no = result.getString("week_no");
-                String atten_status = result.getString("atten_status");
-                String med_id = result.getString("med_id");
-
-                Object[] AttendanceTableData = new Object[6];
-
-                AttendanceTableData[0] = week_no;
-                AttendanceTableData[1] = courseID;
-                AttendanceTableData[2] = courseName;
-                AttendanceTableData[3] = course_status;
-                AttendanceTableData[4] = atten_status;
-                AttendanceTableData[5] = med_id;
-
-                tblmodel.addRow(AttendanceTableData);
             }
         }catch (Exception e){
             e.printStackTrace();
@@ -849,21 +858,32 @@ public class UndergraduateHomePage extends JFrame {
         }
     }
 
-    public void calculateGrade(String tgno){
+    public void calculateGrade(String tgno, int level_no, int semester_no){
+        DefaultTableModel defaultTableModel = (DefaultTableModel) UGGradeTable.getModel();
+
+        System.out.println("Level " + level_no + " Semes " + semester_no);
+
         int quiz_percentage,assessment_percentage,mid_term_percentage,final_theory_percentage,final_practical_percentage,
                 quiz1,quiz2,quiz3,quiz4,assessment1,assessment2,mid_term,finalTheory,finalPractical,ca_perc_max,final_mark_perc_max;
 
         double quizSum, quizPercentage, assessmentPercentage, midPercentage, FinalTheoryPercentage,FinalPracticalPercentage, ca_mark_perc, final_mark_perc;
 
-        String c_id,c_grade = "";
+        String c_id,c_name,c_grade = "";
+        float atten_perc_float = 0;
 
         try{
-            String selectMarkPercentage = "select tgno,courses.course_id,quiz_one,quiz_second,quiz_third,quiz_fourth,assessment_one,assessment_second,mid_term,final_theory,final_practical,quizzes_perc,assessment_perc,mid_term_perc,final_theory_perc,final_practical_perc from marks join courses where marks.course_id = courses.course_id and tgno = '" + tgno + "'";
-            Statement statement = conn.createStatement();
-            ResultSet resultSet = statement.executeQuery(selectMarkPercentage);
+            String selectMarkPercentage = "select tgno,courses.course_id,courses.course_name,quiz_one,quiz_second,quiz_third,quiz_fourth,assessment_one,assessment_second,mid_term,final_theory,final_practical,quizzes_perc,assessment_perc,mid_term_perc,final_theory_perc,final_practical_perc from marks join courses where marks.course_id = courses.course_id and tgno = ? and level_no = ? and semester_no = ?";
+
+            prepStatement = conn.prepareStatement(selectMarkPercentage);
+            prepStatement.setString(1,tgno);
+            prepStatement.setInt(2,level_no);
+            prepStatement.setInt(3,semester_no);
+
+            ResultSet resultSet = prepStatement.executeQuery();
 
             while (resultSet.next()){
                 c_id = resultSet.getString("course_id");
+                c_name = resultSet.getString("course_name");
 
                 quiz1 = resultSet.getInt("quiz_one");
                 quiz2 = resultSet.getInt("quiz_second");
@@ -880,6 +900,20 @@ public class UndergraduateHomePage extends JFrame {
                 mid_term_percentage = resultSet.getInt("mid_term_perc");
                 final_theory_percentage = resultSet.getInt("final_theory_perc");
                 final_practical_percentage = resultSet.getInt("final_practical_perc");
+
+                String atten_eligibility_query = "SELECT((SELECT COUNT(*) FROM attendance WHERE tgno = ? AND course_id = ? AND course_status IN ('practical', 'theory') AND atten_status IN ('present','medical'))/(SELECT COUNT(*) FROM attendance WHERE tgno = ? AND course_id = ? AND course_status IN ('practical', 'theory')) * 100) AS percentage";
+                prepStatement = conn.prepareStatement(atten_eligibility_query);
+                prepStatement.setString(1,tgno);
+                prepStatement.setString(2,c_id);
+                prepStatement.setString(3,tgno);
+                prepStatement.setString(4,c_id);
+
+                ResultSet resultSet1 = prepStatement.executeQuery();
+
+                while (resultSet1.next()){
+                    String atten_perc_Str = resultSet1.getString("percentage");
+                    atten_perc_float = Float.parseFloat(atten_perc_Str);
+                }
 
                 ca_perc_max = ((quiz_percentage + assessment_percentage + mid_term_percentage) * 50) / 100;
                 final_mark_perc_max = final_theory_percentage + final_practical_percentage;
@@ -908,40 +942,90 @@ public class UndergraduateHomePage extends JFrame {
                 ca_mark_perc = quizPercentage + assessmentPercentage + midPercentage;
                 final_mark_perc = FinalTheoryPercentage + FinalPracticalPercentage;
 
+                String ca_eligibility = "Not Eligible";
+//                System.out.println("Currect CA - " + ca_mark_perc + ", Max CA req - " + ca_perc_max + ", Attendance eligi - " + atten_perc_float);
                 if (ca_mark_perc > ca_perc_max){
-                    System.out.println("Eligible");
-                    if((ca_mark_perc + final_mark_perc) >= 90){
-                        c_grade = "A+";
-                    }else if((ca_mark_perc + final_mark_perc) >= 85){
-                        c_grade = "A";
-                    }else if((ca_mark_perc + final_mark_perc) >= 80){
-                        c_grade = "A-";
-                    }else if((ca_mark_perc + final_mark_perc) >= 75){
-                        c_grade = "B+";
-                    }else if((ca_mark_perc + final_mark_perc) >= 70){
-                        c_grade = "B";
-                    }else if((ca_mark_perc + final_mark_perc) >= 65){
-                        c_grade = "B-";
-                    }else if((ca_mark_perc + final_mark_perc) >= 60){
-                        c_grade = "C+";
-                    }else if((ca_mark_perc + final_mark_perc) >= 40){
-                        c_grade = "C";
-                    }else if((ca_mark_perc + final_mark_perc) >= 35){
-                        c_grade = "C-";
-                    }else if((ca_mark_perc + final_mark_perc) >= 30){
-                        c_grade = "D+";
-                    }else if((ca_mark_perc + final_mark_perc) >= 25){
-                        c_grade = "D";
-                    }else if((ca_mark_perc + final_mark_perc) >= 20){
-                        c_grade = "E";
-                    }else if((ca_mark_perc + final_mark_perc) >= 0){
-                        c_grade = "F";
+                    ca_eligibility = "Eligible";
+                    if(atten_perc_float >= 80){
+                        if((ca_mark_perc + final_mark_perc) >= 90){
+                            c_grade = "A+";
+                        }else if((ca_mark_perc + final_mark_perc) >= 85){
+                            c_grade = "A";
+                        }else if((ca_mark_perc + final_mark_perc) >= 80){
+                            c_grade = "A-";
+                        }else if((ca_mark_perc + final_mark_perc) >= 75){
+                            c_grade = "B+";
+                        }else if((ca_mark_perc + final_mark_perc) >= 70){
+                            c_grade = "B";
+                        }else if((ca_mark_perc + final_mark_perc) >= 65){
+                            c_grade = "B-";
+                        }else if((ca_mark_perc + final_mark_perc) >= 60){
+                            c_grade = "C+";
+                        }else if((ca_mark_perc + final_mark_perc) >= 40){
+                            c_grade = "C";
+                        }else if((ca_mark_perc + final_mark_perc) >= 35){
+                            c_grade = "C-";
+                        }else if((ca_mark_perc + final_mark_perc) >= 30){
+                            c_grade = "D+";
+                        }else if((ca_mark_perc + final_mark_perc) >= 25){
+                            c_grade = "D";
+                        }else if((ca_mark_perc + final_mark_perc) >= 20){
+                            c_grade = "E";
+                        }else if((ca_mark_perc + final_mark_perc) >= 0){
+                            c_grade = "F";
+                        }
+                    }else{
+                        c_grade = "Not Released";
                     }
                 }else{
-                    System.out.println("Not Eligible");
+                    ca_eligibility = "Not Eligible";
+                    c_grade = "Not Released";
                 }
-                System.out.println("Grade " + c_grade);
-                System.out.println("");
+
+                Object[] GradeTableData = new Object[7];
+
+                GradeTableData[0] = c_id;
+                GradeTableData[1] = c_name;
+                GradeTableData[2] = ca_mark_perc;
+                GradeTableData[3] = ca_eligibility;
+                GradeTableData[4] = final_mark_perc;
+                GradeTableData[5] = atten_perc_float;
+                GradeTableData[6] = c_grade;
+
+                defaultTableModel.addRow(GradeTableData);
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    private void valuesforAttendanceTable(int level_no, int semester_no, String tgno){
+        String AttendanceTableValues = "select courses.course_id,course_name,course_status,week_no,atten_status,med_id from attendance join courses where attendance.course_id = courses.course_id and tgno = ? and level_no = ? and semester_no = ?";
+        DefaultTableModel tblmodel = (DefaultTableModel) AttendanceTable.getModel();
+        try{
+            prepStatement = conn.prepareStatement(AttendanceTableValues);
+            prepStatement.setString(1,tgno);
+            prepStatement.setInt(2,level_no);
+            prepStatement.setInt(3,semester_no);
+            ResultSet result = prepStatement.executeQuery();
+            while (result.next()){
+                String courseID = result.getString("course_id");
+                String courseName = result.getString("course_name");
+                String course_status = result.getString("course_status");
+                String week_no = result.getString("week_no");
+                String atten_status = result.getString("atten_status");
+                String med_id = result.getString("med_id");
+
+                Object[] AttendanceTableData = new Object[6];
+
+                AttendanceTableData[0] = week_no;
+                AttendanceTableData[1] = courseID;
+                AttendanceTableData[2] = courseName;
+                AttendanceTableData[3] = course_status;
+                AttendanceTableData[4] = atten_status;
+                AttendanceTableData[5] = med_id;
+
+                tblmodel.addRow(AttendanceTableData);
             }
         }catch (Exception e){
             e.printStackTrace();
