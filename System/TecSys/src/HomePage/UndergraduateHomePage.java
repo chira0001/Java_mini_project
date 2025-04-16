@@ -75,6 +75,9 @@ public class UndergraduateHomePage extends JFrame {
     private JComboBox AttendanceSemesterNo;
     private JComboBox AttendanceSubjectCode;
     private JComboBox AttendanceSubjectStatus;
+    private JComboBox AttendanceSubjectStatusPerc;
+    private JLabel AttendancePercWithoutMed;
+    private JLabel AttendancePercWithMed;
 
     private CardLayout cardLayout;
 
@@ -328,6 +331,78 @@ public class UndergraduateHomePage extends JFrame {
                 LoadAttendanceTable(userIdentity,level_no_Global,semester_no_Global,course_id_Global,Atten_Subject_Status);
             }
         });
+        AttendanceSubjectStatusPerc.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String Course_Status_for_Perc = "Theory";
+                Course_Status_for_Perc = (String) AttendanceSubjectStatusPerc.getSelectedItem();
+
+                String course_id_Global = (String) GlobalVariables[2];
+
+                LoadAttendancePercentages(Course_Status_for_Perc,userIdentity,course_id_Global);
+            }
+        });
+    }
+
+    private void LoadAttendancePercentages(String atten_status, String tgno,String course_id){
+        try{
+            String Atten_Perc_Query_without_Med = "", Atten_Perc_Query_with_Med = "";
+
+            if(atten_status != null && !atten_status.isEmpty()){
+                if(atten_status.equals("theory")||atten_status.equals("Theory")){
+                    Atten_Perc_Query_without_Med = "SELECT((SELECT COUNT(*) FROM attendance WHERE tgno = ? AND course_id = ? AND course_status IN ('theory') AND atten_status IN ('present'))/(SELECT COUNT(*) FROM attendance WHERE tgno = ? AND course_id = ? AND course_status IN ('theory')) * 100) AS percentage"; //4
+                    Atten_Perc_Query_with_Med = "SELECT((SELECT COUNT(*) FROM attendance WHERE tgno = ? AND course_id = ? AND course_status IN ('theory') AND atten_status IN ('present','medical'))/(SELECT COUNT(*) FROM attendance WHERE tgno = ? AND course_id = ? AND course_status IN ('theory')) * 100) AS percentage";//4
+                }
+                else if(atten_status.equals("practical")||atten_status.equals("Practical")) {
+                    Atten_Perc_Query_without_Med = "SELECT((SELECT COUNT(*) FROM attendance WHERE tgno = ? AND course_id = ? AND course_status IN ('practical') AND atten_status IN ('present'))/(SELECT COUNT(*) FROM attendance WHERE tgno = ? AND course_id = ? AND course_status IN ('practical')) * 100) AS percentage";//4
+                    Atten_Perc_Query_with_Med = "SELECT((SELECT COUNT(*) FROM attendance WHERE tgno = ? AND course_id = ? AND course_status IN ('practical') AND atten_status IN ('present','medical'))/(SELECT COUNT(*) FROM attendance WHERE tgno = ? AND course_id = ? AND course_status IN ('practical')) * 100) AS percentage";//4
+                }
+                else if(atten_status.equals("theory/practical")||atten_status.equals("Theory/Practical")){
+                    Atten_Perc_Query_without_Med = "SELECT((SELECT COUNT(*) FROM attendance WHERE tgno = ? AND course_id = ? AND course_status IN ('practical', 'theory') AND atten_status IN ('present'))/(SELECT COUNT(*) FROM attendance WHERE tgno = ? AND course_id = ? AND course_status IN ('practical', 'theory')) * 100) AS percentage";//4
+                    Atten_Perc_Query_with_Med = "SELECT((SELECT COUNT(*) FROM attendance WHERE tgno = ? AND course_id = ? AND course_status IN ('practical', 'theory') AND atten_status IN ('present','medical'))/(SELECT COUNT(*) FROM attendance WHERE tgno = ? AND course_id = ? AND course_status IN ('practical', 'theory')) * 100) AS percentage";//4
+                }
+            }
+
+            if(!Atten_Perc_Query_without_Med.isEmpty()){
+                prepStatement = conn.prepareStatement(Atten_Perc_Query_without_Med);
+                prepStatement.setString(1,tgno);
+                prepStatement.setString(2,course_id);
+                prepStatement.setString(3,tgno);
+                prepStatement.setString(4,course_id);
+
+                ResultSet resultSet = prepStatement.executeQuery();
+                while (resultSet.next()){
+                    String perc_without_med_Str = resultSet.getString("percentage");
+                    if(perc_without_med_Str.isEmpty()){
+                        AttendancePercWithoutMed.setText("-%");
+                    }else{
+                        float perc_without_med_Int = Float.parseFloat(perc_without_med_Str);
+                        AttendancePercWithoutMed.setText(perc_without_med_Int + "%");
+                    }
+                }
+            }
+
+            if(!Atten_Perc_Query_with_Med.isEmpty()){
+                prepStatement = conn.prepareStatement(Atten_Perc_Query_with_Med);
+                prepStatement.setString(1,tgno);
+                prepStatement.setString(2,course_id);
+                prepStatement.setString(3,tgno);
+                prepStatement.setString(4,course_id);
+
+                ResultSet resultSet = prepStatement.executeQuery();
+                while (resultSet.next()){
+                    String perc_with_med_Str = resultSet.getString("percentage");
+                    if(perc_with_med_Str.isEmpty()){
+                        AttendancePercWithMed.setText("-%");
+                    }else{
+                        float perc_with_med_Int = Float.parseFloat(perc_with_med_Str);
+                        AttendancePercWithMed.setText(perc_with_med_Int + "%");
+                    }
+                }
+            }
+        }catch(Exception e){
+            e.printStackTrace();
+        }
     }
 
     private void LoadAttendanceTable(String tgno, int level_no, int semester_no, String course_id, String course_status) {
@@ -391,12 +466,22 @@ public class UndergraduateHomePage extends JFrame {
             ResultSet result = prepStatement.executeQuery();
 
             AttendanceSubjectStatus.removeAllItems();
+            AttendanceSubjectStatusPerc.removeAllItems();
+
             AttendanceSubjectStatus.addItem("");
+            AttendanceSubjectStatusPerc.addItem("");
 
             while(result.next()){
                 Atten_Course_Status = result.getString("course_status");
                 AttendanceSubjectStatus.addItem(Atten_Course_Status);
+                AttendanceSubjectStatusPerc.addItem(Atten_Course_Status);
             }
+
+            int itemCount = AttendanceSubjectStatusPerc.getItemCount();
+            if(itemCount>2){
+                AttendanceSubjectStatusPerc.addItem("Theory/Practical");
+            }
+
         }catch (Exception e){
             e.printStackTrace();
         }
@@ -417,11 +502,15 @@ public class UndergraduateHomePage extends JFrame {
             ResultSet result = prepStatement.executeQuery();
 
             AttendanceSubjectCode.removeAllItems();
+//            AttendanceSubjectCodePerc.removeAllItems();
+
             AttendanceSubjectCode.addItem("");
+//            AttendanceSubjectCodePerc.addItem("");
 
             while(result.next()){
                 Atten_Course_Code = result.getString("course_id");
                 AttendanceSubjectCode.addItem(Atten_Course_Code);
+//                AttendanceSubjectCodePerc.addItem(Atten_Course_Code);
             }
         }catch (Exception e){
             e.printStackTrace();
@@ -520,7 +609,6 @@ public class UndergraduateHomePage extends JFrame {
                 String atten_status = result.getString("atten_status");
                 String med_id = result.getString("med_id");
 
-//                Object[] timeTableData = new Object[4];
                 Object[] AttendanceTableData = new Object[6];
 
                 AttendanceTableData[0] = week_no;

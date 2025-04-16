@@ -227,3 +227,32 @@ select tgno,courses.course_id,quiz_one,quiz_second,quiz_third,quiz_fourth,assess
 
 for attendance table with medical 
 select attendance.week_no,courses.course_id,courses.course_name,atten_status,attendance.med_id,medical.med_reason from attendance join courses on attendance.course_id = courses.course_id left join medical on attendance.med_id = medical.medical_no where attendance.tgno = "tg0001" and level_no = 2 and semester_no = 1 and attendance.course_id = "ICT0001" and attendance.course_status = "theory";
+
+for percentage in attendance
+
+___________Attendance for both theroy and practical without medical
+SELECT((SELECT COUNT(*) FROM attendance WHERE tgno = 'tg0001' AND course_id = 'ICT0001' AND course_status IN ('practical', 'theory') AND atten_status IN ('present'))/(SELECT COUNT(*) FROM attendance WHERE tgno = 'tg0001' AND course_id = 'ICT0001' AND course_status IN ('practical', 'theory')) * 100) AS percentage;
+
+___________Attendance for theroy without medical
+SELECT((SELECT COUNT(*) FROM attendance WHERE tgno = 'tg0001' AND course_id = 'ICT0001' AND course_status IN ('theory') AND atten_status IN ('present'))/(SELECT COUNT(*) FROM attendance WHERE tgno = 'tg0001' AND course_id = 'ICT0001' AND course_status IN ('theory')) * 100) AS percentage;
+
+___________Attendance for practical without medical
+SELECT((SELECT COUNT(*) FROM attendance WHERE tgno = 'tg0001' AND course_id = 'ICT0001' AND course_status IN ('practical') AND atten_status IN ('present'))/(SELECT COUNT(*) FROM attendance WHERE tgno = 'tg0001' AND course_id = 'ICT0001' AND course_status IN ('practical')) * 100) AS percentage;
+
+
+___________Attendance for both theroy and practical with medical
+SELECT((SELECT COUNT(*) FROM attendance WHERE tgno = 'tg0001' AND course_id = 'ICT0001' AND course_status IN ('practical', 'theory') AND atten_status IN ('present','medical'))/(SELECT COUNT(*) FROM attendance WHERE tgno = 'tg0001' AND course_id = 'ICT0001' AND course_status IN ('practical', 'theory')) * 100) AS percentage;
+
+___________Attendance for theroy with medical
+SELECT((SELECT COUNT(*) FROM attendance WHERE tgno = 'tg0001' AND course_id = 'ICT0001' AND course_status IN ('theory') AND atten_status IN ('present','medical'))/(SELECT COUNT(*) FROM attendance WHERE tgno = 'tg0001' AND course_id = 'ICT0001' AND course_status IN ('theory')) * 100) AS percentage;
+
+___________Attendance for practical with medical
+SELECT((SELECT COUNT(*) FROM attendance WHERE tgno = 'tg0001' AND course_id = 'ICT0001' AND course_status IN ('practical') AND atten_status IN ('present','medical'))/(SELECT COUNT(*) FROM attendance WHERE tgno = 'tg0001' AND course_id = 'ICT0001' AND course_status IN ('practical')) * 100) AS percentage;
+
+
+
+
+
+
+
+
