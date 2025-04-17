@@ -14,6 +14,7 @@ import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.sql.*;
+import java.text.DecimalFormat;
 import java.util.Scanner;
 
 import static java.util.Arrays.sort;
@@ -110,6 +111,8 @@ public class UndergraduateHomePage extends JFrame {
     private int Atten_Semester_No_Global;
     private String Atten_Course_Number;
 
+    double CGPA;
+
     public UndergraduateHomePage(String userIdentity){
 
         GlobalVariables[0] = 1;
@@ -131,6 +134,7 @@ public class UndergraduateHomePage extends JFrame {
         profileButton.setEnabled(false);
         CardTittleLabel.setText(cardTitles[0]);
         loadUGProfImage(userIdentity);
+        lblSGPA.setText("SGPA Not Available");
 
         ActionListener listener = new ActionListener() {
             @Override
@@ -244,6 +248,7 @@ public class UndergraduateHomePage extends JFrame {
         UGLevelNoforMarksDropDown.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                lblSGPA.setText("SGPA Not Available");
                 MarksTableSetModelMethod();
 
                 String level_no = (String) UGLevelNoforMarksDropDown.getSelectedItem();
@@ -266,6 +271,7 @@ public class UndergraduateHomePage extends JFrame {
         UGSemesterNoforMarksDropDown.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                lblSGPA.setText("SGPA Not Available");
                 MarksTableSetModelMethod();
 
                 String semester_no = (String) UGSemesterNoforMarksDropDown.getSelectedItem();
@@ -385,6 +391,9 @@ public class UndergraduateHomePage extends JFrame {
                 LoadAttendancePercentages(Course_Status_for_Perc,userIdentity,course_id_Global);
             }
         });
+
+        CalcCGPA(userIdentity);
+
     }
 
     private void LoadAttendancePercentages(String atten_status, String tgno,String course_id){
@@ -860,8 +869,9 @@ public class UndergraduateHomePage extends JFrame {
 
     public void calculateGrade(String tgno, int level_no, int semester_no){
         DefaultTableModel defaultTableModel = (DefaultTableModel) UGGradeTable.getModel();
+        DecimalFormat df = new DecimalFormat("0.00");
 
-        System.out.println("Level " + level_no + " Semes " + semester_no);
+//        System.out.println("Level " + level_no + " Semes " + semester_no);
 
         int quiz_percentage,assessment_percentage,mid_term_percentage,final_theory_percentage,final_practical_percentage,
                 quiz1,quiz2,quiz3,quiz4,assessment1,assessment2,mid_term,finalTheory,finalPractical,ca_perc_max,final_mark_perc_max;
@@ -870,6 +880,12 @@ public class UndergraduateHomePage extends JFrame {
 
         String c_id,c_name,c_grade = "";
         float atten_perc_float = 0;
+
+        double c_sum = 0;
+        double SGPA = 0;
+
+        int credit_sum;
+        double credit_point_mul = 0,credit_point_mul_sum = 0;
 
         try{
             String selectMarkPercentage = "select tgno,courses.course_id,courses.course_name,quiz_one,quiz_second,quiz_third,quiz_fourth,assessment_one,assessment_second,mid_term,final_theory,final_practical,quizzes_perc,assessment_perc,mid_term_perc,final_theory_perc,final_practical_perc from marks join courses where marks.course_id = courses.course_id and tgno = ? and level_no = ? and semester_no = ?";
@@ -916,7 +932,7 @@ public class UndergraduateHomePage extends JFrame {
                 }
 
                 ca_perc_max = ((quiz_percentage + assessment_percentage + mid_term_percentage) * 50) / 100;
-                final_mark_perc_max = final_theory_percentage + final_practical_percentage;
+//                final_mark_perc_max = final_theory_percentage + final_practical_percentage;
 
                 int[] quizzes = {quiz1,quiz2,quiz3,quiz4};
                 sort(quizzes);
@@ -993,10 +1009,234 @@ public class UndergraduateHomePage extends JFrame {
                 GradeTableData[6] = c_grade;
 
                 defaultTableModel.addRow(GradeTableData);
+
+                char[] C_id_arr = c_id.toCharArray();
+                int c_id_arr_len = C_id_arr.length;
+                int i, c_credit;
+
+                c_credit =Integer.parseInt(String.valueOf(C_id_arr[c_id_arr_len - 1]));
+
+                if(c_grade.equals("Not Released")){
+                    c_grade = "0";
+                }
+
+                double credit_points = 0.00;
+
+                c_sum = final_mark_perc + ca_mark_perc;
+                if(c_grade.equals("A+") || c_grade.equals("A")){
+                    credit_points = 4.00;
+                } else if (c_grade.equals("A-")) {
+                    credit_points = 3.70;
+                } else if (c_grade.equals("B+")) {
+                    credit_points = 3.30;
+                } else if (c_grade.equals("B")) {
+                    credit_points = 3.00;
+                } else if (c_grade.equals("B-")) {
+                    credit_points = 2.70;
+                } else if (c_grade.equals("C+")) {
+                    credit_points = 2.30;
+                } else if (c_grade.equals("C")) {
+                    credit_points = 2.00;
+                } else if (c_grade.equals("C-")) {
+                    credit_points = 1.70;
+                } else if (c_grade.equals("D+")) {
+                    credit_points = 1.30;
+                } else if (c_grade.equals("D")) {
+                    credit_points = 1.00;
+                } else if (c_grade.equals("E") || c_grade.equals("Not Released") || c_grade.equals("F")) {
+                    credit_points = 0.00;
+                }
+
+                c_sum = c_sum + c_credit;
+                credit_point_mul = c_credit * credit_points;
+                credit_point_mul_sum = credit_point_mul_sum + credit_point_mul;
+
+//                SGPA = credit_point_mul_sum / c_sum;
+
+                SGPA = Double.parseDouble(df.format(credit_point_mul_sum / c_sum));
+
+                lblSGPA.setText(String.valueOf(SGPA));
+
+//                System.out.println("C_id - " + c_id + " cr_poi_mul " + credit_point_mul + " sum - " + credit_point_mul_sum + " SGPA - " + SGPA);
+//                System.out.println("C_id " + c_id + " CM - " + c_sum + " Grade - " + c_grade +" credit - " + c_credit + " Cr point - " + credit_points);
+
+
             }
         }catch (Exception e){
             e.printStackTrace();
         }
+    }
+
+    private double CalcCGPA(String tgno){
+        DecimalFormat df = new DecimalFormat("0.00");
+
+        int quiz_percentage,assessment_percentage,mid_term_percentage,final_theory_percentage,final_practical_percentage,
+                quiz1,quiz2,quiz3,quiz4,assessment1,assessment2,mid_term,finalTheory,finalPractical,ca_perc_max,final_mark_perc_max;
+
+        double quizPercentage, assessmentPercentage, midPercentage, FinalTheoryPercentage,FinalPracticalPercentage, ca_mark_perc, final_mark_perc;
+
+        String c_id,c_name,c_grade = "";
+        float atten_perc_float = 0;
+
+        double c_sum = 0;
+        double CGPA = 0;
+
+        int credit_sum;
+        double credit_point_mul = 0,credit_point_mul_sum = 0;
+
+        try{
+            String selectMarkPercentage = "select tgno,courses.course_id,courses.course_name,quiz_one,quiz_second,quiz_third,quiz_fourth,assessment_one,assessment_second,mid_term,final_theory,final_practical,quizzes_perc,assessment_perc,mid_term_perc,final_theory_perc,final_practical_perc from marks join courses where marks.course_id = courses.course_id and tgno = ?";
+
+            prepStatement = conn.prepareStatement(selectMarkPercentage);
+            prepStatement.setString(1,tgno);
+//            prepStatement.setInt(2,level_no);
+//            prepStatement.setInt(3,semester_no);
+
+            ResultSet resultSet = prepStatement.executeQuery();
+
+            while (resultSet.next()){
+                c_id = resultSet.getString("course_id");
+                c_name = resultSet.getString("course_name");
+
+                quiz1 = resultSet.getInt("quiz_one");
+                quiz2 = resultSet.getInt("quiz_second");
+                quiz3 = resultSet.getInt("quiz_third");
+                quiz4 = resultSet.getInt("quiz_fourth");
+                assessment1 = resultSet.getInt("assessment_one");
+                assessment2 = resultSet.getInt("assessment_second");
+                mid_term = resultSet.getInt("mid_term");
+                finalTheory = resultSet.getInt("final_theory");
+                finalPractical = resultSet.getInt("final_practical");
+
+                quiz_percentage = resultSet.getInt("quizzes_perc");
+                assessment_percentage = resultSet.getInt("assessment_perc");
+                mid_term_percentage = resultSet.getInt("mid_term_perc");
+                final_theory_percentage = resultSet.getInt("final_theory_perc");
+                final_practical_percentage = resultSet.getInt("final_practical_perc");
+
+                ca_perc_max = ((quiz_percentage + assessment_percentage + mid_term_percentage) * 50) / 100;
+//                final_mark_perc_max = final_theory_percentage + final_practical_percentage;
+
+                int[] quizzes = {quiz1,quiz2,quiz3,quiz4};
+                sort(quizzes);
+                int arrLen = quizzes.length;
+
+                if(quizzes[0] == 0){
+                    quizPercentage = ((quizzes[arrLen - 1] * (quiz_percentage/2.0)) / 100) + ((quizzes[arrLen - 2] * (10/2.0)) / 100);
+                }else {
+                    quizPercentage = ((quizzes[arrLen - 1] * (quiz_percentage/3.0)) / 100) + ((quizzes[arrLen - 2] * (10/3.0)) / 100) + ((quizzes[arrLen - 3] * (10/3.0)) / 100);
+                }
+
+                if(assessment1 == 0 || assessment2 == 0){
+                    assessmentPercentage = (((assessment1 + assessment2) * assessment_percentage) / 100.0);
+                }else{
+                    assessmentPercentage = (((assessment1 + assessment2) * (assessment_percentage / 2.0) ) / 100.0);
+                }
+
+                midPercentage = ((mid_term * mid_term_percentage) / 100.0);
+
+                FinalTheoryPercentage = ((finalTheory * final_theory_percentage) / 100.0);
+                FinalPracticalPercentage = ((finalPractical * final_practical_percentage) / 100.0);
+
+                ca_mark_perc = quizPercentage + assessmentPercentage + midPercentage;
+                final_mark_perc = FinalTheoryPercentage + FinalPracticalPercentage;
+
+                String ca_eligibility = "Not Eligible";
+                if (ca_mark_perc > ca_perc_max){
+                    ca_eligibility = "Eligible";
+                    if((ca_mark_perc + final_mark_perc) >= 90){
+                        c_grade = "A+";
+                    }else if((ca_mark_perc + final_mark_perc) >= 85){
+                        c_grade = "A";
+                    }else if((ca_mark_perc + final_mark_perc) >= 80){
+                        c_grade = "A-";
+                    }else if((ca_mark_perc + final_mark_perc) >= 75){
+                        c_grade = "B+";
+                    }else if((ca_mark_perc + final_mark_perc) >= 70){
+                        c_grade = "B";
+                    }else if((ca_mark_perc + final_mark_perc) >= 65){
+                        c_grade = "B-";
+                    }else if((ca_mark_perc + final_mark_perc) >= 60){
+                        c_grade = "C+";
+                    }else if((ca_mark_perc + final_mark_perc) >= 40){
+                        c_grade = "C";
+                    }else if((ca_mark_perc + final_mark_perc) >= 35){
+                        c_grade = "C-";
+                    }else if((ca_mark_perc + final_mark_perc) >= 30){
+                        c_grade = "D+";
+                    }else if((ca_mark_perc + final_mark_perc) >= 25){
+                        c_grade = "D";
+                    }else if((ca_mark_perc + final_mark_perc) >= 20){
+                        c_grade = "E";
+                    }else if((ca_mark_perc + final_mark_perc) >= 0){
+                        c_grade = "F";
+                    }
+                }else{
+                    ca_eligibility = "Not Eligible";
+                    c_grade = "Not Released";
+                }
+
+                char[] C_id_arr = c_id.toCharArray();
+                int c_id_arr_len = C_id_arr.length;
+                int i, c_credit;
+
+                c_credit = Integer.parseInt(String.valueOf(C_id_arr[c_id_arr_len - 1]));
+
+                if(c_grade.equals("Not Released")){
+                    c_grade = "0";
+                }
+
+                double credit_points = 0.00;
+
+                c_sum = final_mark_perc + ca_mark_perc;
+
+                if(c_grade.equals("A+") || c_grade.equals("A")){
+                    credit_points = 4.00;
+                } else if (c_grade.equals("A-")) {
+                    credit_points = 3.70;
+                } else if (c_grade.equals("B+")) {
+                    credit_points = 3.30;
+                } else if (c_grade.equals("B")) {
+                    credit_points = 3.00;
+                } else if (c_grade.equals("B-")) {
+                    credit_points = 2.70;
+                } else if (c_grade.equals("C+")) {
+                    credit_points = 2.30;
+                } else if (c_grade.equals("C")) {
+                    credit_points = 2.00;
+                } else if (c_grade.equals("C-")) {
+                    credit_points = 1.70;
+                } else if (c_grade.equals("D+")) {
+                    credit_points = 1.30;
+                } else if (c_grade.equals("D")) {
+                    credit_points = 1.00;
+                } else if (c_grade.equals("E") || c_grade.equals("Not Released") || c_grade.equals("F")) {
+                    credit_points = 0.00;
+                }
+
+                c_sum = c_sum + c_credit;
+                credit_point_mul = c_credit * credit_points;
+                credit_point_mul_sum = credit_point_mul_sum + credit_point_mul;
+
+                CGPA = Double.parseDouble(df.format(credit_point_mul_sum / c_sum));
+
+                if(CGPA >= 3.7){
+                    UGClass.setText("First Class");
+                }else if(CGPA >= 3.3){
+                    UGClass.setText("Second Upper Class");
+                }else if(CGPA >= 3.0){
+                    UGClass.setText("Second Lower Class");
+                }else if(CGPA >= 2.0){
+                    UGClass.setText("General Class");
+                }else{
+                    UGClass.setText("Class Unavailable");
+                }
+                lblCGPA.setText(String.valueOf(CGPA));
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return CGPA;
     }
 
     private void valuesforAttendanceTable(int level_no, int semester_no, String tgno){
