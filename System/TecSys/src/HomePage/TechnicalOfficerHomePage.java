@@ -90,7 +90,7 @@ public class TechnicalOfficerHomePage extends JFrame {
         setContentPane(TechnicalOfficerHomePage);
         setTitle("Technical Officer User Profile");
         setDefaultCloseOperation(EXIT_ON_CLOSE);
-        setSize(1100, 570);
+        setSize(1200, 570);
         setLocationRelativeTo(this);
         setVisible(true);
 
