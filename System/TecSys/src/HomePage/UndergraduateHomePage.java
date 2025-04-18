@@ -79,6 +79,9 @@ public class UndergraduateHomePage extends JFrame {
     private JComboBox AttendanceSubjectStatusPerc;
     private JLabel AttendancePercWithoutMed;
     private JLabel AttendancePercWithMed;
+    private JTable UGMedicalTable;
+    private JComboBox LevelNoforMedical;
+    private JComboBox SemesterNoforMedical;
 
     private CardLayout cardLayout;
 
@@ -394,7 +397,102 @@ public class UndergraduateHomePage extends JFrame {
 
         CalcCGPA(userIdentity);
 
+        MedicalTableSetModelMethod();
+
+
+        LevelNoforMedical.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                MedicalTableSetModelMethod();
+
+                String SemesterforMedicalStr = (String) SemesterNoforMedical.getSelectedItem();
+                assert SemesterforMedicalStr != null;
+                if(SemesterforMedicalStr.isEmpty()){
+                    SemesterforMedicalStr = "0";
+                }
+                int SemesterforMedicalInt = Integer.parseInt(SemesterforMedicalStr);
+
+
+                String LevelforMedicalStr = (String) LevelNoforMedical.getSelectedItem();
+                assert LevelforMedicalStr != null;
+                if(LevelforMedicalStr.isEmpty()){
+                    LevelforMedicalStr = "0";
+                }
+                int LevelforMedicalInt = Integer.parseInt(LevelforMedicalStr);
+
+                LoadMedicalTable(userIdentity,LevelforMedicalInt,SemesterforMedicalInt);
+            }
+        });
+        SemesterNoforMedical.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                MedicalTableSetModelMethod();
+
+                String LevelforMedicalStr = (String) LevelNoforMedical.getSelectedItem();
+                assert LevelforMedicalStr != null;
+                if(LevelforMedicalStr.isEmpty()){
+                    LevelforMedicalStr = "0";
+                }
+                int LevelforMedicalInt = Integer.parseInt(LevelforMedicalStr);
+
+                String SemesterforMedicalStr = (String) SemesterNoforMedical.getSelectedItem();
+                assert SemesterforMedicalStr != null;
+                if(SemesterforMedicalStr.isEmpty()){
+                    SemesterforMedicalStr = "0";
+                }
+                int SemesterforMedicalInt = Integer.parseInt(SemesterforMedicalStr);
+
+                LoadMedicalTable(userIdentity,LevelforMedicalInt,SemesterforMedicalInt);
+            }
+        });
     }
+
+    private void MedicalTableSetModelMethod(){
+        UGMedicalTable.setModel(new DefaultTableModel(
+                null,
+                new String[]{"Medical No","Course code","Course Name","Course Status","Week No","Medical Reason"}
+        ));
+    }
+
+    private void LoadMedicalTable(String tgno, int level_no, int semester_no){
+        System.out.println("Lev " + level_no + " Sem - " +semester_no);
+
+        DefaultTableModel tblmodel = (DefaultTableModel) UGMedicalTable.getModel();
+//        MedicalTableSetModelMethod();
+
+        try{
+            String medLoadQuery = "select medical_no,courses.course_id,courses.course_name,course_status,medical.week_no,med_reason from attendance join medical on attendance.med_id = medical.medical_no join courses on attendance.course_id = courses.course_id where medical.tgno = ? and level_no = ? and semester_no = ?";
+            prepStatement = conn.prepareStatement(medLoadQuery);
+            prepStatement.setString(1,tgno);
+            prepStatement.setString(2, String.valueOf(level_no));
+            prepStatement.setString(3, String.valueOf(semester_no));
+
+            ResultSet resultSet = prepStatement.executeQuery();
+            while(resultSet.next()){
+               String med_no = resultSet.getString("medical_no");
+               String course_id = resultSet.getString("course_id");
+               String course_name = resultSet.getString("course_name");
+               String course_status = resultSet.getString("course_status");
+               String week_no = resultSet.getString("week_no");
+               String med_reason = resultSet.getString("med_reason");
+
+               Object[] med_det = new Object[6];
+
+               med_det[0] = med_no;
+               med_det[1] = course_id;
+               med_det[2] = course_name;
+               med_det[3] = course_status;
+               med_det[4] = week_no;
+               med_det[5] = med_reason;
+
+                tblmodel.addRow(med_det);
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+
 
     private void LoadAttendancePercentages(String atten_status, String tgno,String course_id){
         try{

@@ -251,6 +251,8 @@ SELECT((SELECT COUNT(*) FROM attendance WHERE tgno = 'tg0001' AND course_id = 'I
 
 
 
+For Medical Table
+select medical_no,courses.course_id,courses.course_name,course_status,medical.week_no,med_reason from attendance join medical on attendance.med_id = medical.medical_no join courses on attendance.course_id = courses.course_id where medical.tgno="tg0001" and level_no = 2 and semester_no = 1;
 
 
 
