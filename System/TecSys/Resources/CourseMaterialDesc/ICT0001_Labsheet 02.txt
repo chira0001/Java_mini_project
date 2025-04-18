@@ -1,0 +1,3 @@
+Labsheet 02 – Linked Lists and Dynamic Memory Management
+
+This labsheet introduces students to linked lists, a fundamental dynamic data structure used to efficiently manage memory and handle variable-sized data collections. The practical exercises focus on implementing singly linked lists, including operations such as node creation, insertion, deletion, and traversal. Students will gain an understanding of dynamic memory allocation using pointers and learn how linked lists differ from arrays in terms of flexibility and performance. Through hands-on coding tasks, learners will develop a deeper insight into memory management, pointer manipulation, and the importance of structuring data for optimal access and modification.

@@ -24,21 +24,21 @@ public class LecturerHomePage extends JFrame {
     private JButton attendanceButton;
     private JLabel CardTittleLabel;
     private JButton logoutButton;
-    private JPanel UGHomeCard;
-    private JPanel UGProfile;
+    private JPanel LECHomeCard;
+    private JPanel LECProfile;
     private JTextField txtLECNO;
     private JTextField txtPHNO;
     private JTextField txtEMAIL;
     private JTextField txtADDRESS;
     private JTextField txtLNAME;
     private JTextField txtFNAME;
-    private JPanel UGAttendance;
-    private JPanel UGTimeTable;
-    private JPanel UGCourses;
-    private JPanel UGMedicals;
-    private JPanel UGNotices;
-    private JPanel UGGrades;
-    private JPanel UGSettings;
+    private JPanel LECAttendance;
+    private JPanel LECTimeTable;
+    private JPanel LECCourses;
+    private JPanel LECMedicals;
+    private JPanel LECNotices;
+    private JPanel LECMarks;
+    private JPanel LECSettings;
     private JTextField textField7;
     private JTextField textField9;
     private JTextField textField8;
@@ -47,21 +47,26 @@ public class LecturerHomePage extends JFrame {
     private JButton updateButton;
     private JTextField textField1;
     private JTextField textField2;
+    private JList list1;
+    private JList list2;
+    private JButton addFilesButton;
+    private JButton renameFilesButton;
+    private JButton removeFilesButton;
 
     private CardLayout cardLayout;
 
-    private String UGTgno;
-    private String UGFname;
-    private String UGLname;
-    private String UGAddress;
-    private String UGEmail;
-    private String UGPhno;
-    private String UGProfImg;
+    private String Lecno;
+    private String LecFname;
+    private String LecLname;
+    private String LecAddress;
+    private String LecEmail;
+    private String LecPhno;
+    private String LecProfImg;
 
-    private String[] cardButtons = {"Profile", "Attendance", "Time Table", "Courses", "Medical", "Notices", "Grades", "Settings"};
-    private String[] cardNames = {"UGProfileCard", "UGAttendanceCard", "UGTimeTableCard", "UGCoursesCard", "UGMedicalsCard", "UGNoticesCard", "UGGradesCard", "UGSettingsCard"};
+    private String[] cardButtons = {"Profile", "Attendance", "Time Table", "Courses", "Medical", "Notices", "Marks", "Settings"};
+    private String[] cardNames = {"LECProfileCard", "LECAttendanceCard", "LECTimeTableCard", "LECCoursesCard", "LECMedicalsCard", "LECNoticesCard", "LECMarksCard", "LECSettingsCard"};
     JButton[] btnFieldNames = {profileButton,attendanceButton,timeTableButton,coursesButton,medicalButton,noticesButton,marksButton,settingsButton};
-    private String[] cardTitles = {"Welcome..!", "Attendance Details", "Undergraduate Time Table","Your Courses","Medical Information", "Notices", "Grades and GPA","Settings Configuration"};;
+    private String[] cardTitles = {"Welcome..!", "Attendance Details", "Undergraduate Time Table","Your Courses","Medical Information", "Notices", "Marks","Settings Configuration"};;
 
     public LecturerHomePage(String userIdentity){
         dbConnection(userIdentity);
@@ -73,7 +78,7 @@ public class LecturerHomePage extends JFrame {
         setLocationRelativeTo(this);
         setVisible(true);
 
-        cardLayout = (CardLayout)(UGHomeCard.getLayout());
+        cardLayout = (CardLayout)(LECHomeCard.getLayout());
         profileButton.setEnabled(false);
         CardTittleLabel.setText(cardTitles[0]);
 
@@ -103,7 +108,7 @@ public class LecturerHomePage extends JFrame {
         updateButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                UGUpdateCredentials(userIdentity);
+                LECUpdateCredentials(userIdentity);
             }
         });
     }
@@ -114,7 +119,7 @@ public class LecturerHomePage extends JFrame {
         for (int i = 0; i < noOfButtons; i++){
             if (cardButtons[i].equals(btn)){
                 dbConnection(tgno);
-                cardLayout.show(UGHomeCard,cardNames[i]);
+                cardLayout.show(LECHomeCard,cardNames[i]);
                 CardTittleLabel.setText(cardTitles[i]);
                 btnFieldNames[i].setEnabled(false);
             }else {
@@ -123,32 +128,34 @@ public class LecturerHomePage extends JFrame {
         }
     }
 
-    private void dbConnection(String tgno){
+    private void dbConnection(String lecno){
         try{
-            String selectQuery = "select * from lecturer where tgno = '" + tgno + "'";
+            String selectQuery = "select * from lecturer where lecno = '" + lecno + "'";
             Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/javatest","root","1234");
             Statement statement = connection.createStatement();
             ResultSet DBresult = statement.executeQuery(selectQuery);
 
             if(DBresult.next()){
-                UGTgno = DBresult.getString("tgno");
-                UGFname = DBresult.getString("ugfname");
-                UGLname = DBresult.getString("uglname");
-                UGAddress = DBresult.getString("ugaddress");
-                UGEmail = DBresult.getString("ugemail");
-                UGPhno = DBresult.getString("ugphno");
-                UGProfImg = DBresult.getString("ugProfImg");
+                Lecno = DBresult.getString("lecno");
+                LecFname = DBresult.getString("lecfname");
+                LecLname = DBresult.getString("leclname");
+                LecAddress = DBresult.getString("lecaddress");
+                LecEmail = DBresult.getString("lecemail");
+                LecPhno = DBresult.getString("lecphno");
+                LecProfImg = DBresult.getString("lecProfImg");
 
-                txtLECNO.setText(UGTgno);
-                txtFNAME.setText(UGFname);
-                txtLNAME.setText(UGLname);
-                txtADDRESS.setText(UGAddress);
-                txtEMAIL.setText(UGEmail);
-                txtPHNO.setText(UGPhno);
+                txtLECNO.setText(Lecno);
+                txtFNAME.setText(LecFname);
+                txtLNAME.setText(LecLname);
+                txtADDRESS.setText(LecAddress);
+                txtEMAIL.setText(LecEmail);
+                txtPHNO.setText(LecPhno);
 
-                textField7.setText(UGAddress);
-                textField8.setText(UGEmail);
-                textField9.setText(UGPhno);
+                textField1.setText(LecFname);
+                textField2.setText(LecLname);
+                textField7.setText(LecAddress);
+                textField8.setText(LecEmail);
+                textField9.setText(LecPhno);
 
             }else{
                 JOptionPane.showMessageDialog(null,"Internal Error");
@@ -158,17 +165,19 @@ public class LecturerHomePage extends JFrame {
         }
     }
 
-    private void UGUpdateCredentials(String tgno){
+    private void LECUpdateCredentials(String lecno){
         try{
-            String UGaddress = textField7.getText();
-            String UGemail = textField8.getText();
-            String UGphno = textField9.getText();
+            String LecFname=textField1.getText();
+            String LecLname=textField2.getText();
+            String Lecaddress = textField7.getText();
+            String Lecemail = textField8.getText();
+            String Lecphno = textField9.getText();
 
-            String UGCredentialupdateQuery = "Update lecturer set ugaddress = '" + UGaddress + "', ugemail = '"+ UGemail +"',ugphno = '"+ UGphno+"' where tgno = '" + tgno + "'";
+            String LECCredentialupdateQuery = "Update lecturer set lecfname = '"+LecFname + "',leclname = '" + LecLname +"',lecaddress = '" + Lecaddress + "', lecemail = '"+ Lecemail +"',lecphno = '"+ Lecphno+"' where lecno = '" + lecno + "'";
 
             Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/javatest","root","1234");
             Statement statement = connection.createStatement();
-            int resultSet = statement.executeUpdate(UGCredentialupdateQuery);
+            int resultSet = statement.executeUpdate(LECCredentialupdateQuery);
 
             if(resultSet > 0){
                 JOptionPane.showMessageDialog(null,"Credentials updated successfully");
