@@ -217,6 +217,24 @@ INSERT INTO lecture_course(lecno,course_id) VALUES
 
 
 
+create table course_materials(
+c_mat_no INT primary key auto_increment,
+c_id varchar(7),
+c_material varchar(50),
+c_material_desc varchar(300),
+c_material_location varchar(300)
+);
+
+insert into course_materials(c_id,c_material,c_material_desc,c_material_location) values
+("ICT0001", "Labsheet 01", "Resources/CourseMaterialDesc/ICT0001_Labsheet 01.txt", "Resources/CourseMaterial/ICT0001_Labsheet 01.pdf"),
+("ICT0002", "Labsheet 01", "Resources/CourseMaterialDesc/ICT0002_Labsheet 01.txt", "Resources/CourseMaterial/ICT0002_Labsheet 01.pdf"),
+("ICT0001", "Labsheet 02", "Resources/CourseMaterialDesc/ICT0001_Labsheet 02.txt", "Resources/CourseMaterial/ICT0001_Labsheet 02.pdf");
+
+for course section ---->
+select c_id,course_name,c_material,c_material_desc,c_material_location,courses.level_no,courses.semester_no from course_materials join courses on course_materials.c_id = courses.course_id where courses.level_no = 2 and courses.semester_no = 1;
+
+
+
 SELECT * FROM timetable
 
 ORDER BY CASE module_day WHEN 'Monday' THEN 1 WHEN 'Tuesday' THEN 2 WHEN 'Wednesday' THEN 3 WHEN 'Thursday' THEN 4 WHEN 'Friday' THEN 5 WHEN 'Saturday' THEN 6 WHEN 'Sunday' THEN 7 END;

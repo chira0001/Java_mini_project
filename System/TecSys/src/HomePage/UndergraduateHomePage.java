@@ -11,8 +11,12 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
+import java.security.spec.ECField;
 import java.sql.*;
 import java.text.DecimalFormat;
 import java.util.Scanner;
@@ -82,6 +86,12 @@ public class UndergraduateHomePage extends JFrame {
     private JTable UGMedicalTable;
     private JComboBox LevelNoforMedical;
     private JComboBox SemesterNoforMedical;
+    private JComboBox LevelNoforCourses;
+    private JComboBox SemesterNoforCourses;
+    private JComboBox CourseforCourses;
+    private JTextArea DescriptionforCourseMaterial;
+    private JComboBox CourseMaterialforCourses;
+    private JButton SaveCourseMaterial;
 
     private CardLayout cardLayout;
 
@@ -219,7 +229,7 @@ public class UndergraduateHomePage extends JFrame {
 
                 int SemesterNo = Integer.parseInt(semester_no);
 
-                valuesForCourseTable(LevelNo,SemesterNo);
+                valuesForTimeTable(LevelNo,SemesterNo);
             }
         });
 
@@ -242,7 +252,7 @@ public class UndergraduateHomePage extends JFrame {
                 }
                 int LevelNo = Integer.parseInt(level_no);
 
-                valuesForCourseTable(LevelNo,SemesterNo);
+                valuesForTimeTable(LevelNo,SemesterNo);
             }
         });
 
@@ -445,6 +455,294 @@ public class UndergraduateHomePage extends JFrame {
                 LoadMedicalTable(userIdentity,LevelforMedicalInt,SemesterforMedicalInt);
             }
         });
+        LevelNoforCourses.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String SemesterforCoursesStr = (String) SemesterNoforCourses.getSelectedItem();
+                assert SemesterforCoursesStr != null;
+                if(SemesterforCoursesStr.isEmpty()){
+                    SemesterforCoursesStr = "0";
+                }
+                int SemesterforCoursesInt = Integer.parseInt(SemesterforCoursesStr);
+
+                String LevelforCoursesStr = (String) LevelNoforCourses.getSelectedItem();
+                assert LevelforCoursesStr != null;
+                if(LevelforCoursesStr.isEmpty()){
+                    LevelforCoursesStr = "0";
+                }
+                int LevelforCoursesInt = Integer.parseInt(LevelforCoursesStr);
+
+                CourseDetailsforCourses(LevelforCoursesInt,SemesterforCoursesInt);
+            }
+        });
+        SemesterNoforCourses.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String LevelforCoursesStr = (String) LevelNoforCourses.getSelectedItem();
+                assert LevelforCoursesStr != null;
+                if(LevelforCoursesStr.isEmpty()){
+                    LevelforCoursesStr = "0";
+                }
+                int LevelforCoursesInt = Integer.parseInt(LevelforCoursesStr);
+
+                String SemesterforCoursesStr = (String) SemesterNoforCourses.getSelectedItem();
+                assert SemesterforCoursesStr != null;
+                if(SemesterforCoursesStr.isEmpty()){
+                    SemesterforCoursesStr = "0";
+                }
+                int SemesterforCoursesInt = Integer.parseInt(SemesterforCoursesStr);
+
+                CourseDetailsforCourses(LevelforCoursesInt,SemesterforCoursesInt);
+            }
+        });
+        CourseforCourses.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String LevelforCoursesStr = (String) LevelNoforCourses.getSelectedItem();
+                assert LevelforCoursesStr != null;
+                if(LevelforCoursesStr.isEmpty()){
+                    LevelforCoursesStr = "0";
+                }
+                int LevelforCoursesInt = Integer.parseInt(LevelforCoursesStr);
+
+                String SemesterforCoursesStr = (String) SemesterNoforCourses.getSelectedItem();
+                assert SemesterforCoursesStr != null;
+                if(SemesterforCoursesStr.isEmpty()){
+                    SemesterforCoursesStr = "0";
+                }
+                int SemesterforCoursesInt = Integer.parseInt(SemesterforCoursesStr);
+
+                String selectedCourse = (String) CourseforCourses.getSelectedItem();
+
+                String regex = "[\\s]";
+                String[] str_split = selectedCourse.split(regex);
+
+                CourseMaterialDetailsforCourses(LevelforCoursesInt,SemesterforCoursesInt,str_split[0]);
+            }
+        });
+        CourseMaterialforCourses.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String LevelforCoursesStr = (String) LevelNoforCourses.getSelectedItem();
+                assert LevelforCoursesStr != null;
+                if(LevelforCoursesStr.isEmpty()){
+                    LevelforCoursesStr = "0";
+                }
+                int LevelforCoursesInt = Integer.parseInt(LevelforCoursesStr);
+
+                String SemesterforCoursesStr = (String) SemesterNoforCourses.getSelectedItem();
+                assert SemesterforCoursesStr != null;
+                if(SemesterforCoursesStr.isEmpty()){
+                    SemesterforCoursesStr = "0";
+                }
+                int SemesterforCoursesInt = Integer.parseInt(SemesterforCoursesStr);
+
+                String selectedCourse = (String) CourseforCourses.getSelectedItem();
+
+                String regex = "\\s";
+                assert selectedCourse != null;
+                String[] str_split = selectedCourse.split(regex);
+
+                String course_material = (String) CourseMaterialforCourses.getSelectedItem();
+
+                LoadCourseMaterialDesc(LevelforCoursesInt,SemesterforCoursesInt,str_split[0],course_material);
+            }
+        });
+        SaveCourseMaterial.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String filename;
+                String resourcePath;
+                String resourceRegex = "/";
+                try {
+                    String LevelforCoursesStr = (String) LevelNoforCourses.getSelectedItem();
+                    assert LevelforCoursesStr != null;
+                    if(LevelforCoursesStr.isEmpty()){
+                        LevelforCoursesStr = "0";
+                    }
+                    int LevelforCoursesInt = Integer.parseInt(LevelforCoursesStr);
+
+                    String SemesterforCoursesStr = (String) SemesterNoforCourses.getSelectedItem();
+                    assert SemesterforCoursesStr != null;
+                    if(SemesterforCoursesStr.isEmpty()){
+                        SemesterforCoursesStr = "0";
+                    }
+                    int SemesterforCoursesInt = Integer.parseInt(SemesterforCoursesStr);
+
+                    String selectedCourse = (String) CourseforCourses.getSelectedItem();
+
+                    String regex = "\\s";
+                    assert selectedCourse != null;
+                    String[] str_split = selectedCourse.split(regex);
+
+                    String course_material = (String) CourseMaterialforCourses.getSelectedItem();
+
+                    resourcePath = selectCourseMaterial(LevelforCoursesInt,SemesterforCoursesInt,str_split[0],course_material);
+
+                    String[] resourceFile = resourcePath.split(resourceRegex);
+                    int arrLength = resourceFile.length;
+                    filename = resourceFile[arrLength - 1];
+
+                    saveResourceToFile(resourcePath,filename);
+                } catch (IOException ex) {
+                    throw new RuntimeException(ex);
+                }
+            }
+        });
+    }
+
+private String selectCourseMaterial(int level_no, int semester_no, String course_id, String course_material){
+    String materialPath = "";
+        try{
+            String SelectCourseMaterialQuery = "select c_material_location from course_materials join courses on course_materials.c_id = courses.course_id where courses.level_no = ? and courses.semester_no = ? and c_id = ? and c_material = ?";
+            prepStatement = conn.prepareStatement(SelectCourseMaterialQuery);
+
+            prepStatement.setInt(1,level_no);
+            prepStatement.setInt(2,semester_no);
+            prepStatement.setString(3,course_id);
+            prepStatement.setString(4,course_material);
+
+            ResultSet resultSet = prepStatement.executeQuery();
+
+            while (resultSet.next()){
+                materialPath = resultSet.getString("c_material_location");
+            }
+            return materialPath;
+
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+    return materialPath;
+}
+
+    private void saveResourceToFile(String resourcePath, String filename) throws IOException {
+        JFileChooser directoryChooser = new JFileChooser();
+        directoryChooser.setDialogTitle("Select Folder to Save File");
+        directoryChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+        directoryChooser.setAcceptAllFileFilterUsed(false);
+
+        int userSelection = directoryChooser.showSaveDialog(null);
+
+        if (userSelection == JFileChooser.APPROVE_OPTION) {
+            File selectedDir = directoryChooser.getSelectedFile();
+            File destinationFile = new File(selectedDir,filename);
+
+            System.out.println(resourcePath);
+            System.out.println(destinationFile);
+
+            Path currentPath = Path.of(resourcePath);
+
+            if (resourcePath == null || resourcePath.equals("")) {
+                JOptionPane.showMessageDialog(null, "Resource not found: " + resourcePath);
+                return;
+            }else{
+                Files.copy(currentPath, destinationFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
+                JOptionPane.showMessageDialog(null, "File saved to: " + destinationFile.getAbsolutePath());
+            }
+        }
+    }
+
+    private void LoadCourseMaterialDesc(int level_no, int semester_no, String course_id, String c_material){
+        try{
+            String c_material_desc;
+
+            String selectCourseMatDescQuery = "select c_material_desc from course_materials join courses on course_materials.c_id = courses.course_id where courses.level_no = ? and courses.semester_no = ? and c_id = ? and c_material = ?";
+            prepStatement = conn.prepareStatement(selectCourseMatDescQuery);
+            prepStatement.setInt(1,level_no);
+            prepStatement.setInt(2,semester_no);
+            prepStatement.setString(3,course_id);
+            prepStatement.setString(4,c_material);
+
+            ResultSet resultSet = prepStatement.executeQuery();
+            while (resultSet.next()){
+                c_material_desc = resultSet.getString("c_material_desc");
+
+                File CourseMatDesc = new File(c_material_desc);
+                input = new Scanner(CourseMatDesc);
+
+                StringBuilder MaterialDescContent = new StringBuilder();
+
+                while (input.hasNextLine()){
+                    MaterialDescContent.append(input.nextLine()).append("\n");
+                }
+                DescriptionforCourseMaterial.setText(MaterialDescContent.toString());
+            }
+
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    private void viewNotice(String selected_notice_title){
+        String view_notice_Query_details = "Select * from notice where noticeTitle = ?";
+        try{
+            prepStatement = conn.prepareStatement(view_notice_Query_details);
+            prepStatement.setString(1,selected_notice_title);
+
+            ResultSet resultSet = prepStatement.executeQuery();
+            while (resultSet.next()){
+                String notice_FilePath = resultSet.getString("noticeFilePath");
+
+                System.out.println(notice_FilePath);
+
+                File notice = new File(notice_FilePath);
+                input = new Scanner(notice);
+
+                StringBuilder noticeContent = new StringBuilder();
+
+                while (input.hasNextLine()){
+                    noticeContent.append(input.nextLine()).append("\n");
+                }
+                noticeDisplayArea.setText(noticeContent.toString());
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    private void CourseMaterialDetailsforCourses(int level_no, int semester_no, String course_id){
+        try{
+            String selectCourseMatQuery = "select c_material from course_materials join courses on course_materials.c_id = courses.course_id where courses.level_no = ? and courses.semester_no = ? and c_id = ?";
+            prepStatement = conn.prepareStatement(selectCourseMatQuery);
+            prepStatement.setInt(1,level_no);
+            prepStatement.setInt(2,semester_no);
+            prepStatement.setString(3,course_id);
+
+            ResultSet resultSet = prepStatement.executeQuery();
+            CourseMaterialforCourses.removeAllItems();
+
+            while(resultSet.next()){
+                String c_material = resultSet.getString("c_material");
+
+                CourseMaterialforCourses.addItem(c_material);
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    private void CourseDetailsforCourses(int level_no, int semester_no){
+        try{
+            String c_id,course_name,c_material,Course;
+
+            String selectCourseQuery = "select distinct(c_id),course_name from course_materials join courses on course_materials.c_id = courses.course_id where courses.level_no = ? and courses.semester_no = ?";
+            prepStatement = conn.prepareStatement(selectCourseQuery);
+            prepStatement.setInt(1,level_no);
+            prepStatement.setInt(2,semester_no);
+
+            ResultSet resultSet = prepStatement.executeQuery();
+            CourseforCourses.removeAllItems();
+
+            while(resultSet.next()){
+                c_id = resultSet.getString("c_id");
+                course_name = resultSet.getString("course_name");
+
+                Course = c_id + " - " + course_name;
+                CourseforCourses.addItem(Course);
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
     }
 
     private void MedicalTableSetModelMethod(){
@@ -699,18 +997,7 @@ public class UndergraduateHomePage extends JFrame {
         timeTableColumns.getColumn(3).setCellRenderer(timeTableCells);
     }
 
-    private void calculateGrade(){
-        int quiz1 = 75;
-        int quiz2 = 65;
-        int quiz3 = 55;
-        int assessment = 78;
-        int mid_term = 70;
-        int finalTheory = 80;
-        int finalPractical = 85;
-
-    }
-
-    private void valuesForCourseTable(int level_no, int semester_no){
+    private void valuesForTimeTable(int level_no, int semester_no){
 
         System.out.println("Level " + level_no + " Semester " + semester_no);
 
@@ -938,38 +1225,9 @@ public class UndergraduateHomePage extends JFrame {
         }
     }
 
-    private void viewNotice(String selected_notice_title){
-        String view_notice_Query_details = "Select * from notice where noticeTitle = ?";
-        try{
-            prepStatement = conn.prepareStatement(view_notice_Query_details);
-            prepStatement.setString(1,selected_notice_title);
-
-            ResultSet resultSet = prepStatement.executeQuery();
-            while (resultSet.next()){
-                String notice_FilePath = resultSet.getString("noticeFilePath");
-
-                System.out.println(notice_FilePath);
-
-                File notice = new File(notice_FilePath);
-                input = new Scanner(notice);
-
-                StringBuilder noticeContent = new StringBuilder();
-
-                while (input.hasNextLine()){
-                    noticeContent.append(input.nextLine()).append("\n");
-                }
-                noticeDisplayArea.setText(noticeContent.toString());
-            }
-        }catch (Exception e){
-            e.printStackTrace();
-        }
-    }
-
     public void calculateGrade(String tgno, int level_no, int semester_no){
         DefaultTableModel defaultTableModel = (DefaultTableModel) UGGradeTable.getModel();
         DecimalFormat df = new DecimalFormat("0.00");
-
-//        System.out.println("Level " + level_no + " Semes " + semester_no);
 
         int quiz_percentage,assessment_percentage,mid_term_percentage,final_theory_percentage,final_practical_percentage,
                 quiz1,quiz2,quiz3,quiz4,assessment1,assessment2,mid_term,finalTheory,finalPractical,ca_perc_max,final_mark_perc_max;
@@ -1030,7 +1288,6 @@ public class UndergraduateHomePage extends JFrame {
                 }
 
                 ca_perc_max = ((quiz_percentage + assessment_percentage + mid_term_percentage) * 50) / 100;
-//                final_mark_perc_max = final_theory_percentage + final_practical_percentage;
 
                 int[] quizzes = {quiz1,quiz2,quiz3,quiz4};
                 sort(quizzes);
@@ -1057,7 +1314,6 @@ public class UndergraduateHomePage extends JFrame {
                 final_mark_perc = FinalTheoryPercentage + FinalPracticalPercentage;
 
                 String ca_eligibility = "Not Eligible";
-//                System.out.println("Currect CA - " + ca_mark_perc + ", Max CA req - " + ca_perc_max + ", Attendance eligi - " + atten_perc_float);
                 if (ca_mark_perc > ca_perc_max){
                     ca_eligibility = "Eligible";
                     if(atten_perc_float >= 80){
