@@ -62,6 +62,16 @@ public class TechnicalOfficerHomePage extends JFrame {
     private JComboBox LevelNoDropDown;
     private JComboBox noticeTitleDropDown;
     private JTextArea noticeDisplayArea;
+    private JComboBox AttendanceSemesterNo;
+    private JComboBox AttendanceSubjectCode;
+    private JComboBox AttendanceSubjectStatus;
+    private JButton viewMedicalsButton;
+    private JLabel AttendancePercWithoutMed;
+    private JLabel AttendancePercWithMed;
+    private JComboBox AttendanceSubjectStatusPerc;
+    private JTable AttendanceTable;
+    private JComboBox AttendenceLevelNo;
+    private JButton updateButton1;
 
     private CardLayout cardLayout;
 
@@ -146,6 +156,15 @@ public class TechnicalOfficerHomePage extends JFrame {
                 cardLayout.show(TOHomeCard,cardNames[0]);
                 btnFieldNames[0].setEnabled(false);
                 btnFieldNames[noOfButtons-1].setEnabled(true);
+            }
+        });
+        viewMedicalsButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                cardLayout.show(TOHomeCard,cardNames[4]);
+                attendanceButton.setEnabled(true);
+                medicalButton.setEnabled(false);
+                CardTittleLabel.setText(cardTitles[4]);
             }
         });
     }
