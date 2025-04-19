@@ -11,9 +11,14 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
+import java.security.spec.ECField;
 import java.sql.*;
+import java.text.DecimalFormat;
 import java.util.Scanner;
 
 import static java.util.Arrays.sort;
@@ -78,6 +83,15 @@ public class UndergraduateHomePage extends JFrame {
     private JComboBox AttendanceSubjectStatusPerc;
     private JLabel AttendancePercWithoutMed;
     private JLabel AttendancePercWithMed;
+    private JTable UGMedicalTable;
+    private JComboBox LevelNoforMedical;
+    private JComboBox SemesterNoforMedical;
+    private JComboBox LevelNoforCourses;
+    private JComboBox SemesterNoforCourses;
+    private JComboBox CourseforCourses;
+    private JTextArea DescriptionforCourseMaterial;
+    private JComboBox CourseMaterialforCourses;
+    private JButton SaveCourseMaterial;
 
     private CardLayout cardLayout;
 
@@ -110,6 +124,8 @@ public class UndergraduateHomePage extends JFrame {
     private int Atten_Semester_No_Global;
     private String Atten_Course_Number;
 
+    double CGPA;
+
     public UndergraduateHomePage(String userIdentity){
 
         GlobalVariables[0] = 1;
@@ -131,6 +147,7 @@ public class UndergraduateHomePage extends JFrame {
         profileButton.setEnabled(false);
         CardTittleLabel.setText(cardTitles[0]);
         loadUGProfImage(userIdentity);
+        lblSGPA.setText("SGPA Not Available");
 
         ActionListener listener = new ActionListener() {
             @Override
@@ -212,7 +229,7 @@ public class UndergraduateHomePage extends JFrame {
 
                 int SemesterNo = Integer.parseInt(semester_no);
 
-                valuesForCourseTable(LevelNo,SemesterNo);
+                valuesForTimeTable(LevelNo,SemesterNo);
             }
         });
 
@@ -235,7 +252,7 @@ public class UndergraduateHomePage extends JFrame {
                 }
                 int LevelNo = Integer.parseInt(level_no);
 
-                valuesForCourseTable(LevelNo,SemesterNo);
+                valuesForTimeTable(LevelNo,SemesterNo);
             }
         });
 
@@ -244,6 +261,7 @@ public class UndergraduateHomePage extends JFrame {
         UGLevelNoforMarksDropDown.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                lblSGPA.setText("SGPA Not Available");
                 MarksTableSetModelMethod();
 
                 String level_no = (String) UGLevelNoforMarksDropDown.getSelectedItem();
@@ -266,6 +284,7 @@ public class UndergraduateHomePage extends JFrame {
         UGSemesterNoforMarksDropDown.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                lblSGPA.setText("SGPA Not Available");
                 MarksTableSetModelMethod();
 
                 String semester_no = (String) UGSemesterNoforMarksDropDown.getSelectedItem();
@@ -385,7 +404,393 @@ public class UndergraduateHomePage extends JFrame {
                 LoadAttendancePercentages(Course_Status_for_Perc,userIdentity,course_id_Global);
             }
         });
+
+        CalcCGPA(userIdentity);
+
+        MedicalTableSetModelMethod();
+
+
+        LevelNoforMedical.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                MedicalTableSetModelMethod();
+
+                String SemesterforMedicalStr = (String) SemesterNoforMedical.getSelectedItem();
+                assert SemesterforMedicalStr != null;
+                if(SemesterforMedicalStr.isEmpty()){
+                    SemesterforMedicalStr = "0";
+                }
+                int SemesterforMedicalInt = Integer.parseInt(SemesterforMedicalStr);
+
+
+                String LevelforMedicalStr = (String) LevelNoforMedical.getSelectedItem();
+                assert LevelforMedicalStr != null;
+                if(LevelforMedicalStr.isEmpty()){
+                    LevelforMedicalStr = "0";
+                }
+                int LevelforMedicalInt = Integer.parseInt(LevelforMedicalStr);
+
+                LoadMedicalTable(userIdentity,LevelforMedicalInt,SemesterforMedicalInt);
+            }
+        });
+        SemesterNoforMedical.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                MedicalTableSetModelMethod();
+
+                String LevelforMedicalStr = (String) LevelNoforMedical.getSelectedItem();
+                assert LevelforMedicalStr != null;
+                if(LevelforMedicalStr.isEmpty()){
+                    LevelforMedicalStr = "0";
+                }
+                int LevelforMedicalInt = Integer.parseInt(LevelforMedicalStr);
+
+                String SemesterforMedicalStr = (String) SemesterNoforMedical.getSelectedItem();
+                assert SemesterforMedicalStr != null;
+                if(SemesterforMedicalStr.isEmpty()){
+                    SemesterforMedicalStr = "0";
+                }
+                int SemesterforMedicalInt = Integer.parseInt(SemesterforMedicalStr);
+
+                LoadMedicalTable(userIdentity,LevelforMedicalInt,SemesterforMedicalInt);
+            }
+        });
+        LevelNoforCourses.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String SemesterforCoursesStr = (String) SemesterNoforCourses.getSelectedItem();
+                assert SemesterforCoursesStr != null;
+                if(SemesterforCoursesStr.isEmpty()){
+                    SemesterforCoursesStr = "0";
+                }
+                int SemesterforCoursesInt = Integer.parseInt(SemesterforCoursesStr);
+
+                String LevelforCoursesStr = (String) LevelNoforCourses.getSelectedItem();
+                assert LevelforCoursesStr != null;
+                if(LevelforCoursesStr.isEmpty()){
+                    LevelforCoursesStr = "0";
+                }
+                int LevelforCoursesInt = Integer.parseInt(LevelforCoursesStr);
+
+                CourseDetailsforCourses(LevelforCoursesInt,SemesterforCoursesInt);
+            }
+        });
+        SemesterNoforCourses.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String LevelforCoursesStr = (String) LevelNoforCourses.getSelectedItem();
+                assert LevelforCoursesStr != null;
+                if(LevelforCoursesStr.isEmpty()){
+                    LevelforCoursesStr = "0";
+                }
+                int LevelforCoursesInt = Integer.parseInt(LevelforCoursesStr);
+
+                String SemesterforCoursesStr = (String) SemesterNoforCourses.getSelectedItem();
+                assert SemesterforCoursesStr != null;
+                if(SemesterforCoursesStr.isEmpty()){
+                    SemesterforCoursesStr = "0";
+                }
+                int SemesterforCoursesInt = Integer.parseInt(SemesterforCoursesStr);
+
+                CourseDetailsforCourses(LevelforCoursesInt,SemesterforCoursesInt);
+            }
+        });
+        CourseforCourses.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String LevelforCoursesStr = (String) LevelNoforCourses.getSelectedItem();
+                assert LevelforCoursesStr != null;
+                if(LevelforCoursesStr.isEmpty()){
+                    LevelforCoursesStr = "0";
+                }
+                int LevelforCoursesInt = Integer.parseInt(LevelforCoursesStr);
+
+                String SemesterforCoursesStr = (String) SemesterNoforCourses.getSelectedItem();
+                assert SemesterforCoursesStr != null;
+                if(SemesterforCoursesStr.isEmpty()){
+                    SemesterforCoursesStr = "0";
+                }
+                int SemesterforCoursesInt = Integer.parseInt(SemesterforCoursesStr);
+
+                String selectedCourse = (String) CourseforCourses.getSelectedItem();
+
+                String regex = "[\\s]";
+                String[] str_split = selectedCourse.split(regex);
+
+                CourseMaterialDetailsforCourses(LevelforCoursesInt,SemesterforCoursesInt,str_split[0]);
+            }
+        });
+        CourseMaterialforCourses.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String LevelforCoursesStr = (String) LevelNoforCourses.getSelectedItem();
+                assert LevelforCoursesStr != null;
+                if(LevelforCoursesStr.isEmpty()){
+                    LevelforCoursesStr = "0";
+                }
+                int LevelforCoursesInt = Integer.parseInt(LevelforCoursesStr);
+
+                String SemesterforCoursesStr = (String) SemesterNoforCourses.getSelectedItem();
+                assert SemesterforCoursesStr != null;
+                if(SemesterforCoursesStr.isEmpty()){
+                    SemesterforCoursesStr = "0";
+                }
+                int SemesterforCoursesInt = Integer.parseInt(SemesterforCoursesStr);
+
+                String selectedCourse = (String) CourseforCourses.getSelectedItem();
+
+                String regex = "\\s";
+                assert selectedCourse != null;
+                String[] str_split = selectedCourse.split(regex);
+
+                String course_material = (String) CourseMaterialforCourses.getSelectedItem();
+
+                LoadCourseMaterialDesc(LevelforCoursesInt,SemesterforCoursesInt,str_split[0],course_material);
+            }
+        });
+        SaveCourseMaterial.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String filename;
+                String resourcePath;
+                String resourceRegex = "/";
+                try {
+                    String LevelforCoursesStr = (String) LevelNoforCourses.getSelectedItem();
+                    assert LevelforCoursesStr != null;
+                    if(LevelforCoursesStr.isEmpty()){
+                        LevelforCoursesStr = "0";
+                    }
+                    int LevelforCoursesInt = Integer.parseInt(LevelforCoursesStr);
+
+                    String SemesterforCoursesStr = (String) SemesterNoforCourses.getSelectedItem();
+                    assert SemesterforCoursesStr != null;
+                    if(SemesterforCoursesStr.isEmpty()){
+                        SemesterforCoursesStr = "0";
+                    }
+                    int SemesterforCoursesInt = Integer.parseInt(SemesterforCoursesStr);
+
+                    String selectedCourse = (String) CourseforCourses.getSelectedItem();
+
+                    String regex = "\\s";
+                    assert selectedCourse != null;
+                    String[] str_split = selectedCourse.split(regex);
+
+                    String course_material = (String) CourseMaterialforCourses.getSelectedItem();
+
+                    resourcePath = selectCourseMaterial(LevelforCoursesInt,SemesterforCoursesInt,str_split[0],course_material);
+
+                    String[] resourceFile = resourcePath.split(resourceRegex);
+                    int arrLength = resourceFile.length;
+                    filename = resourceFile[arrLength - 1];
+
+                    saveResourceToFile(resourcePath,filename);
+                } catch (IOException ex) {
+                    throw new RuntimeException(ex);
+                }
+            }
+        });
     }
+
+private String selectCourseMaterial(int level_no, int semester_no, String course_id, String course_material){
+    String materialPath = "";
+        try{
+            String SelectCourseMaterialQuery = "select c_material_location from course_materials join courses on course_materials.c_id = courses.course_id where courses.level_no = ? and courses.semester_no = ? and c_id = ? and c_material = ?";
+            prepStatement = conn.prepareStatement(SelectCourseMaterialQuery);
+
+            prepStatement.setInt(1,level_no);
+            prepStatement.setInt(2,semester_no);
+            prepStatement.setString(3,course_id);
+            prepStatement.setString(4,course_material);
+
+            ResultSet resultSet = prepStatement.executeQuery();
+
+            while (resultSet.next()){
+                materialPath = resultSet.getString("c_material_location");
+            }
+            return materialPath;
+
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+    return materialPath;
+}
+
+    private void saveResourceToFile(String resourcePath, String filename) throws IOException {
+        JFileChooser directoryChooser = new JFileChooser();
+        directoryChooser.setDialogTitle("Select Folder to Save File");
+        directoryChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+        directoryChooser.setAcceptAllFileFilterUsed(false);
+
+        int userSelection = directoryChooser.showSaveDialog(null);
+
+        if (userSelection == JFileChooser.APPROVE_OPTION) {
+            File selectedDir = directoryChooser.getSelectedFile();
+            File destinationFile = new File(selectedDir,filename);
+
+            System.out.println(resourcePath);
+            System.out.println(destinationFile);
+
+            Path currentPath = Path.of(resourcePath);
+
+            if (resourcePath == null || resourcePath.equals("")) {
+                JOptionPane.showMessageDialog(null, "Resource not found: " + resourcePath);
+                return;
+            }else{
+                Files.copy(currentPath, destinationFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
+                JOptionPane.showMessageDialog(null, "File saved to: " + destinationFile.getAbsolutePath());
+            }
+        }
+    }
+
+    private void LoadCourseMaterialDesc(int level_no, int semester_no, String course_id, String c_material){
+        try{
+            String c_material_desc;
+
+            String selectCourseMatDescQuery = "select c_material_desc from course_materials join courses on course_materials.c_id = courses.course_id where courses.level_no = ? and courses.semester_no = ? and c_id = ? and c_material = ?";
+            prepStatement = conn.prepareStatement(selectCourseMatDescQuery);
+            prepStatement.setInt(1,level_no);
+            prepStatement.setInt(2,semester_no);
+            prepStatement.setString(3,course_id);
+            prepStatement.setString(4,c_material);
+
+            ResultSet resultSet = prepStatement.executeQuery();
+            while (resultSet.next()){
+                c_material_desc = resultSet.getString("c_material_desc");
+
+                File CourseMatDesc = new File(c_material_desc);
+                input = new Scanner(CourseMatDesc);
+
+                StringBuilder MaterialDescContent = new StringBuilder();
+
+                while (input.hasNextLine()){
+                    MaterialDescContent.append(input.nextLine()).append("\n");
+                }
+                DescriptionforCourseMaterial.setText(MaterialDescContent.toString());
+            }
+
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    private void viewNotice(String selected_notice_title){
+        String view_notice_Query_details = "Select * from notice where noticeTitle = ?";
+        try{
+            prepStatement = conn.prepareStatement(view_notice_Query_details);
+            prepStatement.setString(1,selected_notice_title);
+
+            ResultSet resultSet = prepStatement.executeQuery();
+            while (resultSet.next()){
+                String notice_FilePath = resultSet.getString("noticeFilePath");
+
+                System.out.println(notice_FilePath);
+
+                File notice = new File(notice_FilePath);
+                input = new Scanner(notice);
+
+                StringBuilder noticeContent = new StringBuilder();
+
+                while (input.hasNextLine()){
+                    noticeContent.append(input.nextLine()).append("\n");
+                }
+                noticeDisplayArea.setText(noticeContent.toString());
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    private void CourseMaterialDetailsforCourses(int level_no, int semester_no, String course_id){
+        try{
+            String selectCourseMatQuery = "select c_material from course_materials join courses on course_materials.c_id = courses.course_id where courses.level_no = ? and courses.semester_no = ? and c_id = ?";
+            prepStatement = conn.prepareStatement(selectCourseMatQuery);
+            prepStatement.setInt(1,level_no);
+            prepStatement.setInt(2,semester_no);
+            prepStatement.setString(3,course_id);
+
+            ResultSet resultSet = prepStatement.executeQuery();
+            CourseMaterialforCourses.removeAllItems();
+
+            while(resultSet.next()){
+                String c_material = resultSet.getString("c_material");
+
+                CourseMaterialforCourses.addItem(c_material);
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    private void CourseDetailsforCourses(int level_no, int semester_no){
+        try{
+            String c_id,course_name,c_material,Course;
+
+            String selectCourseQuery = "select distinct(c_id),course_name from course_materials join courses on course_materials.c_id = courses.course_id where courses.level_no = ? and courses.semester_no = ?";
+            prepStatement = conn.prepareStatement(selectCourseQuery);
+            prepStatement.setInt(1,level_no);
+            prepStatement.setInt(2,semester_no);
+
+            ResultSet resultSet = prepStatement.executeQuery();
+            CourseforCourses.removeAllItems();
+
+            while(resultSet.next()){
+                c_id = resultSet.getString("c_id");
+                course_name = resultSet.getString("course_name");
+
+                Course = c_id + " - " + course_name;
+                CourseforCourses.addItem(Course);
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    private void MedicalTableSetModelMethod(){
+        UGMedicalTable.setModel(new DefaultTableModel(
+                null,
+                new String[]{"Medical No","Course code","Course Name","Course Status","Week No","Medical Reason"}
+        ));
+    }
+
+    private void LoadMedicalTable(String tgno, int level_no, int semester_no){
+        System.out.println("Lev " + level_no + " Sem - " +semester_no);
+
+        DefaultTableModel tblmodel = (DefaultTableModel) UGMedicalTable.getModel();
+//        MedicalTableSetModelMethod();
+
+        try{
+            String medLoadQuery = "select medical_no,courses.course_id,courses.course_name,course_status,medical.week_no,med_reason from attendance join medical on attendance.med_id = medical.medical_no join courses on attendance.course_id = courses.course_id where medical.tgno = ? and level_no = ? and semester_no = ?";
+            prepStatement = conn.prepareStatement(medLoadQuery);
+            prepStatement.setString(1,tgno);
+            prepStatement.setString(2, String.valueOf(level_no));
+            prepStatement.setString(3, String.valueOf(semester_no));
+
+            ResultSet resultSet = prepStatement.executeQuery();
+            while(resultSet.next()){
+               String med_no = resultSet.getString("medical_no");
+               String course_id = resultSet.getString("course_id");
+               String course_name = resultSet.getString("course_name");
+               String course_status = resultSet.getString("course_status");
+               String week_no = resultSet.getString("week_no");
+               String med_reason = resultSet.getString("med_reason");
+
+               Object[] med_det = new Object[6];
+
+               med_det[0] = med_no;
+               med_det[1] = course_id;
+               med_det[2] = course_name;
+               med_det[3] = course_status;
+               med_det[4] = week_no;
+               med_det[5] = med_reason;
+
+                tblmodel.addRow(med_det);
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+
 
     private void LoadAttendancePercentages(String atten_status, String tgno,String course_id){
         try{
@@ -592,18 +997,7 @@ public class UndergraduateHomePage extends JFrame {
         timeTableColumns.getColumn(3).setCellRenderer(timeTableCells);
     }
 
-    private void calculateGrade(){
-        int quiz1 = 75;
-        int quiz2 = 65;
-        int quiz3 = 55;
-        int assessment = 78;
-        int mid_term = 70;
-        int finalTheory = 80;
-        int finalPractical = 85;
-
-    }
-
-    private void valuesForCourseTable(int level_no, int semester_no){
+    private void valuesForTimeTable(int level_no, int semester_no){
 
         System.out.println("Level " + level_no + " Semester " + semester_no);
 
@@ -831,37 +1225,9 @@ public class UndergraduateHomePage extends JFrame {
         }
     }
 
-    private void viewNotice(String selected_notice_title){
-        String view_notice_Query_details = "Select * from notice where noticeTitle = ?";
-        try{
-            prepStatement = conn.prepareStatement(view_notice_Query_details);
-            prepStatement.setString(1,selected_notice_title);
-
-            ResultSet resultSet = prepStatement.executeQuery();
-            while (resultSet.next()){
-                String notice_FilePath = resultSet.getString("noticeFilePath");
-
-                System.out.println(notice_FilePath);
-
-                File notice = new File(notice_FilePath);
-                input = new Scanner(notice);
-
-                StringBuilder noticeContent = new StringBuilder();
-
-                while (input.hasNextLine()){
-                    noticeContent.append(input.nextLine()).append("\n");
-                }
-                noticeDisplayArea.setText(noticeContent.toString());
-            }
-        }catch (Exception e){
-            e.printStackTrace();
-        }
-    }
-
     public void calculateGrade(String tgno, int level_no, int semester_no){
         DefaultTableModel defaultTableModel = (DefaultTableModel) UGGradeTable.getModel();
-
-        System.out.println("Level " + level_no + " Semes " + semester_no);
+        DecimalFormat df = new DecimalFormat("0.00");
 
         int quiz_percentage,assessment_percentage,mid_term_percentage,final_theory_percentage,final_practical_percentage,
                 quiz1,quiz2,quiz3,quiz4,assessment1,assessment2,mid_term,finalTheory,finalPractical,ca_perc_max,final_mark_perc_max;
@@ -870,6 +1236,12 @@ public class UndergraduateHomePage extends JFrame {
 
         String c_id,c_name,c_grade = "";
         float atten_perc_float = 0;
+
+        double c_sum = 0;
+        double SGPA = 0;
+
+        int credit_sum;
+        double credit_point_mul = 0,credit_point_mul_sum = 0;
 
         try{
             String selectMarkPercentage = "select tgno,courses.course_id,courses.course_name,quiz_one,quiz_second,quiz_third,quiz_fourth,assessment_one,assessment_second,mid_term,final_theory,final_practical,quizzes_perc,assessment_perc,mid_term_perc,final_theory_perc,final_practical_perc from marks join courses where marks.course_id = courses.course_id and tgno = ? and level_no = ? and semester_no = ?";
@@ -916,7 +1288,6 @@ public class UndergraduateHomePage extends JFrame {
                 }
 
                 ca_perc_max = ((quiz_percentage + assessment_percentage + mid_term_percentage) * 50) / 100;
-                final_mark_perc_max = final_theory_percentage + final_practical_percentage;
 
                 int[] quizzes = {quiz1,quiz2,quiz3,quiz4};
                 sort(quizzes);
@@ -943,7 +1314,6 @@ public class UndergraduateHomePage extends JFrame {
                 final_mark_perc = FinalTheoryPercentage + FinalPracticalPercentage;
 
                 String ca_eligibility = "Not Eligible";
-//                System.out.println("Currect CA - " + ca_mark_perc + ", Max CA req - " + ca_perc_max + ", Attendance eligi - " + atten_perc_float);
                 if (ca_mark_perc > ca_perc_max){
                     ca_eligibility = "Eligible";
                     if(atten_perc_float >= 80){
@@ -993,10 +1363,234 @@ public class UndergraduateHomePage extends JFrame {
                 GradeTableData[6] = c_grade;
 
                 defaultTableModel.addRow(GradeTableData);
+
+                char[] C_id_arr = c_id.toCharArray();
+                int c_id_arr_len = C_id_arr.length;
+                int i, c_credit;
+
+                c_credit =Integer.parseInt(String.valueOf(C_id_arr[c_id_arr_len - 1]));
+
+                if(c_grade.equals("Not Released")){
+                    c_grade = "0";
+                }
+
+                double credit_points = 0.00;
+
+                c_sum = final_mark_perc + ca_mark_perc;
+                if(c_grade.equals("A+") || c_grade.equals("A")){
+                    credit_points = 4.00;
+                } else if (c_grade.equals("A-")) {
+                    credit_points = 3.70;
+                } else if (c_grade.equals("B+")) {
+                    credit_points = 3.30;
+                } else if (c_grade.equals("B")) {
+                    credit_points = 3.00;
+                } else if (c_grade.equals("B-")) {
+                    credit_points = 2.70;
+                } else if (c_grade.equals("C+")) {
+                    credit_points = 2.30;
+                } else if (c_grade.equals("C")) {
+                    credit_points = 2.00;
+                } else if (c_grade.equals("C-")) {
+                    credit_points = 1.70;
+                } else if (c_grade.equals("D+")) {
+                    credit_points = 1.30;
+                } else if (c_grade.equals("D")) {
+                    credit_points = 1.00;
+                } else if (c_grade.equals("E") || c_grade.equals("Not Released") || c_grade.equals("F")) {
+                    credit_points = 0.00;
+                }
+
+                c_sum = c_sum + c_credit;
+                credit_point_mul = c_credit * credit_points;
+                credit_point_mul_sum = credit_point_mul_sum + credit_point_mul;
+
+//                SGPA = credit_point_mul_sum / c_sum;
+
+                SGPA = Double.parseDouble(df.format(credit_point_mul_sum / c_sum));
+
+                lblSGPA.setText(String.valueOf(SGPA));
+
+//                System.out.println("C_id - " + c_id + " cr_poi_mul " + credit_point_mul + " sum - " + credit_point_mul_sum + " SGPA - " + SGPA);
+//                System.out.println("C_id " + c_id + " CM - " + c_sum + " Grade - " + c_grade +" credit - " + c_credit + " Cr point - " + credit_points);
+
+
             }
         }catch (Exception e){
             e.printStackTrace();
         }
+    }
+
+    private double CalcCGPA(String tgno){
+        DecimalFormat df = new DecimalFormat("0.00");
+
+        int quiz_percentage,assessment_percentage,mid_term_percentage,final_theory_percentage,final_practical_percentage,
+                quiz1,quiz2,quiz3,quiz4,assessment1,assessment2,mid_term,finalTheory,finalPractical,ca_perc_max,final_mark_perc_max;
+
+        double quizPercentage, assessmentPercentage, midPercentage, FinalTheoryPercentage,FinalPracticalPercentage, ca_mark_perc, final_mark_perc;
+
+        String c_id,c_name,c_grade = "";
+        float atten_perc_float = 0;
+
+        double c_sum = 0;
+        double CGPA = 0;
+
+        int credit_sum;
+        double credit_point_mul = 0,credit_point_mul_sum = 0;
+
+        try{
+            String selectMarkPercentage = "select tgno,courses.course_id,courses.course_name,quiz_one,quiz_second,quiz_third,quiz_fourth,assessment_one,assessment_second,mid_term,final_theory,final_practical,quizzes_perc,assessment_perc,mid_term_perc,final_theory_perc,final_practical_perc from marks join courses where marks.course_id = courses.course_id and tgno = ?";
+
+            prepStatement = conn.prepareStatement(selectMarkPercentage);
+            prepStatement.setString(1,tgno);
+//            prepStatement.setInt(2,level_no);
+//            prepStatement.setInt(3,semester_no);
+
+            ResultSet resultSet = prepStatement.executeQuery();
+
+            while (resultSet.next()){
+                c_id = resultSet.getString("course_id");
+                c_name = resultSet.getString("course_name");
+
+                quiz1 = resultSet.getInt("quiz_one");
+                quiz2 = resultSet.getInt("quiz_second");
+                quiz3 = resultSet.getInt("quiz_third");
+                quiz4 = resultSet.getInt("quiz_fourth");
+                assessment1 = resultSet.getInt("assessment_one");
+                assessment2 = resultSet.getInt("assessment_second");
+                mid_term = resultSet.getInt("mid_term");
+                finalTheory = resultSet.getInt("final_theory");
+                finalPractical = resultSet.getInt("final_practical");
+
+                quiz_percentage = resultSet.getInt("quizzes_perc");
+                assessment_percentage = resultSet.getInt("assessment_perc");
+                mid_term_percentage = resultSet.getInt("mid_term_perc");
+                final_theory_percentage = resultSet.getInt("final_theory_perc");
+                final_practical_percentage = resultSet.getInt("final_practical_perc");
+
+                ca_perc_max = ((quiz_percentage + assessment_percentage + mid_term_percentage) * 50) / 100;
+//                final_mark_perc_max = final_theory_percentage + final_practical_percentage;
+
+                int[] quizzes = {quiz1,quiz2,quiz3,quiz4};
+                sort(quizzes);
+                int arrLen = quizzes.length;
+
+                if(quizzes[0] == 0){
+                    quizPercentage = ((quizzes[arrLen - 1] * (quiz_percentage/2.0)) / 100) + ((quizzes[arrLen - 2] * (10/2.0)) / 100);
+                }else {
+                    quizPercentage = ((quizzes[arrLen - 1] * (quiz_percentage/3.0)) / 100) + ((quizzes[arrLen - 2] * (10/3.0)) / 100) + ((quizzes[arrLen - 3] * (10/3.0)) / 100);
+                }
+
+                if(assessment1 == 0 || assessment2 == 0){
+                    assessmentPercentage = (((assessment1 + assessment2) * assessment_percentage) / 100.0);
+                }else{
+                    assessmentPercentage = (((assessment1 + assessment2) * (assessment_percentage / 2.0) ) / 100.0);
+                }
+
+                midPercentage = ((mid_term * mid_term_percentage) / 100.0);
+
+                FinalTheoryPercentage = ((finalTheory * final_theory_percentage) / 100.0);
+                FinalPracticalPercentage = ((finalPractical * final_practical_percentage) / 100.0);
+
+                ca_mark_perc = quizPercentage + assessmentPercentage + midPercentage;
+                final_mark_perc = FinalTheoryPercentage + FinalPracticalPercentage;
+
+                String ca_eligibility = "Not Eligible";
+                if (ca_mark_perc > ca_perc_max){
+                    ca_eligibility = "Eligible";
+                    if((ca_mark_perc + final_mark_perc) >= 90){
+                        c_grade = "A+";
+                    }else if((ca_mark_perc + final_mark_perc) >= 85){
+                        c_grade = "A";
+                    }else if((ca_mark_perc + final_mark_perc) >= 80){
+                        c_grade = "A-";
+                    }else if((ca_mark_perc + final_mark_perc) >= 75){
+                        c_grade = "B+";
+                    }else if((ca_mark_perc + final_mark_perc) >= 70){
+                        c_grade = "B";
+                    }else if((ca_mark_perc + final_mark_perc) >= 65){
+                        c_grade = "B-";
+                    }else if((ca_mark_perc + final_mark_perc) >= 60){
+                        c_grade = "C+";
+                    }else if((ca_mark_perc + final_mark_perc) >= 40){
+                        c_grade = "C";
+                    }else if((ca_mark_perc + final_mark_perc) >= 35){
+                        c_grade = "C-";
+                    }else if((ca_mark_perc + final_mark_perc) >= 30){
+                        c_grade = "D+";
+                    }else if((ca_mark_perc + final_mark_perc) >= 25){
+                        c_grade = "D";
+                    }else if((ca_mark_perc + final_mark_perc) >= 20){
+                        c_grade = "E";
+                    }else if((ca_mark_perc + final_mark_perc) >= 0){
+                        c_grade = "F";
+                    }
+                }else{
+                    ca_eligibility = "Not Eligible";
+                    c_grade = "Not Released";
+                }
+
+                char[] C_id_arr = c_id.toCharArray();
+                int c_id_arr_len = C_id_arr.length;
+                int i, c_credit;
+
+                c_credit = Integer.parseInt(String.valueOf(C_id_arr[c_id_arr_len - 1]));
+
+                if(c_grade.equals("Not Released")){
+                    c_grade = "0";
+                }
+
+                double credit_points = 0.00;
+
+                c_sum = final_mark_perc + ca_mark_perc;
+
+                if(c_grade.equals("A+") || c_grade.equals("A")){
+                    credit_points = 4.00;
+                } else if (c_grade.equals("A-")) {
+                    credit_points = 3.70;
+                } else if (c_grade.equals("B+")) {
+                    credit_points = 3.30;
+                } else if (c_grade.equals("B")) {
+                    credit_points = 3.00;
+                } else if (c_grade.equals("B-")) {
+                    credit_points = 2.70;
+                } else if (c_grade.equals("C+")) {
+                    credit_points = 2.30;
+                } else if (c_grade.equals("C")) {
+                    credit_points = 2.00;
+                } else if (c_grade.equals("C-")) {
+                    credit_points = 1.70;
+                } else if (c_grade.equals("D+")) {
+                    credit_points = 1.30;
+                } else if (c_grade.equals("D")) {
+                    credit_points = 1.00;
+                } else if (c_grade.equals("E") || c_grade.equals("Not Released") || c_grade.equals("F")) {
+                    credit_points = 0.00;
+                }
+
+                c_sum = c_sum + c_credit;
+                credit_point_mul = c_credit * credit_points;
+                credit_point_mul_sum = credit_point_mul_sum + credit_point_mul;
+
+                CGPA = Double.parseDouble(df.format(credit_point_mul_sum / c_sum));
+
+                if(CGPA >= 3.7){
+                    UGClass.setText("First Class");
+                }else if(CGPA >= 3.3){
+                    UGClass.setText("Second Upper Class");
+                }else if(CGPA >= 3.0){
+                    UGClass.setText("Second Lower Class");
+                }else if(CGPA >= 2.0){
+                    UGClass.setText("General Class");
+                }else{
+                    UGClass.setText("Class Unavailable");
+                }
+                lblCGPA.setText(String.valueOf(CGPA));
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return CGPA;
     }
 
     private void valuesforAttendanceTable(int level_no, int semester_no, String tgno){

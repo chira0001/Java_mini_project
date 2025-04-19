@@ -109,7 +109,7 @@ course_id varchar(7),
 week_no int(2),
 course_status varchar(20),
 atten_status varchar(20),
-med_id char(6)
+med_id INT
 );
 
 create table medical(
