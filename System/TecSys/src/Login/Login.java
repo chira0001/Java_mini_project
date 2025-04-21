@@ -1,6 +1,7 @@
 package Login;
 
 import DBCONNECTION.DBCONNECTION;
+import HomePage.AdminHomePage;
 import HomePage.LecturerHomePage;
 import HomePage.TechnicalOfficerHomePage;
 import HomePage.UndergraduateHomePage;
@@ -94,7 +95,7 @@ public class Login extends JFrame {
                                     case "ad" :
                                         System.out.println("Admin");
                                         dispose();
-                                        new AdminUserProfile();
+                                        new AdminHomePage(uname);
                                         break;
                                 }
                             } else {
