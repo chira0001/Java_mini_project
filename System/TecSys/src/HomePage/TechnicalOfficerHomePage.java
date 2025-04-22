@@ -1,20 +1,23 @@
 package HomePage;
+import DBCONNECTION.DBCONNECTION;
 import Login.Login;
-
 
 
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
+import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableColumnModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.Statement;
+import java.sql.*;
+import java.util.Scanner;
+
+import static java.util.Arrays.sort;
 
 public class TechnicalOfficerHomePage extends JFrame {
 
@@ -71,7 +74,11 @@ public class TechnicalOfficerHomePage extends JFrame {
     private JComboBox AttendanceSubjectStatusPerc;
     private JTable AttendanceTable;
     private JComboBox AttendenceLevelNo;
-    private JButton updateButton1;
+    private JButton attendenceUpdateBtn;
+    private JComboBox SemesterNoforMedical;
+    private JComboBox LevelNoforMedical;
+    private JTable UGMedicalTable;
+    private JPanel Notice;
 
     private CardLayout cardLayout;
 
@@ -90,12 +97,29 @@ public class TechnicalOfficerHomePage extends JFrame {
     private String[] cardTitles = {"Welcome..!", "Attendance Details", "View Technical Officer Time Table","Medical Information", "Notices","Settings Configuration"};
 
     private Object[] filePathValues = new Object[4];
+    private Object[] GlobalVariables = new Object[4];
 
+    DBCONNECTION _dbconn = new DBCONNECTION();
+    Connection conn = _dbconn.Conn();
+    private PreparedStatement prepStatement;
 
+    private Scanner input;
 
-    public TechnicalOfficerHomePage(String userIdentity){
+    private int SemeterNumber;
+    private int LevelNumber;
+
+   // private int Atten_Level_No_Global;
+  //  private int Atten_Semester_No_Global;
+  //  private String Atten_Course_Number;
+
+    public TechnicalOfficerHomePage(String userIdentity) {
+
+        GlobalVariables[0] = 1;
+        GlobalVariables[1] = 1;
+        GlobalVariables[2] = "";
 
         dbConnection(userIdentity);
+        LoadNotices();
 
         setContentPane(TechnicalOfficerHomePage);
         setTitle("Technical Officer User Profile");
@@ -104,7 +128,8 @@ public class TechnicalOfficerHomePage extends JFrame {
         setLocationRelativeTo(this);
         setVisible(true);
 
-        cardLayout = (CardLayout)(TOHomeCard.getLayout());
+        cardLayout = (CardLayout) (TOHomeCard.getLayout());
+
         profileButton.setEnabled(false);
         CardTittleLabel.setText(cardTitles[0]);
         loadTOProfImage(userIdentity);
@@ -113,7 +138,7 @@ public class TechnicalOfficerHomePage extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 cardCommand = e.getActionCommand();
-                changeBtnState(cardCommand,userIdentity);
+                changeBtnState(cardCommand, userIdentity);
             }
         };
         profileButton.addActionListener(listener);
@@ -135,7 +160,6 @@ public class TechnicalOfficerHomePage extends JFrame {
         uploadImageButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-
                 TOUploadToPreviewProfileImage(userIdentity);
             }
         });
@@ -153,197 +177,322 @@ public class TechnicalOfficerHomePage extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 int noOfButtons = cardButtons.length;
 
-                cardLayout.show(TOHomeCard,cardNames[0]);
+                cardLayout.show(TOHomeCard, cardNames[0]);
                 btnFieldNames[0].setEnabled(false);
-                btnFieldNames[noOfButtons-1].setEnabled(true);
+                btnFieldNames[noOfButtons - 1].setEnabled(true);
+                loadTOProfImage(userIdentity);
+                dbConnection(userIdentity);
             }
         });
         viewMedicalsButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                cardLayout.show(TOHomeCard,cardNames[4]);
+                cardLayout.show(TOHomeCard, cardNames[4]);
                 attendanceButton.setEnabled(true);
                 medicalButton.setEnabled(false);
                 CardTittleLabel.setText(cardTitles[4]);
             }
         });
-    }
-
-    public void changeBtnState(String btn, String tono){
-
-        int noOfButtons = cardButtons.length;
-        for (int i = 0; i < noOfButtons; i++){
-            if (cardButtons[i].equals(btn)){
-                dbConnection(tono);
-                cardLayout.show(TOHomeCard,cardNames[i]);
-                CardTittleLabel.setText(cardTitles[i]);
-                btnFieldNames[i].setEnabled(false);
-            }else {
-                btnFieldNames[i].setEnabled(true);
+        noticeTitleDropDown.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String notice = (String) noticeTitleDropDown.getSelectedItem();
+                System.out.println(notice);
+                viewNotice(notice);
             }
-        }
-    }
+        });
 
-    private void dbConnection(String tono){
-        try{
-            String selectQuery = "select * from technical_officer where tono = '" + tono + "'";
-            Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/javatest","root","1234");
-            Statement statement = connection.createStatement();
-            ResultSet DBresult = statement.executeQuery(selectQuery);
+        TimeTableSetModelMethod();
 
-            if(DBresult.next()){
-                tono = DBresult.getString("tono");
-                toFname = DBresult.getString("tofname");
-                toLname = DBresult.getString("tolname");
-                toAddress = DBresult.getString("toaddress");
-                toEmail = DBresult.getString("toemail");
-                toPhno = DBresult.getString("tophno");
-                toProfImg = DBresult.getString("toProfImg");
+        LevelNoDropDown.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                TimeTableSetModelMethod();
 
-                txtTGNO.setText(tono);
-                txtFNAME.setText(toFname);
-                txtLNAME.setText(toLname);
-                txtADDRESS.setText(toAddress);
-                txtEMAIL.setText(toEmail);
-                txtPHNO.setText(toPhno);
-
-                textField7.setText(toAddress);
-                textField8.setText(toEmail);
-                textField9.setText(toPhno);
-
-                loadTOProfImage(tono);
-            }else{
-                JOptionPane.showMessageDialog(null,"Internal Error");
-            }
-        }catch (Exception e){
-            e.printStackTrace();
-
-        }
-    }
-
-    private void TOUpdateCredentials(String tono){
-        try{
-            String TOaddress = textField7.getText();
-            String TOemail = textField8.getText();
-            String TOphno = textField9.getText();
-
-            String extension = (String) filePathValues[3];
-
-            String TOProfileImagePath = "Resources/ProfileImages/" + tono + "." + extension;
-            System.out.println(TOProfileImagePath);
-            String TOCredentialupdateQuery;
-            if (extension == null){
-                TOCredentialupdateQuery = "Update technical_officer set toaddress = '" + toAddress + "', TOemail = '"+ TOemail +"',TOphno = '"+ TOphno+"' where tgno = '" + tono + "'";
-            }else {
-                TOCredentialupdateQuery = "Update technical_officer set toaddress = '" + toAddress + "', toemail = '"+ toEmail +"',tophno = '"+ toPhno+"',toProfImg ='" + toProfImg + "' where tono = '" + tono + "'";
-            }
-
-            Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/javatest","root","1234");
-            Statement statement = connection.createStatement();
-            int resultSet = statement.executeUpdate(TOCredentialupdateQuery);
-
-            if(resultSet > 0){
-                TOSaveProfileImage(tono);
-                JOptionPane.showMessageDialog(null,"Credentials updated successfully");
-            }else {
-                JOptionPane.showMessageDialog(null,"Error in credential updation");
-            }
-
-        }catch (Exception e){
-            e.printStackTrace();
-        }
-    }
-
-    private void loadTOProfImage(String tono){
-        try{
-            String UGProfImageSearchQuery = "select * from technical_officer where tono = '" + tono + "'";
-            Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/javatest","root","1234");
-            Statement statement = connection.createStatement();
-            ResultSet result = statement.executeQuery(UGProfImageSearchQuery);
-
-            while (result.next()){
-                Path toSaveImagePath = Path.of(result.getString("toProfImg"));
-                ImageIcon icon = new ImageIcon(toSaveImagePath.toString());
-                Image scaled = icon.getImage().getScaledInstance(
-                        HomePageUserProfile.getWidth() - 50,
-                        HomePageUserProfile.getHeight() - 50,
-                        Image.SCALE_SMOOTH
-                );
-                HomePageUserProfileLable.setIcon(new ImageIcon(scaled));
-                HomePageUserProfileLable.setText("");
-            }
-        }catch (Exception ex){
-            ex.printStackTrace();
-        }
-    }
-
-    private void TOUploadToPreviewProfileImage(String tgno) {
-        try {
-            JFileChooser TOFileChooser = new JFileChooser();
-            TOFileChooser.setDialogTitle("Select Profile Picture");
-            TOFileChooser.setAcceptAllFileFilterUsed(false);
-            TOFileChooser.addChoosableFileFilter(new FileNameExtensionFilter("Images", "jpg", "jpeg"));
-
-            if (TOFileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
-
-                ImageIcon icon = new ImageIcon(TOFileChooser.getSelectedFile().getPath());
-                Image scaled = icon.getImage().getScaledInstance(
-                        TOProfImgPanel.getWidth() - 50,
-                        TOProfImgPanel.getHeight() - 50,
-                        Image.SCALE_SMOOTH
-                );
-                TOProfileImage.setIcon(new ImageIcon(scaled));
-                TOProfileImage.setText("");
-
-                String filename = TOFileChooser.getSelectedFile().getAbsolutePath();
-
-                String UGSaveImagePath = "Resources/ProfileImages/";
-                File UGSaveImageDirectory = new File(UGSaveImagePath);
-                if (!UGSaveImageDirectory.exists()) {
-                    UGSaveImageDirectory.mkdirs();
+                String level_no = (String) LevelNoDropDown.getSelectedItem();
+                assert level_no != null;
+                if (level_no.isEmpty()) {
+                    level_no = "0";
                 }
+                int LevelNo = Integer.parseInt(level_no);
 
-                File UGSourceFile = null;
+                String semester_no = (String) SemesterNoDropDown.getSelectedItem();
+                assert semester_no != null;
+                if (semester_no.isEmpty()) {
+                    semester_no = "0";
+                }
+                int SemesterNo = Integer.parseInt(semester_no);
 
-                String extension = filename.substring(filename.lastIndexOf('.') + 1);
-                UGSourceFile = new File(tono + "." + extension);
-
-                File UGDestinationFile = new File(UGSaveImagePath + UGSourceFile);
-
-                System.out.println(UGDestinationFile);
-
-                Path fromFile = TOFileChooser.getSelectedFile().toPath();
-                Path toFile = UGDestinationFile.toPath();
-
-                filePathValues[0] = fromFile;
-                filePathValues[1] = toFile;
-                filePathValues[2] = UGDestinationFile;
-                filePathValues[3] = extension;
+                valuesForTimeTable(LevelNo, SemesterNo);
             }
+        });
 
-        } catch (Exception ex) {
-            ex.printStackTrace();
+
+        SemesterNoDropDown.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                TimeTableSetModelMethod();
+
+                String semester_no = (String) SemesterNoDropDown.getSelectedItem();
+                assert semester_no != null;
+                if(semester_no.isEmpty()){
+                    semester_no = "0";
+                }
+                int SemesterNo = Integer.parseInt(semester_no);
+
+                String level_no = (String) LevelNoDropDown.getSelectedItem();
+                assert level_no != null;
+                if(level_no.isEmpty()){
+                    level_no = "0";
+                }
+                int LevelNo = Integer.parseInt(level_no);
+
+                valuesForTimeTable(LevelNo,SemesterNo);
+            }
+        });
+
+        AttendanceTableSetMethod();
+
+        AttendenceLevelNo.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                AttendanceTableSetMethod();
+
+                String level_no = (String) AttendenceLevelNo.getSelectedItem();
+                int LevelNo = Integer.parseInt(level_no);
+                valuesforAttendanceTable(LevelNo,SemeterNumber,userIdentity);
+
+                valuesforAttendanceTable(LevelNo,1,userIdentity);
+                LoadAttendanceCourseNumber(userIdentity, LevelNo,1);
+
+                GlobalVariables[0] = LevelNo;
+
+                int semester_no_Global = (Integer) GlobalVariables[1];
+                String course_id_Global = (String) GlobalVariables[2];
+                String course_status_Global = (String) GlobalVariables[3];
+
+                LoadAttendanceTable(userIdentity,LevelNo,semester_no_Global,course_id_Global,course_status_Global);
+
+            }
+        });
+
+        AttendanceSemesterNo.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                AttendanceTableSetMethod();
+
+                String semester_no = (String) AttendanceSemesterNo.getSelectedItem();
+                int SemesterNo = Integer.parseInt(semester_no);
+
+                valuesforAttendanceTable(LevelNumber,SemesterNo,userIdentity);
+                valuesforAttendanceTable(2,SemesterNo,userIdentity);
+
+                LoadAttendanceCourseNumber(userIdentity, 2, SemesterNo);
+
+                GlobalVariables[1] = SemesterNo;
+
+                int level_no_Global = (Integer) GlobalVariables[0];
+                String course_id_Global = (String) GlobalVariables[2];
+                String course_status_Global = (String) GlobalVariables[3];
+
+                LoadAttendanceTable(userIdentity,level_no_Global,SemesterNo,course_id_Global,course_status_Global);
+            }
+        });
+        AttendanceSubjectCode.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                AttendanceTableSetMethod();
+
+                int level_no_Global = (Integer) GlobalVariables[0];
+                int semester_no_Global = (Integer) GlobalVariables[1];
+                String course_status_Global = (String) GlobalVariables[3];
+
+                String Atten_Subject_code = (String) AttendanceSubjectCode.getSelectedItem();
+                LoadAttendanceCourseStatus(userIdentity,level_no_Global,semester_no_Global,Atten_Subject_code);
+
+                GlobalVariables[2] = Atten_Subject_code;
+                String course_id_Global = (String) GlobalVariables[2];
+
+                LoadAttendanceTable(userIdentity,level_no_Global,semester_no_Global,course_id_Global,course_status_Global);
+            }
+        });
+
+        AttendanceSubjectStatus.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                AttendanceTableSetMethod();
+
+                String Atten_Subject_Status = (String) AttendanceSubjectStatus.getSelectedItem();
+
+                GlobalVariables[3] = Atten_Subject_Status;
+
+                int level_no_Global = (Integer) GlobalVariables[0];
+                int semester_no_Global = (Integer) GlobalVariables[1];
+                String course_id_Global = (String) GlobalVariables[2];
+
+                LoadAttendanceTable(userIdentity,level_no_Global,semester_no_Global,course_id_Global,Atten_Subject_Status);
+            }
+        });
+
+        AttendanceSubjectStatusPerc.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String Course_Status_for_Perc = "Theory";
+                Course_Status_for_Perc = (String) AttendanceSubjectStatusPerc.getSelectedItem();
+
+                String course_id_Global = (String) GlobalVariables[2];
+
+                LoadAttendancePercentages(Course_Status_for_Perc,userIdentity,course_id_Global);
+            }
+        });
+
+        //Technical officer can update attendance
+        attendenceUpdateBtn.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+            }
+        });
+
+        LevelNoforMedical.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                MedicalTableSetModelMethod();
+
+                String SemesterforMedicalStr = (String) SemesterNoforMedical.getSelectedItem();
+                assert SemesterforMedicalStr != null;
+                if(SemesterforMedicalStr.isEmpty()){
+                    SemesterforMedicalStr = "0";
+                }
+                int SemesterforMedicalInt = Integer.parseInt(SemesterforMedicalStr);
+
+
+                String LevelforMedicalStr = (String) LevelNoforMedical.getSelectedItem();
+                assert LevelforMedicalStr != null;
+                if(LevelforMedicalStr.isEmpty()){
+                    LevelforMedicalStr = "0";
+                }
+                int LevelforMedicalInt = Integer.parseInt(LevelforMedicalStr);
+
+                LoadMedicalTable(userIdentity,LevelforMedicalInt,SemesterforMedicalInt);
+            }
+        });
+
+        SemesterNoforMedical.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                MedicalTableSetModelMethod();
+
+                String LevelforMedicalStr = (String) LevelNoforMedical.getSelectedItem();
+                assert LevelforMedicalStr != null;
+                if(LevelforMedicalStr.isEmpty()){
+                    LevelforMedicalStr = "0";
+                }
+                int LevelforMedicalInt = Integer.parseInt(LevelforMedicalStr);
+
+                String SemesterforMedicalStr = (String) SemesterNoforMedical.getSelectedItem();
+                assert SemesterforMedicalStr != null;
+                if(SemesterforMedicalStr.isEmpty()){
+                    SemesterforMedicalStr = "0";
+                }
+                int SemesterforMedicalInt = Integer.parseInt(SemesterforMedicalStr);
+
+                LoadMedicalTable(userIdentity,LevelforMedicalInt,SemesterforMedicalInt);
+            }
+        });
+    }
+
+//Notices
+private void LoadNotices() {
+    String notice_Title;
+
+    try{
+        String noticeLoadQuery = "select * from notice";
+
+        Statement statement = conn.createStatement();
+        ResultSet result = statement.executeQuery(noticeLoadQuery);
+
+        while(result.next()){
+            notice_Title = result.getString("noticeTitle");
+
+            noticeTitleDropDown.addItem(notice_Title);
+        }
+    }catch (Exception e){
+        e.printStackTrace();
+    }
+}
+
+    private void viewNotice(String selected_notice_title) {
+        String view_notice_Query_details = "Select * from notice where noticeTitle = ?";
+        try{
+            prepStatement = conn.prepareStatement(view_notice_Query_details);
+            prepStatement.setString(1,selected_notice_title);
+
+            ResultSet resultSet = prepStatement.executeQuery();
+            while (resultSet.next()){
+                String notice_FilePath = resultSet.getString("noticeFilePath");
+
+                System.out.println(notice_FilePath);
+
+                File notice = new File(notice_FilePath);
+                input = new Scanner(notice);
+
+                StringBuilder noticeContent = new StringBuilder();
+
+                while (input.hasNextLine()){
+                    noticeContent.append(input.nextLine()).append("\n");
+                }
+                noticeDisplayArea.setText(noticeContent.toString());
+            }
+        }catch (Exception e){
+            e.printStackTrace();
         }
     }
 
-    private void TOSaveProfileImage(String tgno){
+    //Medical
+    private void MedicalTableSetModelMethod(){
+        UGMedicalTable.setModel(new DefaultTableModel(
+                null,
+                new String[]{"Medical No","Course code","Course Name","Course Status","Week No","Medical Reason"}
+        ));
+    }
+
+    private void LoadMedicalTable(String tono, int level_no, int semester_no){
+        System.out.println("Lev " + level_no + " Sem - " +semester_no);
+
+        DefaultTableModel tblmodel = (DefaultTableModel) UGMedicalTable.getModel();
+//        MedicalTableSetModelMethod();
 
         try{
-            Path fromFile = (Path) filePathValues[0];
-            Path toFile = (Path) filePathValues[1];
-            File UGDestinationFile = (File) filePathValues[2];
+            String medLoadQuery = "select medical_no,courses.course_id,courses.course_name,course_status,medical.week_no,med_reason from attendance join medical on attendance.med_id = medical.medical_no join courses on attendance.course_id = courses.course_id where medical.tgno = ? and level_no = ? and semester_no = ?";
+            prepStatement = conn.prepareStatement(medLoadQuery);
+            prepStatement.setString(1,tono);
+            prepStatement.setString(2, String.valueOf(level_no));
+            prepStatement.setString(3, String.valueOf(semester_no));
 
-            if (UGDestinationFile.exists()){
-                UGDestinationFile.delete();
-                Files.copy(fromFile,toFile);
-            }else{
-                Files.copy(fromFile,toFile);
+            ResultSet resultSet = prepStatement.executeQuery();
+            while(resultSet.next()){
+                String med_no = resultSet.getString("medical_no");
+                String course_id = resultSet.getString("course_id");
+                String course_name = resultSet.getString("course_name");
+                String course_status = resultSet.getString("course_status");
+                String week_no = resultSet.getString("week_no");
+                String med_reason = resultSet.getString("med_reason");
+
+                Object[] med_det = new Object[6];
+
+                med_det[0] = med_no;
+                med_det[1] = course_id;
+                med_det[2] = course_name;
+                med_det[3] = course_status;
+                med_det[4] = week_no;
+                med_det[5] = med_reason;
+
+                tblmodel.addRow(med_det);
             }
-
-        }catch(Exception exc){
-            exc.printStackTrace();
+        }catch (Exception e){
+            e.printStackTrace();
         }
     }
-
-
 }
+
