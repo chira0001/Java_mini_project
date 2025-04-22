@@ -98,10 +98,22 @@
       <workItem from="1743909814567" duration="1254000" />
       <workItem from="1743943043719" duration="2102000" />
       <workItem from="1744114188550" duration="7836000" />
+      <workItem from="1745335045494" duration="1089000" />
     </task>
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/TecSys/src/HomePage/LecturerHomePage.java</url>
+          <line>246</line>
+          <option name="timeStamp" value="1" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
 </project>
