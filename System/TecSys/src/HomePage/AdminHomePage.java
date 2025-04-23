@@ -123,8 +123,6 @@ public class AdminHomePage extends JFrame {
     private JLabel AdminProfImgSelectedLabel;
     private JPanel UndergraduateProfImgSelectedPanel;
     private JLabel UndergraduateProfImgSelectedLabel;
-    private JPanel TechnicalOfficerProfImgSelectedPanel;
-    private JLabel TechnicalOfficerProfImgSelectedLabel;
     private JPanel Admin;
 
 
@@ -256,21 +254,17 @@ public class AdminHomePage extends JFrame {
                 AddUndergraduateUser();
             }
         });
-        UserTechnicalOfficerProfImgBtn.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                AdminAddTechnicalOfficerUploadToPreviewProfileImage(userIdentity);
-            }
-        });
+
         TechnicalOfficerAddUserBtn.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                AddTechnicalOfficerUser(userIdentity);
+                AddTechnicalOfficerUser();
             }
         });
     }
 
-    private void AddTechnicalOfficerUser(String tono){
+    private void AddTechnicalOfficerUser(){
+        String to_no;
         try{
             String Fname = UserTechnicalOfficerFname.getText();
             String Lname = UserTechnicalOfficerLname.getText();
@@ -278,10 +272,7 @@ public class AdminHomePage extends JFrame {
             String Email = UserTechnicalOfficerEmail.getText();
             String Phno = UserTechnicalOfficerPhNo.getText();
 
-            String extension = (String) filePathValues[3];
-            String UGProfileImagePath = "Resources/ProfileImages/" + tono + "." + extension;
-
-            String addQuery = "INSERT INTO technical_officer (tofname,tolname,toaddress,toemail,tophno) VALUES(?,?,?,?,?)";
+            String addQuery = "INSERT INTO technical_officer (tofname,tolname,toaddress,toemail,tophno,toProfImg) VALUES (?,?,?,?,?,?)";
 
             prepStatement = conn.prepareStatement(addQuery);
             prepStatement.setString(1,Fname);
@@ -289,70 +280,32 @@ public class AdminHomePage extends JFrame {
             prepStatement.setString(3,Address);
             prepStatement.setString(4,Email);
             prepStatement.setString(5,Phno);
+            prepStatement.setString(6,DefualtImage);
 
             int Result = prepStatement.executeUpdate();
             if(Result > 0){
-                JOptionPane.showMessageDialog(null,"Technical Officer User Successfully added");
+
+                String getToId = "select tono from technical_officer where tofname = ? and tolname = ? and toemail = ?";
+
+                prepStatement = conn.prepareStatement(getToId);
+                prepStatement.setString(1,Fname);
+                prepStatement.setString(2,Lname);
+                prepStatement.setString(3,Email);
+
+                ResultSet resultSet = prepStatement.executeQuery();
+                while (resultSet.next()){
+                    to_no = resultSet.getString("tono");
+
+                    JOptionPane.showMessageDialog(null,"Technical Officer User Successfully added");
+                    TONumberLabel.setText(to_no);
+                }
             }else {
                 JOptionPane.showMessageDialog(null,"Technical Officer User Entry Failed");
             }
-
         }catch (Exception e){
             e.printStackTrace();
         }
     }
-
-    private void AdminAddTechnicalOfficerUploadToPreviewProfileImage(String tono) {
-        try {
-            JFileChooser UGFileChooser = new JFileChooser();
-            UGFileChooser.setDialogTitle("Select Profile Picture");
-            UGFileChooser.setAcceptAllFileFilterUsed(false);
-            UGFileChooser.addChoosableFileFilter(new FileNameExtensionFilter("Images", "jpg", "jpeg"));
-
-            if (UGFileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
-
-                ImageIcon icon = new ImageIcon(UGFileChooser.getSelectedFile().getPath());
-                Image scaled = icon.getImage().getScaledInstance(
-                        TechnicalOfficerProfImgSelectedPanel.getWidth() - 50,
-                        TechnicalOfficerProfImgSelectedPanel.getHeight() - 50,
-                        Image.SCALE_SMOOTH
-                );
-                TechnicalOfficerProfImgSelectedLabel.setIcon(new ImageIcon(scaled));
-                TechnicalOfficerProfImgSelectedLabel.setText("");
-
-                String filename = UGFileChooser.getSelectedFile().getAbsolutePath();
-
-                String TECHOFFICERSaveImagePath = "Resources/ProfileImages/";
-                File UGSaveImageDirectory = new File(TECHOFFICERSaveImagePath);
-                if (!UGSaveImageDirectory.exists()) {
-                    UGSaveImageDirectory.mkdirs();
-                }
-
-                File UGSourceFile = null;
-
-                String extension = filename.substring(filename.lastIndexOf('.') + 1);
-
-                UGSourceFile = new File(tono + "." + extension);
-
-                File TECHOFFICERDestinationFile = new File(TECHOFFICERSaveImagePath + UGSourceFile);
-
-                System.out.println(TECHOFFICERDestinationFile);
-
-                Path fromFile = UGFileChooser.getSelectedFile().toPath();
-                Path toFile = TECHOFFICERDestinationFile.toPath();
-
-                filePathValues[0] = fromFile;
-                filePathValues[1] = toFile;
-                filePathValues[2] = TECHOFFICERDestinationFile;
-                filePathValues[3] = extension;
-            }
-
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
-    }
-
-    //    #####################################################################################################
 
     private void AddUndergraduateUser(){
         String tg_no;
@@ -365,7 +318,6 @@ public class AdminHomePage extends JFrame {
 
             int Undergraduate_LevelNo = Integer.parseInt((String) UserUndergraduateLevelNumber.getSelectedItem());
             int Undergraduate_SemesterNo = Integer.parseInt((String) UserUndergraduateSemesterNumber.getSelectedItem());
-
 
             String addQuery = "INSERT INTO undergraduate (ugfname,uglname,ugaddress,ugemail,ugphno,ugProfImg,study_year,study_semester) VALUES (?,?,?,?,?,?,?,?)";
 

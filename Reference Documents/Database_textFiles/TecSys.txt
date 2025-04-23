@@ -117,7 +117,7 @@ tolname VARCHAR(20),
 toaddress VARCHAR(100),
 toemail VARCHAR(50),
 tophno INT(10),
-topassword VARCHAR(50),
+topassword VARCHAR(50) default "123",
 toProfImg VARCHAR(200)
 );
 
