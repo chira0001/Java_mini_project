@@ -149,6 +149,8 @@ public class AdminHomePage extends JFrame {
 
     private Object[] filePathValues = new Object[4];
 
+    private String DefualtImage = "Resources/ProfileImages/DefaultUser.png";
+
     public AdminHomePage(String userIdentity){
 
         dbConnection(userIdentity);
@@ -245,25 +247,13 @@ public class AdminHomePage extends JFrame {
         AdminAddUserBtn.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                AddAdminUser(userIdentity);
-            }
-        });
-        UserAdminProfImgBtn.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                AdminAddAdminUploadToPreviewProfileImage(userIdentity);
-            }
-        });
-        UserUndergraduateProfImgBtn.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                AdminAddUndergraduateUploadToPreviewProfileImage(userIdentity);
+                AddAdminUser();
             }
         });
         UndergraduateAddUserBtn.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                AddUndergraduateUser(userIdentity);
+                AddUndergraduateUser();
             }
         });
         UserTechnicalOfficerProfImgBtn.addActionListener(new ActionListener() {
@@ -364,7 +354,8 @@ public class AdminHomePage extends JFrame {
 
     //    #####################################################################################################
 
-    private void AddUndergraduateUser(String tgno){
+    private void AddUndergraduateUser(){
+        String tg_no;
         try{
             String Fname = UserUndergraduateFname.getText();
             String Lname = UserUndergraduateLname.getText();
@@ -372,18 +363,11 @@ public class AdminHomePage extends JFrame {
             String Email = UserUndergraduateEmail.getText();
             String Phno = UserUndergraduatePhNo.getText();
 
-            String UGLevelStr = (String) UserUndergraduateLevelNumber.getSelectedItem();
-            assert UGLevelStr != null;
-            int UGLevelInt = Integer.parseInt(UGLevelStr);
+            int Undergraduate_LevelNo = Integer.parseInt((String) UserUndergraduateLevelNumber.getSelectedItem());
+            int Undergraduate_SemesterNo = Integer.parseInt((String) UserUndergraduateSemesterNumber.getSelectedItem());
 
-            String UGSemesterStr = (String) UserUndergraduateSemesterNumber.getSelectedItem();
-            assert UGSemesterStr != null;
-            int UGSemesterInt = Integer.parseInt(UGSemesterStr);
 
-            String extension = (String) filePathValues[3];
-            String UGProfileImagePath = "Resources/ProfileImages/" + tgno + "." + extension;
-
-            String addQuery = "INSERT INTO undergraduate (ugfname,uglname,ugaddress,ugemail,ugphno,study_year,study_semester) VALUES(?,?,?,?,?,?,?)";
+            String addQuery = "INSERT INTO undergraduate (ugfname,uglname,ugaddress,ugemail,ugphno,ugProfImg,study_year,study_semester) VALUES (?,?,?,?,?,?,?,?)";
 
             prepStatement = conn.prepareStatement(addQuery);
             prepStatement.setString(1,Fname);
@@ -391,75 +375,37 @@ public class AdminHomePage extends JFrame {
             prepStatement.setString(3,Address);
             prepStatement.setString(4,Email);
             prepStatement.setString(5,Phno);
-            prepStatement.setInt(6,UGLevelInt);
-            prepStatement.setInt(7,UGSemesterInt);
+            prepStatement.setString(6,DefualtImage);
+            prepStatement.setInt(7,Undergraduate_LevelNo);
+            prepStatement.setInt(8,Undergraduate_SemesterNo);
 
             int Result = prepStatement.executeUpdate();
             if(Result > 0){
-                JOptionPane.showMessageDialog(null,"Undergraduate User Successfully added");
+
+                String getAdminId = "select tgno from undergraduate where ugfname = ? and uglname = ? and ugemail = ?";
+
+                prepStatement = conn.prepareStatement(getAdminId);
+                prepStatement.setString(1,Fname);
+                prepStatement.setString(2,Lname);
+                prepStatement.setString(3,Email);
+
+                ResultSet resultSet = prepStatement.executeQuery();
+                while (resultSet.next()){
+                    tg_no = resultSet.getString("tgno");
+
+                    JOptionPane.showMessageDialog(null,"Undergraduate User Successfully added");
+                    TGNumberLabel.setText(tg_no);
+                }
             }else {
                 JOptionPane.showMessageDialog(null,"Undergraduate User Entry Failed");
             }
-
         }catch (Exception e){
             e.printStackTrace();
         }
     }
 
-    private void AdminAddUndergraduateUploadToPreviewProfileImage(String tgno) {
-        try {
-            JFileChooser UGFileChooser = new JFileChooser();
-            UGFileChooser.setDialogTitle("Select Profile Picture");
-            UGFileChooser.setAcceptAllFileFilterUsed(false);
-            UGFileChooser.addChoosableFileFilter(new FileNameExtensionFilter("Images", "jpg", "jpeg"));
-
-            if (UGFileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
-
-                ImageIcon icon = new ImageIcon(UGFileChooser.getSelectedFile().getPath());
-                Image scaled = icon.getImage().getScaledInstance(
-                        UndergraduateProfImgSelectedPanel.getWidth() - 50,
-                        UndergraduateProfImgSelectedPanel.getHeight() - 50,
-                        Image.SCALE_SMOOTH
-                );
-                UndergraduateProfImgSelectedLabel.setIcon(new ImageIcon(scaled));
-                UndergraduateProfImgSelectedLabel.setText("");
-
-                String filename = UGFileChooser.getSelectedFile().getAbsolutePath();
-
-                String ADMINSaveImagePath = "Resources/ProfileImages/";
-                File UGSaveImageDirectory = new File(ADMINSaveImagePath);
-                if (!UGSaveImageDirectory.exists()) {
-                    UGSaveImageDirectory.mkdirs();
-                }
-
-                File UGSourceFile = null;
-
-                String extension = filename.substring(filename.lastIndexOf('.') + 1);
-
-                UGSourceFile = new File(tgno + "." + extension);
-
-                File ADMINDestinationFile = new File(ADMINSaveImagePath + UGSourceFile);
-
-                System.out.println(ADMINDestinationFile);
-
-                Path fromFile = UGFileChooser.getSelectedFile().toPath();
-                Path toFile = ADMINDestinationFile.toPath();
-
-                filePathValues[0] = fromFile;
-                filePathValues[1] = toFile;
-                filePathValues[2] = ADMINDestinationFile;
-                filePathValues[3] = extension;
-            }
-
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
-    }
-
-
-//    #####################################################################################################
-
-    private void AddAdminUser(String adno){
+    private void AddAdminUser(){
+        String admin_no;
         try{
             String Fname = UserAdminFname.getText();
             String Lname = UserAdminLname.getText();
@@ -467,10 +413,7 @@ public class AdminHomePage extends JFrame {
             String Email = UserAdminEmail.getText();
             String Phno = UserAdminPhNo.getText();
 
-            String extension = (String) filePathValues[3];
-            String UGProfileImagePath = "Resources/ProfileImages/" + adno + "." + extension;
-
-            String addQuery = "INSERT INTO admin (adfname,adlname,adaddress,ademail,adphno) VALUES (?,?,?,?,?)";
+            String addQuery = "INSERT INTO admin (adfname,adlname,adaddress,ademail,adphno,adProfImg) VALUES (?,?,?,?,?,?)";
 
             prepStatement = conn.prepareStatement(addQuery);
             prepStatement.setString(1,Fname);
@@ -478,67 +421,30 @@ public class AdminHomePage extends JFrame {
             prepStatement.setString(3,Address);
             prepStatement.setString(4,Email);
             prepStatement.setString(5,Phno);
-//            prepStatement.setString(6,UGProfileImagePath);
+            prepStatement.setString(6,DefualtImage);
 
             int Result = prepStatement.executeUpdate();
             if(Result > 0){
-                JOptionPane.showMessageDialog(null,"Admin User Successfully added");
+
+                String getAdminId = "select adno from admin where adfname = ? and adlname = ? and ademail = ?";
+
+                prepStatement = conn.prepareStatement(getAdminId);
+                prepStatement.setString(1,Fname);
+                prepStatement.setString(2,Lname);
+                prepStatement.setString(3,Email);
+
+                ResultSet resultSet = prepStatement.executeQuery();
+                while (resultSet.next()){
+                    admin_no = resultSet.getString("adno");
+
+                    JOptionPane.showMessageDialog(null,"Admin User Successfully added");
+                    ADNumberLabel.setText(admin_no);
+                }
             }else {
                 JOptionPane.showMessageDialog(null,"Admin User Entry Failed");
             }
-
         }catch (Exception e){
             e.printStackTrace();
-        }
-    }
-
-    private void AdminAddAdminUploadToPreviewProfileImage(String adno) {
-        try {
-            JFileChooser UGFileChooser = new JFileChooser();
-            UGFileChooser.setDialogTitle("Select Profile Picture");
-            UGFileChooser.setAcceptAllFileFilterUsed(false);
-            UGFileChooser.addChoosableFileFilter(new FileNameExtensionFilter("Images", "jpg", "jpeg"));
-
-            if (UGFileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
-
-                ImageIcon icon = new ImageIcon(UGFileChooser.getSelectedFile().getPath());
-                Image scaled = icon.getImage().getScaledInstance(
-                        AdminProfImgSelectedPanel.getWidth() - 50,
-                        AdminProfImgSelectedPanel.getHeight() - 50,
-                        Image.SCALE_SMOOTH
-                );
-                AdminProfImgSelectedLabel.setIcon(new ImageIcon(scaled));
-                AdminProfImgSelectedLabel.setText("");
-
-                String filename = UGFileChooser.getSelectedFile().getAbsolutePath();
-
-                String UGSaveImagePath = "Resources/ProfileImages/";
-                File UGSaveImageDirectory = new File(UGSaveImagePath);
-                if (!UGSaveImageDirectory.exists()) {
-                    UGSaveImageDirectory.mkdirs();
-                }
-
-                File UGSourceFile = null;
-
-                String extension = filename.substring(filename.lastIndexOf('.') + 1);
-
-                UGSourceFile = new File(adno + "." + extension);
-
-                File UGDestinationFile = new File(UGSaveImagePath + UGSourceFile);
-
-                System.out.println(UGDestinationFile);
-
-                Path fromFile = UGFileChooser.getSelectedFile().toPath();
-                Path toFile = UGDestinationFile.toPath();
-
-                filePathValues[0] = fromFile;
-                filePathValues[1] = toFile;
-                filePathValues[2] = UGDestinationFile;
-                filePathValues[3] = extension;
-            }
-
-        } catch (Exception ex) {
-            ex.printStackTrace();
         }
     }
 
