@@ -1,7 +1,9 @@
 package Login;
 
 import DBCONNECTION.DBCONNECTION;
+import HomePage.AdminHomePage;
 import HomePage.LecturerHomePage;
+import HomePage.TechnicalOfficerHomePage;
 import HomePage.UndergraduateHomePage;
 import UserProfile.AdminUserProfile;
 import UserProfile.LecturerUserProfile;
@@ -61,7 +63,6 @@ public class Login extends JFrame {
 
                         String loginQuery = "select * from users where id ='" + uname + "'";
 
-//                        Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/javatest","root","1234");
                         Statement statement = conn.createStatement();
                         ResultSet result = statement.executeQuery(loginQuery);
 
@@ -86,14 +87,15 @@ public class Login extends JFrame {
 
                                     case "to" :
                                         System.out.println("Technical Officer");
+                                        System.out.println("uname:"+uname+", pass:"+pass+", dbname:"+dbUname+",dbpass:"+dbPassword);
                                         dispose();
-                                        new TechnicalOfficerUserProfile();
+                                        new TechnicalOfficerHomePage(uname);
                                         break;
 
                                     case "ad" :
                                         System.out.println("Admin");
                                         dispose();
-                                        new AdminUserProfile();
+                                        new AdminHomePage(uname);
                                         break;
                                 }
                             } else {
@@ -125,8 +127,8 @@ public class Login extends JFrame {
         String pass = "123";
 
         try{
-//            Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/javatest","root","1234");
             Statement statement = conn.createStatement();
+
             statement.executeUpdate(query);
             ResultSet result = statement.executeQuery(selectQuery);
 
