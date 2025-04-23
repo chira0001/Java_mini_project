@@ -226,7 +226,7 @@ public class LecturerHomePage extends JFrame {
             e.printStackTrace();
         }
     }
-
+    //hello
     private void loadLECProfImage(String lecno){
         try{
             String LECProfImageSearchQuery = "select * from lecturer where lecno = ?";
