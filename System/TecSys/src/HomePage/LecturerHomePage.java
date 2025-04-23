@@ -1,14 +1,17 @@
 package HomePage;
+import DBCONNECTION.DBCONNECTION;
 import Login.Login;
 
 import javax.swing.*;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.Statement;
+import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.sql.*;
+import java.util.Scanner;
 
 public class LecturerHomePage extends JFrame {
     private String cardCommand;
@@ -47,11 +50,17 @@ public class LecturerHomePage extends JFrame {
     private JButton updateButton;
     private JTextField textField1;
     private JTextField textField2;
-    private JList list1;
+    private JList leccourselist;
     private JList list2;
     private JButton addFilesButton;
     private JButton renameFilesButton;
     private JButton removeFilesButton;
+    private JComboBox noticeTitleDropDown;
+    private JTextArea noticeDisplayArea;
+    private JPanel LecturerHomePageProfile;
+    private JLabel LecturerHomePageProfileLable;
+    private JPanel LecProfileImagePanel;
+    private JLabel LecProfileImage;
 
     private CardLayout cardLayout;
 
@@ -68,8 +77,18 @@ public class LecturerHomePage extends JFrame {
     JButton[] btnFieldNames = {profileButton,attendanceButton,timeTableButton,coursesButton,medicalButton,noticesButton,marksButton,settingsButton};
     private String[] cardTitles = {"Welcome..!", "Attendance Details", "Undergraduate Time Table","Your Courses","Medical Information", "Notices", "Marks","Settings Configuration"};;
 
+
+    private Object[] filePathValues = new Object[4];
+
+    DBCONNECTION dbconn = new DBCONNECTION();
+    Connection conn = dbconn.Conn();
+    private PreparedStatement prepStatement;
+
+    private Scanner input;
+
     public LecturerHomePage(String userIdentity){
         dbConnection(userIdentity);
+        LoadNotices();
 
         setContentPane(Lecturer);
         setTitle("Lecturer User Profile");
@@ -111,18 +130,37 @@ public class LecturerHomePage extends JFrame {
                 LECUpdateCredentials(userIdentity);
             }
         });
+        uploadImageButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                LECUploadToPreviewProfileImage(userIdentity);
+            }
+        });
+        noticeTitleDropDown.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+                String notice = (String) noticeTitleDropDown.getSelectedItem();
+                System.out.println(notice);
+                viewNotice(notice);
+            }
+        });
     }
 
-    public void changeBtnState(String btn, String tgno){
+    public void changeBtnState(String btn, String lecno){
 
         int noOfButtons = cardButtons.length;
         for (int i = 0; i < noOfButtons; i++){
             if (cardButtons[i].equals(btn)){
-                dbConnection(tgno);
+                dbConnection(lecno);
                 cardLayout.show(LECHomeCard,cardNames[i]);
                 CardTittleLabel.setText(cardTitles[i]);
                 btnFieldNames[i].setEnabled(false);
-            }else {
+            }
+            if (btn.equals("Courses")) {
+                LECCourse(lecno);
+            }
+            else {
                 btnFieldNames[i].setEnabled(true);
             }
         }
@@ -157,11 +195,106 @@ public class LecturerHomePage extends JFrame {
                 textField8.setText(LecEmail);
                 textField9.setText(LecPhno);
 
+                loadLECProfImage(lecno);
+
             }else{
                 JOptionPane.showMessageDialog(null,"Internal Error");
             }
         }catch (Exception e){
             e.printStackTrace();
+        }
+    }
+
+    private void loadLECProfImage(String lecno){
+        try{
+            String LECProfImageSearchQuery = "select * from lecturer where lecno = ?";
+
+            prepStatement = conn.prepareStatement(LECProfImageSearchQuery);
+            prepStatement.setString(1,lecno);
+            ResultSet result = prepStatement.executeQuery();
+
+            while (result.next()){
+                Path LECSaveImagePath = Path.of(result.getString("lecProfImg"));
+                ImageIcon icon = new ImageIcon(LECSaveImagePath.toString());
+                Image scaled = icon.getImage().getScaledInstance(
+                        LecturerHomePageProfile.getWidth() - 50,
+                        LecturerHomePageProfile.getHeight() - 50,
+                        Image.SCALE_SMOOTH
+                );
+                LecturerHomePageProfileLable.setIcon(new ImageIcon(scaled));
+                LecturerHomePageProfileLable.setText("");
+            }
+        }catch (Exception ex){
+            ex.printStackTrace();
+        }
+    }
+
+    private void LECUploadToPreviewProfileImage(String lecno) {
+        try {
+            JFileChooser LECFileChooser = new JFileChooser();
+            LECFileChooser.setDialogTitle("Select Profile Picture");
+            LECFileChooser.setAcceptAllFileFilterUsed(false);
+            LECFileChooser.addChoosableFileFilter(new FileNameExtensionFilter("Images", "jpg", "jpeg"));
+
+            if (LECFileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
+
+                ImageIcon icon = new ImageIcon(LECFileChooser.getSelectedFile().getPath());
+                Image scaled = icon.getImage().getScaledInstance(
+                        LecProfileImagePanel.getWidth() - 50,
+                        LecProfileImagePanel.getHeight() - 50,
+                        Image.SCALE_SMOOTH
+                );
+                LecProfileImage.setIcon(new ImageIcon(scaled));
+                LecProfileImage.setText("");
+
+                String filename = LECFileChooser.getSelectedFile().getAbsolutePath();
+
+                String LECSaveImagePath = "Resources/ProfileImages/";
+                File LECSaveImageDirectory = new File(LECSaveImagePath);
+                if (!LECSaveImageDirectory.exists()) {
+                    LECSaveImageDirectory.mkdirs();
+                }
+
+                File LECSourceFile = null;
+
+                String extension = filename.substring(filename.lastIndexOf('.') + 1);
+
+                LECSourceFile = new File(lecno + "." + extension);
+
+                File LECDestinationFile = new File(LECSaveImagePath + LECSourceFile);
+
+                System.out.println(LECDestinationFile);
+
+                Path fromFile = LECFileChooser.getSelectedFile().toPath();
+                Path toFile = LECDestinationFile.toPath();
+
+                filePathValues[0] = fromFile;
+                filePathValues[1] = toFile;
+                filePathValues[2] = LECDestinationFile;
+                filePathValues[3] = extension;
+            }
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    private void LECSaveProfileImage(String tgno){
+
+        try{
+            Path fromFile = (Path) filePathValues[0];
+            Path toFile = (Path) filePathValues[1];
+            File LECDestinationFile = (File) filePathValues[2];
+
+            if (LECDestinationFile.exists()){
+                LECDestinationFile.delete();
+                Files.copy(fromFile,toFile);
+            }else{
+                Files.copy(fromFile,toFile);
+            }
+
+        }catch(Exception exc){
+
         }
     }
 
@@ -173,18 +306,98 @@ public class LecturerHomePage extends JFrame {
             String Lecemail = textField8.getText();
             String Lecphno = textField9.getText();
 
-            String LECCredentialupdateQuery = "Update lecturer set lecfname = '"+LecFname + "',leclname = '" + LecLname +"',lecaddress = '" + Lecaddress + "', lecemail = '"+ Lecemail +"',lecphno = '"+ Lecphno+"' where lecno = '" + lecno + "'";
+            String extension = (String) filePathValues[3];
 
-            Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/javatest","root","1234");
-            Statement statement = connection.createStatement();
+            String LECProfileImagePath = "Resources/ProfileImages/" + lecno + "." + extension;
+            System.out.println(LECProfileImagePath);
+            String LECCredentialupdateQuery;
+            if(extension==null) {
+                LECCredentialupdateQuery = "Update lecturer set lecfname = '" + LecFname + "',leclname = '" + LecLname + "',lecaddress = '" + Lecaddress + "', lecemail = '" + Lecemail + "',lecphno = '" + Lecphno + "' where lecno = '" + lecno + "'";
+            }
+            else{
+                LECCredentialupdateQuery = "Update lecturer set lecfname = '" + LecFname + "',leclname = '" + LecLname + "',lecaddress = '" + Lecaddress + "', lecemail = '" + Lecemail + "',lecphno = '" + Lecphno + "',lecProfImg ='" + LECProfileImagePath + "' where lecno = '"+ lecno + "'";
+            }
+
+            Statement statement = conn.createStatement();
             int resultSet = statement.executeUpdate(LECCredentialupdateQuery);
 
             if(resultSet > 0){
+                LECSaveProfileImage(lecno);
                 JOptionPane.showMessageDialog(null,"Credentials updated successfully");
+                loadLECProfImage(lecno);
             }else {
                 JOptionPane.showMessageDialog(null,"Error in credential updation");
             }
 
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    private void LECCourse(String lecno){
+        try {
+            DefaultListModel<String> model = new DefaultListModel<>();
+            Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/javatest","root","1234");
+            Statement statement = connection.createStatement();
+            String query = "SELECT c.course_name FROM courses c " +
+                    "JOIN lecture_course lc ON c.course_id = lc.course_id " +
+                    "WHERE lc.lecno = '" + lecno + "'";
+            ResultSet resultSet = statement.executeQuery(query);
+
+            while (resultSet.next()) {
+                String courseName = resultSet.getString("course_name");
+                model.addElement(courseName);
+            }
+
+            leccourselist.setModel(model);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void LoadNotices(){
+
+        String notice_Title;
+
+        try{
+            String noticeLoadQuery = "select * from notice";
+
+            Statement statement = conn.createStatement();
+            ResultSet result = statement.executeQuery(noticeLoadQuery);
+
+            while(result.next()){
+                notice_Title = result.getString("noticeTitle");
+
+                noticeTitleDropDown.addItem(notice_Title);
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    private void viewNotice(String selected_notice_title){
+        String view_notice_Query_details = "Select * from notice where noticeTitle = ?";
+        try{
+            prepStatement = conn.prepareStatement(view_notice_Query_details);
+            prepStatement.setString(1,selected_notice_title);
+
+            ResultSet resultSet = prepStatement.executeQuery();
+            while (resultSet.next()){
+                String notice_FilePath = resultSet.getString("noticeFilePath");
+
+                System.out.println(notice_FilePath);
+
+                File notice = new File(notice_FilePath);
+                input = new Scanner(notice);
+
+                StringBuilder noticeContent = new StringBuilder();
+
+                while (input.hasNextLine()){
+                    noticeContent.append(input.nextLine()).append("\n");
+                }
+                noticeDisplayArea.setText(noticeContent.toString());
+            }
         }catch (Exception e){
             e.printStackTrace();
         }
