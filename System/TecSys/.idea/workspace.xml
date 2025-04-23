@@ -54,6 +54,7 @@
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
     "Application.Lecturer.executor": "Run",
+    "Application.Login.executor": "Run",
     "Application.Main.executor": "Run",
     "Application.Unnamed.executor": "Run",
     "Application.admin.executor": "Run",
@@ -61,7 +62,7 @@
     "RunOnceActivity.git.unshallow": "true",
     "UI_DESIGNER_EDITOR_MODE.PaletteManager.SHOW": "true",
     "UI_DESIGNER_EDITOR_MODE.UIDesignerToolWindowManager.SHOW": "true",
-    "UI_DESIGNER_EDITOR_MODE.UIDesignerToolWindowManager.WIDTH": "183",
+    "UI_DESIGNER_EDITOR_MODE.UIDesignerToolWindowManager.WIDTH": "381",
     "git-widget-placeholder": "<unknown>",
     "kotlin-language-version-configured": "true",
     "last_opened_file_path": "C:/Users/DELL/Desktop/Java Project/Java_mini_project/System/TecSys",
@@ -123,7 +124,8 @@
       <workItem from="1745345579143" duration="21000" />
       <workItem from="1745345654475" duration="29000" />
       <workItem from="1745345998789" duration="166000" />
-      <workItem from="1745401667974" duration="15632000" />
+      <workItem from="1745401667974" duration="15778000" />
+      <workItem from="1745423544977" duration="5117000" />
     </task>
     <servers />
   </component>

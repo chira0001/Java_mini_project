@@ -4,6 +4,9 @@ import Login.Login;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
+import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableColumnModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -63,6 +66,18 @@ public class LecturerHomePage extends JFrame {
     private JLabel LecProfileImage;
     private JComboBox LECSemesterCombobox;
     private JComboBox LECLevelComboBox;
+    private JTable tableTimeTable;
+    private JComboBox SemesterNoDropDown;
+    private JComboBox LevelNoDropDown;
+    private JComboBox AttendanceSemesterNo;
+    private JComboBox AttendanceLevelNo;
+    private JComboBox AttendanceSubjectCode;
+    private JComboBox AttendanceSubjectStatus;
+    private JButton viewMedicalsButton;
+    private JLabel AttendancePercWithoutMed;
+    private JLabel AttendancePercWithMed;
+    private JComboBox AttendanceSubjectStatusPerc;
+    private JTable AttendanceTable;
     private JComboBox comboBox2;
 
     private CardLayout cardLayout;
@@ -78,7 +93,7 @@ public class LecturerHomePage extends JFrame {
     private String[] cardButtons = {"Profile", "Attendance", "Time Table", "Courses", "Medical", "Notices", "Marks", "Settings"};
     private String[] cardNames = {"LECProfileCard", "LECAttendanceCard", "LECTimeTableCard", "LECCoursesCard", "LECMedicalsCard", "LECNoticesCard", "LECMarksCard", "LECSettingsCard"};
     JButton[] btnFieldNames = {profileButton,attendanceButton,timeTableButton,coursesButton,medicalButton,noticesButton,marksButton,settingsButton};
-    private String[] cardTitles = {"Welcome..!", "Attendance Details", "Undergraduate Time Table","Your Courses","Medical Information", "Notices", "Marks","Settings Configuration"};;
+    private String[] cardTitles = {"Welcome..!", "Attendance Details", "Lecturer Time Table","Your Courses","Medical Information", "Notices", "Marks","Settings Configuration"};;
 
 
     private Object[] filePathValues = new Object[4];
@@ -163,6 +178,53 @@ public class LecturerHomePage extends JFrame {
             }
         });
 
+        LevelNoDropDown.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                TimeTableSetModelMethod();
+
+                String level_no = (String) LevelNoDropDown.getSelectedItem();
+                assert level_no != null;
+                if(level_no.isEmpty()){
+                    level_no = "0";
+                }
+                int LevelNo = Integer.parseInt(level_no);
+
+                String semester_no = (String) SemesterNoDropDown.getSelectedItem();
+                assert semester_no != null;
+                if(semester_no.isEmpty()){
+                    semester_no = "0";
+                }
+
+                int SemesterNo = Integer.parseInt(semester_no);
+
+                valuesForTimeTable(LevelNo,SemesterNo);
+            }
+        });
+
+
+        SemesterNoDropDown.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                TimeTableSetModelMethod();
+
+                String semester_no = (String) SemesterNoDropDown.getSelectedItem();
+                assert semester_no != null;
+                if (semester_no.isEmpty()) {
+                    semester_no = "0";
+                }
+                int SemesterNo = Integer.parseInt(semester_no);
+
+                String level_no = (String) LevelNoDropDown.getSelectedItem();
+                assert level_no != null;
+                if (level_no.isEmpty()) {
+                    level_no = "0";
+                }
+                int LevelNo = Integer.parseInt(level_no);
+
+                valuesForTimeTable(LevelNo, SemesterNo);
+            }
+        });
     }
 
     public void changeBtnState(String btn, String lecno){
@@ -226,7 +288,56 @@ public class LecturerHomePage extends JFrame {
             e.printStackTrace();
         }
     }
-    //hello
+
+    private void TimeTableSetModelMethod(){
+        tableTimeTable.setModel(new DefaultTableModel(
+                null,
+                new String[]{"Day", "Course Code", "Course Module","Time"}
+        ));
+
+        TableColumnModel timeTableColumns = tableTimeTable.getColumnModel();
+        timeTableColumns.getColumn(2).setMinWidth(100);
+        timeTableColumns.getColumn(3).setMinWidth(20);
+
+        DefaultTableCellRenderer timeTableCells = new DefaultTableCellRenderer();
+        timeTableCells.setHorizontalAlignment(JLabel.CENTER);
+
+        timeTableColumns.getColumn(0).setCellRenderer(timeTableCells);
+        timeTableColumns.getColumn(1).setCellRenderer(timeTableCells);
+        timeTableColumns.getColumn(3).setCellRenderer(timeTableCells);
+    }
+
+    private void valuesForTimeTable(int level_no, int semester_no){
+
+        System.out.println("Level " + level_no + " Semester " + semester_no);
+
+        String TimeTableValues = "select time_table_id, Courses.course_id, module_day, course_name, time from timeTable join Courses where timeTable.course_id = Courses.course_id and level_no = ? and semester_no = ? ORDER BY CASE module_day WHEN 'Monday' THEN 1 WHEN 'Tuesday' THEN 2 WHEN 'Wednesday' THEN 3 WHEN 'Thursday' THEN 4 WHEN 'Friday' THEN 5 WHEN 'Saturday' THEN 6 WHEN 'Sunday' THEN 7 END";
+        DefaultTableModel tblmodel = (DefaultTableModel) tableTimeTable.getModel();
+        try{
+            prepStatement = conn.prepareStatement(TimeTableValues);
+            prepStatement.setInt(1,level_no);
+            prepStatement.setInt(2,semester_no);
+            ResultSet result = prepStatement.executeQuery();
+            while (result.next()){
+                String courseID = result.getString("course_id");
+                String moduleDay = result.getString("module_day");
+                String courseName = result.getString("course_name");
+                String courseTime = result.getString("time");
+
+                Object[] timeTableData = new Object[4];
+
+                timeTableData[0] = moduleDay;
+                timeTableData[1] = courseID;
+                timeTableData[2] = courseName;
+                timeTableData[3] = courseTime;
+
+                tblmodel.addRow(timeTableData);
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
     private void loadLECProfImage(String lecno){
         try{
             String LECProfImageSearchQuery = "select * from lecturer where lecno = ?";
@@ -378,14 +489,6 @@ public class LecturerHomePage extends JFrame {
     private void LECCourse(String lecno,int level, int semester) {
         try {
             DefaultListModel<String> model = new DefaultListModel<>();
-
-//            Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/javatest", "root", "1234");
-//            Statement statement = connection.createStatement();
-//            String query = "SELECT c.course_name FROM courses c " +
-//                    "JOIN lecture_course lc ON c.course_id = lc.course_id " +
-//                    "WHERE c.level_no = " + level + " AND c.semester_no = " + semester + " AND lc.lec_no = " + lecno;
-
-
             String query = "select courses.course_name from courses join lecture_course on courses.course_id = lecture_course.course_id where lecture_course.lecno = ? and courses.level_no = ? and courses.semester_no = ?";
             prepStatement = conn.prepareStatement(query);
             prepStatement.setString(1, lecno);
