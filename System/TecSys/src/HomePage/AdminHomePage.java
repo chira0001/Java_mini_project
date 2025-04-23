@@ -5,6 +5,7 @@ import Login.Login;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
+import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -39,15 +40,7 @@ public class AdminHomePage extends JFrame {
     private JPanel HomePageUserProfile;
     private JLabel HomePageUserProfileLable;
     private JPanel AdminUserProfiles;
-    private JComboBox AttendanceSemesterNo;
-    private JComboBox AttendanceLevelNo;
-    private JComboBox AttendanceSubjectCode;
-    private JComboBox AttendanceSubjectStatus;
-    private JButton viewMedicalsButton;
-    private JLabel AttendancePercWithoutMed;
-    private JLabel AttendancePercWithMed;
-    private JComboBox AttendanceSubjectStatusPerc;
-    private JTable AttendanceTable;
+    private JPanel AdminProfImgSelectedPanel;
     private JPanel AdminTimeTable;
     private JTable tableTimeTable;
     private JComboBox SemesterNoDropDown;
@@ -74,7 +67,66 @@ public class AdminHomePage extends JFrame {
     private JPanel AdminHomePage;
     private JTextField textField1;
     private JTextField textField2;
-    private JButton changePasswordButton;
+    private JTabbedPane tabbedPane1;
+    private JComboBox comboBox1;
+    private JTable AdminViewUserTable;
+    private JComboBox comboBox2;
+    private JTextField AD_Phno;
+    private JTextField AD_Email;
+    private JTextField AD_Address;
+    private JTextField AD_Lname;
+    private JTextField AD_Fname;
+    private JPanel ADProfImgPanel;
+    private JLabel ADProfImgLabel;
+    private JTabbedPane tabbedPane2;
+    private JButton UndergraduateAddUserBtn;
+    private JTextField UserUndergraduateFname;
+    private JTextField UserUndergraduateLname;
+    private JTextField UserUndergraduateAddress;
+    private JTextField UserUndergraduateEmail;
+    private JTextField UserUndergraduatePhNo;
+    private JComboBox comboBox3;
+    private JComboBox UserUndergraduateSemesterNumber;
+    private JButton UserUndergraduateProfImgBtn;
+    private JButton AdminAddUserBtn;
+    private JButton LecturerAddUserBtn;
+    private JButton TechnicalOfficerAddUserBtn;
+    private JTextField UserAdminFname;
+    private JTextField UserAdminLname;
+    private JTextField UserAdminAddress;
+    private JTextField UserAdminEmail;
+    private JTextField UserAdminPhNo;
+    private JButton UserAdminProfImgBtn;
+    private JTextField ADAddFname;
+    private JTextField ADAddLname;
+    private JTextField ADAddAddress;
+    private JTextField ADAddEmail;
+    private JTextField ADAddPhno;
+    private JButton ADAddUserBtn;
+    private JComboBox UserUndergraduateLevelNumber;
+    private JTextField UserLecturerFname;
+    private JTextField UserLecturerLname;
+    private JTextField UserLecturerAddress;
+    private JTextField UserLecturerEmail;
+    private JTextField UserLecturerPhNo;
+    private JTextField UserTechnicalOfficerFname;
+    private JTextField UserTechnicalOfficerLname;
+    private JTextField UserTechnicalOfficerAddress;
+    private JTextField UserTechnicalOfficerEmail;
+    private JTextField UserTechnicalOfficerPhNo;
+    private JButton UserLecturerProfImgBtn;
+    private JButton UserTechnicalOfficerProfImgBtn;
+    private JLabel TONumberLabel;
+    private JLabel LECNumberLabel;
+    private JLabel TGNumberLabel;
+    private JLabel ADNumberLabel;
+    private JLabel AdminProfImgSelectedLabel;
+    private JPanel UndergraduateProfImgSelectedPanel;
+    private JLabel UndergraduateProfImgSelectedLabel;
+    private JPanel TechnicalOfficerProfImgSelectedPanel;
+    private JLabel TechnicalOfficerProfImgSelectedLabel;
+    private JPanel Admin;
+
 
     private String ADnumber;
     private String ADFname;
@@ -159,13 +211,460 @@ public class AdminHomePage extends JFrame {
                 ADMINUploadToPreviewProfileImage(userIdentity);
             }
         });
-        uploadImageButton.addActionListener(new ActionListener() {
+//        uploadImageButton.addActionListener(new ActionListener() {
+//            @Override
+//            public void actionPerformed(ActionEvent e) {
+//                ADMINUploadToPreviewProfileImage(userIdentity);
+//            }
+//        });
+        ADViewUserTableSetModelMethod();
+
+        comboBox1.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                ADMINUploadToPreviewProfileImage(userIdentity);
+                ADViewUserTableSetModelMethod();
+
+                String userType = (String) comboBox1.getSelectedItem();
+                ADUserFilter(userType);
+                FillViewUserTable(userType);
+            }
+        });
+        comboBox2.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String userType = (String) comboBox1.getSelectedItem();
+
+                String user_id = (String) comboBox2.getSelectedItem();
+
+                System.out.println(user_id);
+
+                FillAdViewUser(user_id,userType);
+            }
+        });
+
+        AdminAddUserBtn.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                AddAdminUser(userIdentity);
+            }
+        });
+        UserAdminProfImgBtn.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                AdminAddAdminUploadToPreviewProfileImage(userIdentity);
+            }
+        });
+        UserUndergraduateProfImgBtn.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                AdminAddUndergraduateUploadToPreviewProfileImage(userIdentity);
+            }
+        });
+        UndergraduateAddUserBtn.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                AddUndergraduateUser(userIdentity);
+            }
+        });
+        UserTechnicalOfficerProfImgBtn.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                AdminAddTechnicalOfficerUploadToPreviewProfileImage(userIdentity);
+            }
+        });
+        TechnicalOfficerAddUserBtn.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                AddTechnicalOfficerUser(userIdentity);
             }
         });
     }
+
+    private void AddTechnicalOfficerUser(String tono){
+        try{
+            String Fname = UserTechnicalOfficerFname.getText();
+            String Lname = UserTechnicalOfficerLname.getText();
+            String Address = UserTechnicalOfficerAddress.getText();
+            String Email = UserTechnicalOfficerEmail.getText();
+            String Phno = UserTechnicalOfficerPhNo.getText();
+
+            String extension = (String) filePathValues[3];
+            String UGProfileImagePath = "Resources/ProfileImages/" + tono + "." + extension;
+
+            String addQuery = "INSERT INTO technical_officer (tofname,tolname,toaddress,toemail,tophno) VALUES(?,?,?,?,?)";
+
+            prepStatement = conn.prepareStatement(addQuery);
+            prepStatement.setString(1,Fname);
+            prepStatement.setString(2,Lname);
+            prepStatement.setString(3,Address);
+            prepStatement.setString(4,Email);
+            prepStatement.setString(5,Phno);
+
+            int Result = prepStatement.executeUpdate();
+            if(Result > 0){
+                JOptionPane.showMessageDialog(null,"Technical Officer User Successfully added");
+            }else {
+                JOptionPane.showMessageDialog(null,"Technical Officer User Entry Failed");
+            }
+
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    private void AdminAddTechnicalOfficerUploadToPreviewProfileImage(String tono) {
+        try {
+            JFileChooser UGFileChooser = new JFileChooser();
+            UGFileChooser.setDialogTitle("Select Profile Picture");
+            UGFileChooser.setAcceptAllFileFilterUsed(false);
+            UGFileChooser.addChoosableFileFilter(new FileNameExtensionFilter("Images", "jpg", "jpeg"));
+
+            if (UGFileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
+
+                ImageIcon icon = new ImageIcon(UGFileChooser.getSelectedFile().getPath());
+                Image scaled = icon.getImage().getScaledInstance(
+                        TechnicalOfficerProfImgSelectedPanel.getWidth() - 50,
+                        TechnicalOfficerProfImgSelectedPanel.getHeight() - 50,
+                        Image.SCALE_SMOOTH
+                );
+                TechnicalOfficerProfImgSelectedLabel.setIcon(new ImageIcon(scaled));
+                TechnicalOfficerProfImgSelectedLabel.setText("");
+
+                String filename = UGFileChooser.getSelectedFile().getAbsolutePath();
+
+                String TECHOFFICERSaveImagePath = "Resources/ProfileImages/";
+                File UGSaveImageDirectory = new File(TECHOFFICERSaveImagePath);
+                if (!UGSaveImageDirectory.exists()) {
+                    UGSaveImageDirectory.mkdirs();
+                }
+
+                File UGSourceFile = null;
+
+                String extension = filename.substring(filename.lastIndexOf('.') + 1);
+
+                UGSourceFile = new File(tono + "." + extension);
+
+                File TECHOFFICERDestinationFile = new File(TECHOFFICERSaveImagePath + UGSourceFile);
+
+                System.out.println(TECHOFFICERDestinationFile);
+
+                Path fromFile = UGFileChooser.getSelectedFile().toPath();
+                Path toFile = TECHOFFICERDestinationFile.toPath();
+
+                filePathValues[0] = fromFile;
+                filePathValues[1] = toFile;
+                filePathValues[2] = TECHOFFICERDestinationFile;
+                filePathValues[3] = extension;
+            }
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    //    #####################################################################################################
+
+    private void AddUndergraduateUser(String tgno){
+        try{
+            String Fname = UserUndergraduateFname.getText();
+            String Lname = UserUndergraduateLname.getText();
+            String Address = UserUndergraduateAddress.getText();
+            String Email = UserUndergraduateEmail.getText();
+            String Phno = UserUndergraduatePhNo.getText();
+
+            String UGLevelStr = (String) UserUndergraduateLevelNumber.getSelectedItem();
+            assert UGLevelStr != null;
+            int UGLevelInt = Integer.parseInt(UGLevelStr);
+
+            String UGSemesterStr = (String) UserUndergraduateSemesterNumber.getSelectedItem();
+            assert UGSemesterStr != null;
+            int UGSemesterInt = Integer.parseInt(UGSemesterStr);
+
+            String extension = (String) filePathValues[3];
+            String UGProfileImagePath = "Resources/ProfileImages/" + tgno + "." + extension;
+
+            String addQuery = "INSERT INTO undergraduate (ugfname,uglname,ugaddress,ugemail,ugphno,study_year,study_semester) VALUES(?,?,?,?,?,?,?)";
+
+            prepStatement = conn.prepareStatement(addQuery);
+            prepStatement.setString(1,Fname);
+            prepStatement.setString(2,Lname);
+            prepStatement.setString(3,Address);
+            prepStatement.setString(4,Email);
+            prepStatement.setString(5,Phno);
+            prepStatement.setInt(6,UGLevelInt);
+            prepStatement.setInt(7,UGSemesterInt);
+
+            int Result = prepStatement.executeUpdate();
+            if(Result > 0){
+                JOptionPane.showMessageDialog(null,"Undergraduate User Successfully added");
+            }else {
+                JOptionPane.showMessageDialog(null,"Undergraduate User Entry Failed");
+            }
+
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    private void AdminAddUndergraduateUploadToPreviewProfileImage(String tgno) {
+        try {
+            JFileChooser UGFileChooser = new JFileChooser();
+            UGFileChooser.setDialogTitle("Select Profile Picture");
+            UGFileChooser.setAcceptAllFileFilterUsed(false);
+            UGFileChooser.addChoosableFileFilter(new FileNameExtensionFilter("Images", "jpg", "jpeg"));
+
+            if (UGFileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
+
+                ImageIcon icon = new ImageIcon(UGFileChooser.getSelectedFile().getPath());
+                Image scaled = icon.getImage().getScaledInstance(
+                        UndergraduateProfImgSelectedPanel.getWidth() - 50,
+                        UndergraduateProfImgSelectedPanel.getHeight() - 50,
+                        Image.SCALE_SMOOTH
+                );
+                UndergraduateProfImgSelectedLabel.setIcon(new ImageIcon(scaled));
+                UndergraduateProfImgSelectedLabel.setText("");
+
+                String filename = UGFileChooser.getSelectedFile().getAbsolutePath();
+
+                String ADMINSaveImagePath = "Resources/ProfileImages/";
+                File UGSaveImageDirectory = new File(ADMINSaveImagePath);
+                if (!UGSaveImageDirectory.exists()) {
+                    UGSaveImageDirectory.mkdirs();
+                }
+
+                File UGSourceFile = null;
+
+                String extension = filename.substring(filename.lastIndexOf('.') + 1);
+
+                UGSourceFile = new File(tgno + "." + extension);
+
+                File ADMINDestinationFile = new File(ADMINSaveImagePath + UGSourceFile);
+
+                System.out.println(ADMINDestinationFile);
+
+                Path fromFile = UGFileChooser.getSelectedFile().toPath();
+                Path toFile = ADMINDestinationFile.toPath();
+
+                filePathValues[0] = fromFile;
+                filePathValues[1] = toFile;
+                filePathValues[2] = ADMINDestinationFile;
+                filePathValues[3] = extension;
+            }
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+
+
+//    #####################################################################################################
+
+    private void AddAdminUser(String adno){
+        try{
+            String Fname = UserAdminFname.getText();
+            String Lname = UserAdminLname.getText();
+            String Address = UserAdminAddress.getText();
+            String Email = UserAdminEmail.getText();
+            String Phno = UserAdminPhNo.getText();
+
+            String extension = (String) filePathValues[3];
+            String UGProfileImagePath = "Resources/ProfileImages/" + adno + "." + extension;
+
+            String addQuery = "INSERT INTO admin (adfname,adlname,adaddress,ademail,adphno) VALUES (?,?,?,?,?)";
+
+            prepStatement = conn.prepareStatement(addQuery);
+            prepStatement.setString(1,Fname);
+            prepStatement.setString(2,Lname);
+            prepStatement.setString(3,Address);
+            prepStatement.setString(4,Email);
+            prepStatement.setString(5,Phno);
+//            prepStatement.setString(6,UGProfileImagePath);
+
+            int Result = prepStatement.executeUpdate();
+            if(Result > 0){
+                JOptionPane.showMessageDialog(null,"Admin User Successfully added");
+            }else {
+                JOptionPane.showMessageDialog(null,"Admin User Entry Failed");
+            }
+
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    private void AdminAddAdminUploadToPreviewProfileImage(String adno) {
+        try {
+            JFileChooser UGFileChooser = new JFileChooser();
+            UGFileChooser.setDialogTitle("Select Profile Picture");
+            UGFileChooser.setAcceptAllFileFilterUsed(false);
+            UGFileChooser.addChoosableFileFilter(new FileNameExtensionFilter("Images", "jpg", "jpeg"));
+
+            if (UGFileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
+
+                ImageIcon icon = new ImageIcon(UGFileChooser.getSelectedFile().getPath());
+                Image scaled = icon.getImage().getScaledInstance(
+                        AdminProfImgSelectedPanel.getWidth() - 50,
+                        AdminProfImgSelectedPanel.getHeight() - 50,
+                        Image.SCALE_SMOOTH
+                );
+                AdminProfImgSelectedLabel.setIcon(new ImageIcon(scaled));
+                AdminProfImgSelectedLabel.setText("");
+
+                String filename = UGFileChooser.getSelectedFile().getAbsolutePath();
+
+                String UGSaveImagePath = "Resources/ProfileImages/";
+                File UGSaveImageDirectory = new File(UGSaveImagePath);
+                if (!UGSaveImageDirectory.exists()) {
+                    UGSaveImageDirectory.mkdirs();
+                }
+
+                File UGSourceFile = null;
+
+                String extension = filename.substring(filename.lastIndexOf('.') + 1);
+
+                UGSourceFile = new File(adno + "." + extension);
+
+                File UGDestinationFile = new File(UGSaveImagePath + UGSourceFile);
+
+                System.out.println(UGDestinationFile);
+
+                Path fromFile = UGFileChooser.getSelectedFile().toPath();
+                Path toFile = UGDestinationFile.toPath();
+
+                filePathValues[0] = fromFile;
+                filePathValues[1] = toFile;
+                filePathValues[2] = UGDestinationFile;
+                filePathValues[3] = extension;
+            }
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    private void FillViewUserTable(String userType){
+        DefaultTableModel tblmodel = (DefaultTableModel) AdminViewUserTable.getModel();
+
+        try{
+            String userTableFillQuery = "";
+            if(userType.equals("Undergraduate")){
+                userTableFillQuery = "select tgno as user_id, ugfname as fname, uglname as lname, ugphno as phno from undergraduate";
+            }
+            else if(userType.equals("Lecturer")){
+                userTableFillQuery = "select lecno as user_id, lecfname as fname, leclname as lname, lecphno as phno from lecturer";
+            }
+            else if(userType.equals("Technical Officer")){
+                userTableFillQuery = "select tono as user_id, tofname as fname, tolname as lname, tophno as phno from technical_officer";
+            }
+
+            prepStatement = conn.prepareStatement(userTableFillQuery);
+
+            ResultSet resultSet = prepStatement.executeQuery();
+
+            while (resultSet.next()){
+                String user_id = resultSet.getString("user_id");
+                String fname = resultSet.getString("fname");
+                String lname = resultSet.getString("lname");
+                String phno = resultSet.getString("phno");
+
+                Object[] user_det = new Object[4];
+
+                user_det[0] = user_id;
+                user_det[1] = fname;
+                user_det[2] = lname;
+                user_det[3] = phno;
+
+                tblmodel.addRow(user_det);
+            }
+
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    private void ADViewUserTableSetModelMethod(){
+        AdminViewUserTable.setModel(new DefaultTableModel(
+                null,
+                new String[]{"User ID", "First Name", "Last Name", "Phone Number"}
+        ));
+    }
+
+    private void FillAdViewUser(String userNo, String userType){
+        try{
+            String userFillQuery = "";
+            if(userType.equals("Undergraduate")){
+                userFillQuery = "select ugfname as fname, uglname as lname, ugaddress as address, ugemail as email, ugphno as phno, ugprofimg as profimg from undergraduate where tgno = ?";
+            }
+            else if(userType.equals("Lecturer")){
+                userFillQuery = "select lecfname as fname, leclname as lname, lecaddress as address, lecemail as email, lecphno as phno, lecprofimg as profimg from lecturer where lecno = ?";
+            }
+            else if(userType.equals("Technical Officer")){
+                userFillQuery = "select tofname as fname, tolname as lname, toaddress as address, toemail as email, tophno as phno, toprofimg as profimg from technical_officer where tono = ?";
+            }
+
+            prepStatement = conn.prepareStatement(userFillQuery);
+            prepStatement.setString(1,userNo);
+
+            ResultSet resultSet = prepStatement.executeQuery();
+
+            while (resultSet.next()){
+                String fname = resultSet.getString("fname");
+                String lname = resultSet.getString("lname");
+                String address = resultSet.getString("address");
+                String email = resultSet.getString("email");
+                String phno = resultSet.getString("phno");
+                Path SaveImagePath = Path.of(resultSet.getString("profimg"));
+
+                ImageIcon icon = new ImageIcon(SaveImagePath.toString());
+                Image scaled = icon.getImage().getScaledInstance(
+                        ADProfImgPanel.getWidth() - 50,
+                        ADProfImgPanel.getHeight() - 50,
+                        Image.SCALE_SMOOTH
+                );
+
+                AD_Fname.setText(fname);
+                AD_Lname.setText(lname);
+                AD_Address.setText(address);
+                AD_Email.setText(email);
+                AD_Phno.setText(phno);
+                ADProfImgLabel.setIcon(new ImageIcon(scaled));
+                ADProfImgLabel.setText("");
+            }
+
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    private void ADUserFilter(String userType){
+        try{
+            String usersQuery = "";
+
+            if(userType.equals("Undergraduate")){
+                usersQuery = "select tgno as userNo from undergraduate";
+            }
+            else if(userType.equals("Lecturer")){
+                usersQuery = "select lecno as userNo from Lecturer";
+            }
+            else if(userType.equals("Technical Officer")){
+                usersQuery = "select tono as userNo from technical_officer";
+            }
+
+            comboBox2.removeAllItems();
+            comboBox2.addItem("");
+
+            prepStatement = conn.prepareStatement(usersQuery);
+            ResultSet resultSet = prepStatement.executeQuery();
+
+            while (resultSet.next()){
+                String user = resultSet.getString("userNo");
+                comboBox2.addItem(user);
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
     private boolean isFileChooserOpen = false;
 
     private void ADMINUploadToPreviewProfileImage(String adno) {
@@ -374,5 +873,9 @@ public class AdminHomePage extends JFrame {
         }catch(Exception exc){
 
         }
+    }
+
+    public static void main(String[] args) {
+        new AdminHomePage("admin");
     }
 }
