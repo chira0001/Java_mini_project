@@ -99,6 +99,10 @@
       <workItem from="1743943043719" duration="2102000" />
       <workItem from="1744114188550" duration="7836000" />
       <workItem from="1745335045494" duration="1089000" />
+      <workItem from="1745336181869" duration="561000" />
+      <workItem from="1745345710045" duration="99000" />
+      <workItem from="1745345832003" duration="36000" />
+      <workItem from="1745398430659" duration="2535000" />
     </task>
     <servers />
   </component>
@@ -110,7 +114,7 @@
       <breakpoints>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/TecSys/src/HomePage/LecturerHomePage.java</url>
-          <line>246</line>
+          <line>248</line>
           <option name="timeStamp" value="1" />
         </line-breakpoint>
       </breakpoints>

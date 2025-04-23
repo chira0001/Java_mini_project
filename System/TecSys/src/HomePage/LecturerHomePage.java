@@ -61,6 +61,8 @@ public class LecturerHomePage extends JFrame {
     private JLabel LecturerHomePageProfileLable;
     private JPanel LecProfileImagePanel;
     private JLabel LecProfileImage;
+    private JComboBox comboBox1;
+    private JComboBox comboBox2;
 
     private CardLayout cardLayout;
 
