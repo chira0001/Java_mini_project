@@ -748,7 +748,7 @@
                       </grid>
                     </children>
                   </grid>
-                  <grid id="207f3" binding="UGAttendance" layout-manager="GridLayoutManager" row-count="2" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+                  <grid id="207f3" binding="UGAttendance" layout-manager="GridLayoutManager" row-count="1" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
                     <margin top="25" left="25" bottom="25" right="50"/>
                     <constraints>
                       <card name="UGAttendanceCard"/>
@@ -965,29 +965,6 @@
                           </scrollpane>
                         </children>
                       </grid>
-                      <grid id="fa84f" binding="UGCourses" layout-manager="GridLayoutManager" row-count="1" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
-                        <margin top="25" left="25" bottom="25" right="50"/>
-                        <constraints>
-                          <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
-                        </constraints>
-                        <properties>
-                          <enabled value="true"/>
-                        </properties>
-                        <border type="none"/>
-                        <children>
-                          <grid id="44ee9" layout-manager="GridLayoutManager" row-count="1" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
-                            <margin top="0" left="0" bottom="0" right="0"/>
-                            <constraints>
-                              <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
-                            </constraints>
-                            <properties>
-                              <background color="-1"/>
-                            </properties>
-                            <border type="none"/>
-                            <children/>
-                          </grid>
-                        </children>
-                      </grid>
                     </children>
                   </grid>
                   <grid id="e341c" binding="UGTimeTable" layout-manager="GridLayoutManager" row-count="2" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
@@ -1106,7 +1083,6 @@
                       </grid>
                     </children>
                   </grid>
-<<<<<<< HEAD
                   <grid id="fa84f" binding="UGCourses" layout-manager="GridLayoutManager" row-count="1" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
                     <margin top="25" left="25" bottom="25" right="50"/>
                     <constraints>
@@ -1427,8 +1403,6 @@
                       </grid>
                     </children>
                   </grid>
-=======
->>>>>>> origin/Kavindu
                   <grid id="18ef0" binding="UGNotices" layout-manager="GridLayoutManager" row-count="1" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
                     <margin top="25" left="25" bottom="25" right="50"/>
                     <constraints>
@@ -1972,6 +1946,29 @@
                             </children>
                           </grid>
                         </children>
+                      </grid>
+                    </children>
+                  </grid>
+                  <grid id="fa84f" binding="UGCourses" layout-manager="GridLayoutManager" row-count="1" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+                    <margin top="25" left="25" bottom="25" right="50"/>
+                    <constraints>
+                      <card name="Card1"/>
+                    </constraints>
+                    <properties>
+                      <enabled value="true"/>
+                    </properties>
+                    <border type="none"/>
+                    <children>
+                      <grid id="44ee9" layout-manager="GridLayoutManager" row-count="1" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+                        <margin top="0" left="0" bottom="0" right="0"/>
+                        <constraints>
+                          <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+                        </constraints>
+                        <properties>
+                          <background color="-1"/>
+                        </properties>
+                        <border type="none"/>
+                        <children/>
                       </grid>
                     </children>
                   </grid>

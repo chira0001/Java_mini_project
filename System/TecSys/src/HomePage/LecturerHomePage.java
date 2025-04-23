@@ -61,7 +61,8 @@ public class LecturerHomePage extends JFrame {
     private JLabel LecturerHomePageProfileLable;
     private JPanel LecProfileImagePanel;
     private JLabel LecProfileImage;
-    private JComboBox comboBox1;
+    private JComboBox LECSemesterCombobox;
+    private JComboBox LECLevelComboBox;
     private JComboBox comboBox2;
 
     private CardLayout cardLayout;
@@ -147,6 +148,21 @@ public class LecturerHomePage extends JFrame {
                 viewNotice(notice);
             }
         });
+
+        LECLevelComboBox.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                updateCoursesIfReady(userIdentity);
+            }
+        });
+
+        LECSemesterCombobox.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                updateCoursesIfReady(userIdentity);
+            }
+        });
+
     }
 
     public void changeBtnState(String btn, String lecno){
@@ -167,6 +183,10 @@ public class LecturerHomePage extends JFrame {
             }
         }
     }
+
+    private void LECCourse(String lecno) {
+    }
+
 
     private void dbConnection(String lecno){
         try{
@@ -336,15 +356,43 @@ public class LecturerHomePage extends JFrame {
         }
     }
 
-    private void LECCourse(String lecno){
+    private void updateCoursesIfReady(String lecno) {
+        String LecLevel = (String) LECLevelComboBox.getSelectedItem();
+        String LecSemester = (String) LECSemesterCombobox.getSelectedItem();
+
+
+        if (LecLevel != null && !LecLevel.isEmpty() && LecSemester != null && !LecSemester.isEmpty()) {
+            try {
+
+                int level = Integer.parseInt(LecLevel);
+                int semester = Integer.parseInt(LecSemester);
+
+                LECCourse(lecno,level, semester);
+            } catch (NumberFormatException ex) {
+                ex.printStackTrace();
+            }
+        }
+    }
+
+
+    private void LECCourse(String lecno,int level, int semester) {
         try {
             DefaultListModel<String> model = new DefaultListModel<>();
-            Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/javatest","root","1234");
-            Statement statement = connection.createStatement();
-            String query = "SELECT c.course_name FROM courses c " +
-                    "JOIN lecture_course lc ON c.course_id = lc.course_id " +
-                    "WHERE lc.lecno = '" + lecno + "'";
-            ResultSet resultSet = statement.executeQuery(query);
+
+//            Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/javatest", "root", "1234");
+//            Statement statement = connection.createStatement();
+//            String query = "SELECT c.course_name FROM courses c " +
+//                    "JOIN lecture_course lc ON c.course_id = lc.course_id " +
+//                    "WHERE c.level_no = " + level + " AND c.semester_no = " + semester + " AND lc.lec_no = " + lecno;
+
+
+            String query = "select courses.course_name from courses join lecture_course on courses.course_id = lecture_course.course_id where lecture_course.lecno = ? and courses.level_no = ? and courses.semester_no = ?";
+            prepStatement = conn.prepareStatement(query);
+            prepStatement.setString(1, lecno);
+            prepStatement.setInt(2, level);
+            prepStatement.setInt(3, semester);
+
+            ResultSet resultSet = prepStatement.executeQuery();
 
             while (resultSet.next()) {
                 String courseName = resultSet.getString("course_name");
@@ -408,4 +456,8 @@ public class LecturerHomePage extends JFrame {
 //    private void UGFillUpdateFields(String tgno){
 //        String UpdateFillQuery = "select ";
 //    }
+
+    public static void main(String[] args) {
+        new LecturerHomePage("lec1234");
+    }
 }
