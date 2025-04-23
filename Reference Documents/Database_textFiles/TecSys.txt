@@ -1,0 +1,263 @@
+Create Database tecsys;
+use tecsys;
+
+CREATE TABLE undergraduate (
+id INT AUTO_INCREMENT PRIMARY KEY,
+tgno VARCHAR(10) UNIQUE,
+ugfname VARCHAR(20),
+uglname VARCHAR(20),
+ugaddress VARCHAR(100),
+ugemail VARCHAR(50),
+ugphno INT(10),
+ugpassword VARCHAR(50) default "123",
+ugProfImg VARCHAR(200),
+study_year INT(1),
+study_semester INT(1)
+);
+
+DELIMITER //
+
+CREATE TRIGGER trg_before_insert_undergraduate
+BEFORE INSERT ON undergraduate
+FOR EACH ROW
+BEGIN
+    DECLARE next_id INT;
+
+    SET next_id = (SELECT AUTO_INCREMENT
+                   FROM information_schema.TABLES
+                   WHERE TABLE_SCHEMA = DATABASE()
+                   AND TABLE_NAME = 'undergraduate');
+
+    SET NEW.tgno = CONCAT('tg', LPAD(next_id, 4, '0'));
+END;
+//
+
+DELIMITER ;
+
+INSERT INTO undergraduate (ugfname,uglname,ugaddress,ugemail,ugphno,ugpassword,ugProfImg,study_year,study_semester) VALUES
+('Alice','Perera','456 Lake Road, Colombo','alice.perera@example.com',770123456,'securePass123','alice.jpg',1,1);
+
+CREATE TABLE admin (
+id INT AUTO_INCREMENT PRIMARY KEY,
+adno VARCHAR(10) UNIQUE,
+adfname VARCHAR(20),
+adlname VARCHAR(20),
+adaddress VARCHAR(100),
+ademail VARCHAR(50),
+adphno INT(10),
+adpassword VARCHAR(50),
+adProfImg VARCHAR(200)
+);
+
+DELIMITER //
+
+CREATE TRIGGER trg_before_insert_admin
+BEFORE INSERT ON admin
+FOR EACH ROW
+BEGIN
+    DECLARE next_id INT;
+
+    SET next_id = (SELECT AUTO_INCREMENT
+                   FROM information_schema.TABLES
+                   WHERE TABLE_SCHEMA = DATABASE()
+                   AND TABLE_NAME = 'admin');
+
+    SET NEW.adno = CONCAT('ad', LPAD(next_id, 4, '0'));
+END;
+//
+
+DELIMITER ;
+
+INSERT INTO admin (adfname,adlname,adaddress,ademail,adphno,adpassword,adProfImg) VALUES
+('Nimal','Fernando','789 Galle Road, Galle','nimal.fernando@example.com',712345678,'123','nimal.jpg');
+
+CREATE TABLE lecturer (
+id INT AUTO_INCREMENT PRIMARY KEY,
+lecno VARCHAR(10) UNIQUE,
+lecfname VARCHAR(20),
+leclname VARCHAR(20),
+lecaddress VARCHAR(100),
+lecemail VARCHAR(50),
+lecphno INT(10),
+lecpassword VARCHAR(50),
+lecProfImg VARCHAR(200)
+);
+
+create table lecture_course(
+lecno varchar(7),
+course_id varchar(7));
+
+DELIMITER //
+
+CREATE TRIGGER trg_before_insert_lecturer
+BEFORE INSERT ON lecturer
+FOR EACH ROW
+BEGIN
+    DECLARE next_id INT;
+
+    SET next_id = (SELECT AUTO_INCREMENT
+                   FROM information_schema.TABLES
+                   WHERE TABLE_SCHEMA = DATABASE()
+                   AND TABLE_NAME = 'lecturer');
+
+    SET NEW.lecno = CONCAT('lec', LPAD(next_id, 4, '0'));
+END;
+//
+
+DELIMITER ;
+
+INSERT INTO lecturer (lecfname,leclname,lecaddress,lecemail,lecphno,lecpassword,lecProfImg) VALUES
+('Saman','Jayasinghe','123 Kandy Road, Kandy','saman.j@example.com',712987654,'lecPass456','saman.jpg');
+
+CREATE TABLE technical_officer (
+id INT AUTO_INCREMENT PRIMARY KEY,
+tono VARCHAR(10) UNIQUE,
+tofname VARCHAR(20),
+tolname VARCHAR(20),
+toaddress VARCHAR(100),
+toemail VARCHAR(50),
+tophno INT(10),
+topassword VARCHAR(50),
+toProfImg VARCHAR(200)
+);
+
+DELIMITER //
+
+CREATE TRIGGER trg_before_insert_technical_officer
+BEFORE INSERT ON technical_officer
+FOR EACH ROW
+BEGIN
+    DECLARE next_id INT;
+
+    -- Get next AUTO_INCREMENT value
+    SET next_id = (SELECT AUTO_INCREMENT
+                   FROM information_schema.TABLES
+                   WHERE TABLE_SCHEMA = DATABASE()
+                   AND TABLE_NAME = 'technical_officer');
+
+    -- Format tono like to0001, to0002...
+    SET NEW.tono = CONCAT('to', LPAD(next_id, 4, '0'));
+END;
+//
+
+DELIMITER ;
+
+INSERT INTO technical_officer (tofname,tolname,toaddress,toemail,tophno,topassword,toProfImg) VALUES
+('Kamal','Wickramasinghe','42 Temple Road, Matara','kamal.w@example.com',714567890,'toSecure789','kamal.jpg');
+
+create view users as 
+SELECT adno AS id, adpassword as password FROM admin
+UNION
+SELECT tgno AS id, ugpassword as password FROM undergraduate
+UNION
+SELECT lecno AS id, lecpassword as password FROM lecturer
+UNION
+SELECT tono AS id, topassword as password FROM technical_officer;
+
+create table notice(
+notice_no INT primary key auto_increment,
+noticeTitle varchar(75),
+noticeFilePath varchar(100)
+);
+
+INSERT INTO notice (noticeTitle, noticeFilePath) VALUES
+("Semester Timetable", "Resources/Notices/1.txt"),
+("Holiday Announcement", "Resources/Notices/2.txt"),
+("Workshop on AI", "Resources/Notices/3.txt"),
+("Library Renovation Notice", "Resources/Notices/4.txt"),
+("Internship Opportunities", "Resources/Notices/5.txt");
+
+create table timeTable(
+time_table_id INT primary key auto_increment,
+course_id varchar(7), 
+module_day varchar(20),
+time varchar(20)
+);
+
+insert into timeTable(course_id,module_day,time) values
+("ICT2113","Thursday","8.00 - 12.00"),
+("ICT2122","Thursday","1.00 - 3.00"),
+("ICT2133","Tuesday","8.00 - 10.00"),
+("ICT2142","Monday","8.00 - 12.00"),
+("ICT2152","Wednesday","10.00 - 12.00");
+
+create table courses(
+course_id varchar(7),
+course_name varchar(50),
+level_no int(1),
+semester_no int(1),
+status enum('theory','practical','theory/practical') default 'theory',
+quizzes_perc int(3) default 0,
+assessment_perc int(3) default 0,
+mid_term_perc int(3) default 0,
+final_theory_perc int(3) default 0,
+final_practical_perc int(3) default 0
+);
+
+INSERT INTO courses VALUES
+("ICT2113","Data Structures and Algorithms",2,1,'theory/practical',10,0,20,40,30),
+("ICT2122","Object Oriented Programming",2,1,'theory',10,10,20,60,0),
+("ICT2133","Object Oriented Programming Practicum III",2,1,'theory/practical',10,20,0,40,30),
+("ICT2142","Object Oriented Analysis and Design",2,1,'practical',0,20,20,0,60),
+("ICT2152","E-Commerce Implementation Management and Security",2,1,'theory',10,20,0,70,0);
+
+create table marks(
+mark_id INT primary key auto_increment,
+tgno varchar(6),
+course_id varchar(7),
+quiz_one int(3) default -1,
+quiz_second int(3) default -1,
+quiz_third int(3) default -1,
+quiz_fourth int(3) default -1,
+assessment_one int(3) default -1,
+assessment_second int(3) default -1,
+mid_term int(3) default -1,
+final_theory int(3) default -1,
+final_practical int(3) default -1
+);
+
+insert into marks(tgno,course_id,quiz_one,quiz_second,quiz_third,quiz_fourth,assessment_one,assessment_second,mid_term,final_theory,final_practical) values
+("tg0001","ICT2113",100,100,100,0,0,0,100,100,100);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
