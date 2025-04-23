@@ -129,6 +129,27 @@ c_material_desc varchar(300),
 c_material_location varchar(300)
 );
 
+
+DELIMITER //
+
+CREATE TRIGGER trg_before_insert_undergraduate
+BEFORE INSERT ON undergraduate
+FOR EACH ROW
+BEGIN
+    DECLARE next_id INT;
+
+    SET next_id = (SELECT AUTO_INCREMENT
+                   FROM information_schema.TABLES
+                   WHERE TABLE_SCHEMA = DATABASE()
+                   AND TABLE_NAME = 'undergraduate');
+
+    SET NEW.tgno = CONCAT('tg', LPAD(next_id, 4, '0'));
+END;
+//
+
+DELIMITER ;
+
+
 insert into course_materials(c_id,c_material,c_material_desc,c_material_location) values
 ("ICT0001", "Labsheet 01", "Resources/CourseMaterialDesc/ICT0001_Labsheet 01.txt", "Resources/CourseMaterial/ICT0001_Labsheet 01.pdf"),
 ("ICT0002", "Labsheet 01", "Resources/CourseMaterialDesc/ICT0002_Labsheet 01.txt", "Resources/CourseMaterial/ICT0002_Labsheet 01.pdf"),
