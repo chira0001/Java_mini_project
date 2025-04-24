@@ -119,7 +119,9 @@ public class AdminHomePage extends JFrame {
     private JLabel LECNumberLabel;
     private JLabel TGNumberLabel;
     private JLabel ADNumberLabel;
-    private JButton addCourseButton;
+    private JButton ADaddLecCourseButton;
+    private JComboBox CourseIDforADLecturer;
+    private JList SelectedCourseList;
     private JLabel AdminProfImgSelectedLabel;
     private JPanel UndergraduateProfImgSelectedPanel;
     private JLabel UndergraduateProfImgSelectedLabel;
@@ -166,6 +168,7 @@ public class AdminHomePage extends JFrame {
         profileButton.setEnabled(false);
         CardTittleLabel.setText(cardTitles[0]);
         loadUGProfImage(userIdentity);
+        loadCoursesForAddLecturer();
 
         logoutButton.addActionListener(new ActionListener() {
             @Override
@@ -261,11 +264,94 @@ public class AdminHomePage extends JFrame {
                 AddTechnicalOfficerUser();
             }
         });
+
+        DefaultListModel<String> courseList = new DefaultListModel<>();
+        ADaddLecCourseButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+
+                String selectedCourse = (String) CourseIDforADLecturer.getSelectedItem();
+                courseList.addElement(selectedCourse);
+
+                SelectedCourseList.setModel(courseList);
+            }
+        });
+        LecturerAddUserBtn.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String lec_no;
+                try{
+                    String Fname = UserLecturerFname.getText();
+                    String Lname = UserLecturerLname.getText();
+                    String Address = UserLecturerAddress.getText();
+                    String Email = UserLecturerEmail.getText();
+                    String Phno = UserLecturerPhNo.getText();
+
+                    String addQuery = "INSERT INTO lecturer (lecfname,leclname,lecaddress,lecemail,lecphno,lecProfImg) VALUES (?,?,?,?,?,?)";
+
+                    prepStatement = conn.prepareStatement(addQuery);
+                    prepStatement.setString(1,Fname);
+                    prepStatement.setString(2,Lname);
+                    prepStatement.setString(3,Address);
+                    prepStatement.setString(4,Email);
+                    prepStatement.setString(5,Phno);
+                    prepStatement.setString(6,DefualtImage);
+
+                    int Result = prepStatement.executeUpdate();
+                    if(Result > 0){
+
+                        String getLecId = "select lecno from lecturer where lecfname = ? and leclname = ? and lecemail = ?";
+
+                        prepStatement = conn.prepareStatement(getLecId);
+                        prepStatement.setString(1,Fname);
+                        prepStatement.setString(2,Lname);
+                        prepStatement.setString(3,Email);
+
+                        ResultSet resultSet = prepStatement.executeQuery();
+                        while (resultSet.next()){
+                            int i;
+                            int courseListLength = courseList.getSize();
+                            lec_no = resultSet.getString("lecno");
+                            TGNumberLabel.setText(lec_no);
+
+                            String addQueryLectureCourse = "INSERT INTO lecture_course (lecno,course_id) values(?,?)";
+                            prepStatement = conn.prepareStatement(addQueryLectureCourse);
+
+                            for (i = 0; i < courseListLength; i++){
+                                prepStatement.setString(1,lec_no);
+                                prepStatement.setString(2,courseList.getElementAt(i));
+
+                                prepStatement.executeUpdate();
+                            }
+                        }
+                        JOptionPane.showMessageDialog(null,"Lecturer User Successfully added");
+                    }else {
+                        JOptionPane.showMessageDialog(null,"Lecturer User Entry Failed");
+                    }
+                }catch (Exception exp){
+                    exp.printStackTrace();
+                }
+            }
+        });
     }
 
     private void loadCoursesForAddLecturer(){
         try{
-            String getQuery = "select course_id, from ";
+            String getQuery = "select distinct(course_id) from courses";
+
+            prepStatement = conn.prepareStatement(getQuery);
+
+            ResultSet resultSet = prepStatement.executeQuery();
+            while (resultSet.next()){
+                String course_id = resultSet.getString("course_id");
+
+                CourseIDforADLecturer.addItem(course_id);
+
+
+
+            }
+
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -633,7 +719,7 @@ public class AdminHomePage extends JFrame {
 
                 loadUGProfImage(adno);
             }else{
-                JOptionPane.showMessageDialog(null,"Internal Error");
+                JOptionPane.showMessageDialog(null,"No Records found - Internal Error");
             }
         }catch (Exception e){
             e.printStackTrace();
@@ -742,6 +828,6 @@ public class AdminHomePage extends JFrame {
     }
 
     public static void main(String[] args) {
-        new AdminHomePage("admin");
+        new AdminHomePage("ad0001");
     }
 }

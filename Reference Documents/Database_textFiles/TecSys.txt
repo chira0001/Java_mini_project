@@ -79,13 +79,15 @@ leclname VARCHAR(20),
 lecaddress VARCHAR(100),
 lecemail VARCHAR(50),
 lecphno INT(10),
-lecpassword VARCHAR(50),
+lecpassword VARCHAR(50) default "123",
 lecProfImg VARCHAR(200)
 );
 
 create table lecture_course(
 lecno varchar(7),
 course_id varchar(7));
+
+alter table lecture_course add primary key(lecno,course_id);
 
 DELIMITER //
 

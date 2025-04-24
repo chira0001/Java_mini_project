@@ -1974,7 +1974,7 @@
                                                             <properties/>
                                                             <border type="none"/>
                                                             <children>
-                                                              <component id="71c46" class="javax.swing.JComboBox" default-binding="true">
+                                                              <component id="71c46" class="javax.swing.JComboBox" binding="CourseIDforADLecturer">
                                                                 <constraints>
                                                                   <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="2" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
                                                                 </constraints>
@@ -1982,7 +1982,7 @@
                                                                   <model/>
                                                                 </properties>
                                                               </component>
-                                                              <component id="c415e" class="javax.swing.JButton" binding="addCourseButton" default-binding="true">
+                                                              <component id="c415e" class="javax.swing.JButton" binding="ADaddLecCourseButton">
                                                                 <constraints>
                                                                   <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
                                                                 </constraints>
@@ -2003,7 +2003,16 @@
                                                     </constraints>
                                                     <properties/>
                                                     <border type="none"/>
-                                                    <children/>
+                                                    <children>
+                                                      <component id="d7323" class="javax.swing.JList" binding="SelectedCourseList">
+                                                        <constraints>
+                                                          <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="6" hsize-policy="2" anchor="0" fill="3" indent="0" use-parent-layout="false">
+                                                            <preferred-size width="150" height="50"/>
+                                                          </grid>
+                                                        </constraints>
+                                                        <properties/>
+                                                      </component>
+                                                    </children>
                                                   </grid>
                                                 </children>
                                               </grid>
