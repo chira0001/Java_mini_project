@@ -672,9 +672,10 @@ public class LecturerHomePage extends JFrame {
             AttendencetableMethod();
             DefaultTableModel tablemodel = (DefaultTableModel) AttendanceTable.getModel();
 
-            String loadAttendanceQuery = "select tgno,week_no,atten_status from attendance where course_status=?;";
+            String loadAttendanceQuery = "select tgno,week_no,atten_status from attendance where course_id=? AND course_status=?;";
             prepStatement=conn.prepareStatement(loadAttendanceQuery);
-            prepStatement.setString(1,"subject_status");
+            prepStatement.setString(1,subject_code);
+            prepStatement.setString(2,subject_status);
 
             ResultSet resultSet = prepStatement.executeQuery();
             while (resultSet.next()){
