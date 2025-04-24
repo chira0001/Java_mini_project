@@ -114,12 +114,12 @@ public class AdminHomePage extends JFrame {
     private JTextField UserTechnicalOfficerAddress;
     private JTextField UserTechnicalOfficerEmail;
     private JTextField UserTechnicalOfficerPhNo;
-    private JButton UserLecturerProfImgBtn;
     private JButton UserTechnicalOfficerProfImgBtn;
     private JLabel TONumberLabel;
     private JLabel LECNumberLabel;
     private JLabel TGNumberLabel;
     private JLabel ADNumberLabel;
+    private JButton addCourseButton;
     private JLabel AdminProfImgSelectedLabel;
     private JPanel UndergraduateProfImgSelectedPanel;
     private JLabel UndergraduateProfImgSelectedLabel;
