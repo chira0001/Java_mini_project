@@ -1383,7 +1383,7 @@
                   <grid id="2fc01" binding="LECMarks" layout-manager="GridLayoutManager" row-count="1" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
                     <margin top="25" left="25" bottom="25" right="50"/>
                     <constraints>
-                      <card name="LECGradesCard"/>
+                      <card name="LECMarksCard"/>
                     </constraints>
                     <properties>
                       <enabled value="true"/>
