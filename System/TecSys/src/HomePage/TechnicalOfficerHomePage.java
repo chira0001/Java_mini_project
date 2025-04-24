@@ -50,13 +50,13 @@ public class TechnicalOfficerHomePage extends JFrame {
     private JPanel TOProfImgPanel;
     private JLabel TOProfileImage;
     private JButton uploadImageButton;
+    private JTextField textDEP;
     private JButton cancelButton;
     private JButton updateButton;
     private JPanel ProfileButton;
     private JPanel TechnicalOfficerHomePage;
     private JPanel HomePageUserProfile;
     private JLabel HomePageUserProfileLable;
-    private JComboBox TODepartment;
     private JPanel attendenceButton;
     private JPanel technicalofficerTimeTable;
     private JTable tableTimeTable;
@@ -78,6 +78,13 @@ public class TechnicalOfficerHomePage extends JFrame {
     private JComboBox LevelNoforMedical;
     private JTable UGMedicalTable;
     private JPanel Notice;
+    private JPanel toupdatemedical;
+    private JButton ToupdateMedicalBtn;
+    private JButton medicalupdatecancel;
+    private JTextField TOmedTgnum;
+    private JTextField TomedCid;
+    private JTextField ToMedReason;
+
 
     private CardLayout cardLayout;
 
@@ -396,6 +403,26 @@ public class TechnicalOfficerHomePage extends JFrame {
                 int SemesterforMedicalInt = Integer.parseInt(SemesterforMedicalStr);
 
                 LoadMedicalTable(userIdentity,LevelforMedicalInt,SemesterforMedicalInt);
+            }
+        });
+        medicalupdatecancel.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                int noOfButtons = cardButtons.length;
+
+                cardLayout.show(TOHomeCard, cardNames[0]);
+                btnFieldNames[0].setEnabled(false);
+                btnFieldNames[noOfButtons - 1].setEnabled(true);
+                loadTOProfImage(userIdentity);
+                dbConnection(userIdentity);
+            }
+        });
+
+        //Technical officer can update medical
+        ToupdateMedicalBtn.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
             }
         });
     }
@@ -917,7 +944,9 @@ private void LoadNotices() {
                 toAddress = DBresult.getString("toaddress");
                 toEmail = DBresult.getString("toemail");
                 toPhno = DBresult.getString("tophno");
+                textDEP =DBresult.getString("todepartment");
                 toProfImg = DBresult.getString("toProfImg");
+
 
                 txtTGNO.setText(tono);
                 txtFNAME.setText(toFname);
