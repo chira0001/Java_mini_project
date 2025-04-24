@@ -57,7 +57,6 @@ public class TechnicalOfficerHomePage extends JFrame {
     private JPanel HomePageUserProfile;
     private JLabel HomePageUserProfileLable;
     private JComboBox TODepartment;
-    private JComboBox TOupdateDepartment;
     private JPanel attendenceButton;
     private JPanel technicalofficerTimeTable;
     private JTable tableTimeTable;
@@ -261,7 +260,6 @@ public class TechnicalOfficerHomePage extends JFrame {
                 String level_no = (String) AttendenceLevelNo.getSelectedItem();
                 int LevelNo = Integer.parseInt(level_no);
                 valuesforAttendanceTable(LevelNo,SemeterNumber,userIdentity);
-
                 valuesforAttendanceTable(LevelNo,1,userIdentity);
                 LoadAttendanceCourseNumber(userIdentity, LevelNo,1);
 
@@ -494,5 +492,452 @@ private void LoadNotices() {
             e.printStackTrace();
         }
     }
+
+
+    //Timetable
+    private void TimeTableSetModelMethod() {
+        tableTimeTable.setModel(new DefaultTableModel(
+                null,
+                new String[]{"Day", "Course Code", "Course Module","Time"}
+        ));
+
+        TableColumnModel timeTableColumns = tableTimeTable.getColumnModel();
+        timeTableColumns.getColumn(2).setMinWidth(100);
+        timeTableColumns.getColumn(3).setMinWidth(20);
+
+        DefaultTableCellRenderer timeTableCells = new DefaultTableCellRenderer();
+        timeTableCells.setHorizontalAlignment(JLabel.CENTER);
+
+        timeTableColumns.getColumn(0).setCellRenderer(timeTableCells);
+        timeTableColumns.getColumn(1).setCellRenderer(timeTableCells);
+        timeTableColumns.getColumn(3).setCellRenderer(timeTableCells);
+    }
+
+    private void valuesForTimeTable(int levelNo, int semesterNo) {
+        String semester_no = (String) SemesterNoDropDown.getSelectedItem();
+        String level_no = (String) LevelNoDropDown.getSelectedItem();
+
+        System.out.println("Level " + level_no + " Semester " + semester_no);
+
+        String TimeTableValues = "select time_table_id, Courses.course_id, module_day, course_name, time from timeTable join Courses where timeTable.course_id = Courses.course_id and level_no = ? and semester_no = ? ORDER BY CASE module_day WHEN 'Monday' THEN 1 WHEN 'Tuesday' THEN 2 WHEN 'Wednesday' THEN 3 WHEN 'Thursday' THEN 4 WHEN 'Friday' THEN 5 WHEN 'Saturday' THEN 6 WHEN 'Sunday' THEN 7 END";
+        DefaultTableModel tblmodel = (DefaultTableModel) tableTimeTable.getModel();
+        try{
+            prepStatement = conn.prepareStatement(TimeTableValues);
+            prepStatement.setInt(1, Integer.parseInt(level_no));
+            prepStatement.setInt(2, Integer.parseInt(semester_no));
+            ResultSet result = prepStatement.executeQuery();
+            while (result.next()){
+                String courseID = result.getString("course_id");
+                String moduleDay = result.getString("module_day");
+                String courseName = result.getString("course_name");
+                String courseTime = result.getString("time");
+
+                Object[] timeTableData = new Object[4];
+
+                timeTableData[0] = moduleDay;
+                timeTableData[1] = courseID;
+                timeTableData[2] = courseName;
+                timeTableData[3] = courseTime;
+
+                tblmodel.addRow(timeTableData);
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    //Attendance
+    private void AttendanceTableSetMethod() {
+        AttendanceTable.setModel(new DefaultTableModel(
+                null,
+                new String[]{"Week No","Course No","Course Name","Attendance Status","Medical No","Medical Reason"}
+        ));
+    }
+
+
+    private void LoadAttendanceTable(String userIdentity, int levelNo, int semesterNoGlobal, String courseIdGlobal, String courseStatusGlobal) {
+        try{
+            String semester_no = (String) SemesterNoDropDown.getSelectedItem();
+            String level_no = (String) LevelNoDropDown.getSelectedItem();
+
+            AttendanceTableSetMethod();
+
+            DefaultTableModel tblmodel = (DefaultTableModel) AttendanceTable.getModel();
+            String LoadAttendanceQuery = "select attendance.week_no,courses.course_id,courses.course_name,atten_status,attendance.med_id,medical.med_reason from attendance join courses on attendance.course_id = courses.course_id left join medical on attendance.med_id = medical.medical_no where attendance.tgno = ? and level_no = ? and semester_no = ? and attendance.course_id = ? and attendance.course_status = ?";
+
+            prepStatement = conn.prepareStatement(LoadAttendanceQuery);
+            prepStatement.setString(1,tono);
+            prepStatement.setInt(2, Integer.parseInt(level_no));
+            prepStatement.setInt(3, Integer.parseInt(semester_no));
+            prepStatement.setString(4,course_id);
+            prepStatement.setString(5,course_status);
+
+            ResultSet resultSet = prepStatement.executeQuery();
+
+            while (resultSet.next()){
+                String table_week_no = resultSet.getString("week_no");
+                String table_course_id = resultSet.getString("course_id");
+                String table_course_name = resultSet.getString("course_name");
+                String table_atten_status = resultSet.getString("atten_status");
+                String table_med_id = resultSet.getString("med_id");
+                String med_reason = resultSet.getString("med_reason");
+
+                if(med_reason == "NULL"){
+                    med_reason = "";
+                }
+
+                Object[] attendanceTableData = new Object[6];
+
+                attendanceTableData[0] = table_week_no;
+                attendanceTableData[1] = table_course_id;
+                attendanceTableData[2] = table_course_name;
+                attendanceTableData[3] = table_atten_status;
+                attendanceTableData[4] = table_med_id;
+                attendanceTableData[5] = med_reason;
+
+                tblmodel.addRow(attendanceTableData);
+            }
+
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    private void LoadAttendanceCourseNumber(String tono, int level_no, int semester_no) {
+
+        String Atten_Course_Code;
+
+        try{
+            String noticeLoadQuery = "select distinct courses.course_id from attendance join courses where attendance.course_id = courses.course_id and tgno = ? and level_no = ? and semester_no = ?";
+
+            prepStatement = conn.prepareStatement(noticeLoadQuery);
+            prepStatement.setString(1,tono);
+            prepStatement.setInt(2, Integer.parseInt(level_no));
+            prepStatement.setInt(3, Integer.parseInt(semester_no));
+
+            ResultSet result = prepStatement.executeQuery();
+
+            AttendanceSubjectCode.removeAllItems();
+//            AttendanceSubjectCodePerc.removeAllItems();
+
+            AttendanceSubjectCode.addItem("");
+//            AttendanceSubjectCodePerc.addItem("");
+
+            while(result.next()){
+                Atten_Course_Code = result.getString("course_id");
+                AttendanceSubjectCode.addItem(Atten_Course_Code);
+//                AttendanceSubjectCodePerc.addItem(Atten_Course_Code);
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    private void LoadAttendanceCourseStatus(String tono, int level_no, int semester_no, String course_id) {
+        String Atten_Course_Status;
+
+        try{
+            String Atten_Course_StatusLoadQuery = "select distinct attendance.course_status from attendance join courses where attendance.course_id = courses.course_id and tgno = ? and level_no = ? and semester_no = ? and courses.course_id = ?";
+
+            prepStatement = conn.prepareStatement(Atten_Course_StatusLoadQuery);
+            prepStatement.setString(1,tono);
+            prepStatement.setInt(2,level_no);
+            prepStatement.setInt(3,semester_no);
+            prepStatement.setString(4,course_id);
+
+            ResultSet result = prepStatement.executeQuery();
+
+            AttendanceSubjectStatus.removeAllItems();
+            AttendanceSubjectStatusPerc.removeAllItems();
+
+            AttendanceSubjectStatus.addItem("");
+            AttendanceSubjectStatusPerc.addItem("");
+
+            while(result.next()){
+                Atten_Course_Status = result.getString("course_status");
+                AttendanceSubjectStatus.addItem(Atten_Course_Status);
+                AttendanceSubjectStatusPerc.addItem(Atten_Course_Status);
+            }
+
+            int itemCount = AttendanceSubjectStatusPerc.getItemCount();
+            if(itemCount>2){
+                AttendanceSubjectStatusPerc.addItem("Theory/Practical");
+            }
+
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    private void LoadAttendancePercentages(String atten_status, String tgno,String course_id){
+        try{
+            String Atten_Perc_Query_without_Med = "", Atten_Perc_Query_with_Med = "";
+
+            if(atten_status != null && !atten_status.isEmpty()){
+                if(atten_status.equals("theory")||atten_status.equals("Theory")){
+                    Atten_Perc_Query_without_Med = "SELECT((SELECT COUNT(*) FROM attendance WHERE tgno = ? AND course_id = ? AND course_status IN ('theory') AND atten_status IN ('present'))/(SELECT COUNT(*) FROM attendance WHERE tgno = ? AND course_id = ? AND course_status IN ('theory')) * 100) AS percentage"; //4
+                    Atten_Perc_Query_with_Med = "SELECT((SELECT COUNT(*) FROM attendance WHERE tgno = ? AND course_id = ? AND course_status IN ('theory') AND atten_status IN ('present','medical'))/(SELECT COUNT(*) FROM attendance WHERE tgno = ? AND course_id = ? AND course_status IN ('theory')) * 100) AS percentage";//4
+                }
+                else if(atten_status.equals("practical")||atten_status.equals("Practical")) {
+                    Atten_Perc_Query_without_Med = "SELECT((SELECT COUNT(*) FROM attendance WHERE tgno = ? AND course_id = ? AND course_status IN ('practical') AND atten_status IN ('present'))/(SELECT COUNT(*) FROM attendance WHERE tgno = ? AND course_id = ? AND course_status IN ('practical')) * 100) AS percentage";//4
+                    Atten_Perc_Query_with_Med = "SELECT((SELECT COUNT(*) FROM attendance WHERE tgno = ? AND course_id = ? AND course_status IN ('practical') AND atten_status IN ('present','medical'))/(SELECT COUNT(*) FROM attendance WHERE tgno = ? AND course_id = ? AND course_status IN ('practical')) * 100) AS percentage";//4
+                }
+                else if(atten_status.equals("theory/practical")||atten_status.equals("Theory/Practical")){
+                    Atten_Perc_Query_without_Med = "SELECT((SELECT COUNT(*) FROM attendance WHERE tgno = ? AND course_id = ? AND course_status IN ('practical', 'theory') AND atten_status IN ('present'))/(SELECT COUNT(*) FROM attendance WHERE tgno = ? AND course_id = ? AND course_status IN ('practical', 'theory')) * 100) AS percentage";//4
+                    Atten_Perc_Query_with_Med = "SELECT((SELECT COUNT(*) FROM attendance WHERE tgno = ? AND course_id = ? AND course_status IN ('practical', 'theory') AND atten_status IN ('present','medical'))/(SELECT COUNT(*) FROM attendance WHERE tgno = ? AND course_id = ? AND course_status IN ('practical', 'theory')) * 100) AS percentage";//4
+                }
+            }
+
+            if(!Atten_Perc_Query_without_Med.isEmpty()){
+                prepStatement = conn.prepareStatement(Atten_Perc_Query_without_Med);
+                prepStatement.setString(1,tgno);
+                prepStatement.setString(2,course_id);
+                prepStatement.setString(3,tgno);
+                prepStatement.setString(4,course_id);
+
+                ResultSet resultSet = prepStatement.executeQuery();
+                while (resultSet.next()){
+                    String perc_without_med_Str = resultSet.getString("percentage");
+                    if(perc_without_med_Str.isEmpty()){
+                        AttendancePercWithoutMed.setText("-%");
+                    }else{
+                        float perc_without_med_Int = Float.parseFloat(perc_without_med_Str);
+                        AttendancePercWithoutMed.setText(perc_without_med_Int + "%");
+                    }
+                }
+            }
+
+            if(!Atten_Perc_Query_with_Med.isEmpty()){
+                prepStatement = conn.prepareStatement(Atten_Perc_Query_with_Med);
+                prepStatement.setString(1,tgno);
+                prepStatement.setString(2,course_id);
+                prepStatement.setString(3,tgno);
+                prepStatement.setString(4,course_id);
+
+                ResultSet resultSet = prepStatement.executeQuery();
+                while (resultSet.next()){
+                    String perc_with_med_Str = resultSet.getString("percentage");
+                    if(perc_with_med_Str.isEmpty()){
+                        AttendancePercWithMed.setText("-%");
+                    }else{
+                        float perc_with_med_Int = Float.parseFloat(perc_with_med_Str);
+                        AttendancePercWithMed.setText(perc_with_med_Int + "%");
+                    }
+                }
+            }
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    private void valuesforAttendanceTable(int level_no , String semester_no, String tono) {
+
+        String AttendanceTableValues = "select courses.course_id,course_name,course_status,week_no,atten_status,med_id from attendance join courses where attendance.course_id = courses.course_id and tgno = ? and level_no = ? and semester_no = ?";
+        DefaultTableModel tblmodel = (DefaultTableModel) AttendanceTable.getModel();
+        try{
+            prepStatement = conn.prepareStatement(AttendanceTableValues);
+            prepStatement.setString(1,tono);
+            prepStatement.setInt(2,level_no);
+            prepStatement.setInt(3, Integer.parseInt(semester_no));
+            ResultSet result = prepStatement.executeQuery();
+            while (result.next()){
+                String courseID = result.getString("course_id");
+                String courseName = result.getString("course_name");
+                String course_status = result.getString("course_status");
+                String week_no = result.getString("week_no");
+                String atten_status = result.getString("atten_status");
+                String med_id = result.getString("med_id");
+
+                Object[] AttendanceTableData = new Object[6];
+
+                AttendanceTableData[0] = week_no;
+                AttendanceTableData[1] = courseID;
+                AttendanceTableData[2] = courseName;
+                AttendanceTableData[3] = course_status;
+                AttendanceTableData[4] = atten_status;
+                AttendanceTableData[5] = med_id;
+
+                tblmodel.addRow(AttendanceTableData);
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    //setting configuration
+    private void TOUpdateCredentials(String tono) {
+        try{
+            String TOaddress = textField7.getText();
+            String TOemail = textField8.getText();
+            String TOphno = textField9.getText();
+
+            String extension = (String) filePathValues[3];
+
+            String TOProfileImagePath = "Resources/ProfileImages/" + tono + "." + extension;
+            System.out.println(TOProfileImagePath);
+            String TOCredentialupdateQuery;
+            if (extension == null){
+                TOCredentialupdateQuery = "Update technical_officer set toaddress = '" + toAddress + "', TOemail = '"+ TOemail +"',TOphno = '"+ TOphno+"' where tgno = '" + tono + "'";
+            }else {
+                TOCredentialupdateQuery = "Update technical_officer set toaddress = '" + toAddress + "', toemail = '"+ toEmail +"',tophno = '"+ toPhno+"',toProfImg ='" + toProfImg + "' where tono = '" + tono + "'";
+            }
+
+            Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/javatest","root","1234");
+            Statement statement = connection.createStatement();
+            int resultSet = statement.executeUpdate(TOCredentialupdateQuery);
+
+            if(resultSet > 0){
+                   TOSaveProfileImage(tono);
+                JOptionPane.showMessageDialog(null,"Credentials updated successfully");
+            }else {
+                JOptionPane.showMessageDialog(null,"Error in credential updation");
+            }
+
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    private void loadTOProfImage(String userIdentity) {
+        try{
+            String UGProfImageSearchQuery = "select * from technical_officer where tono = '" + tono + "'";
+            Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/javatest","root","1234");
+            Statement statement = connection.createStatement();
+            ResultSet result = statement.executeQuery(UGProfImageSearchQuery);
+
+            while (result.next()){
+                Path toSaveImagePath = Path.of(result.getString("toProfImg"));
+                ImageIcon icon = new ImageIcon(toSaveImagePath.toString());
+                Image scaled = icon.getImage().getScaledInstance(
+                        HomePageUserProfile.getWidth() - 50,
+                        HomePageUserProfile.getHeight() - 50,
+                        Image.SCALE_SMOOTH
+                );
+                HomePageUserProfileLable.setIcon(new ImageIcon(scaled));
+                HomePageUserProfileLable.setText("");
+            }
+        }catch (Exception ex){
+            ex.printStackTrace();
+        }
+    }
+
+    private void TOUploadToPreviewProfileImage(String tono) {
+        try {
+            JFileChooser TOFileChooser = new JFileChooser();
+            TOFileChooser.setDialogTitle("Select Profile Picture");
+            TOFileChooser.setAcceptAllFileFilterUsed(false);
+            TOFileChooser.addChoosableFileFilter(new FileNameExtensionFilter("Images", "jpg", "jpeg"));
+
+            if (TOFileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
+
+                ImageIcon icon = new ImageIcon(TOFileChooser.getSelectedFile().getPath());
+                Image scaled = icon.getImage().getScaledInstance(
+                        TOProfImgPanel.getWidth() - 50,
+                        TOProfImgPanel.getHeight() - 50,
+                        Image.SCALE_SMOOTH
+                );
+                TOProfileImage.setIcon(new ImageIcon(scaled));
+                TOProfileImage.setText("");
+
+                String filename = TOFileChooser.getSelectedFile().getAbsolutePath();
+
+                String UGSaveImagePath = "Resources/ProfileImages/";
+                File UGSaveImageDirectory = new File(UGSaveImagePath);
+                if (!UGSaveImageDirectory.exists()) {
+                    UGSaveImageDirectory.mkdirs();
+                }
+
+                File UGSourceFile = null;
+
+                String extension = filename.substring(filename.lastIndexOf('.') + 1);
+                UGSourceFile = new File(tono + "." + extension);
+
+                File UGDestinationFile = new File(UGSaveImagePath + UGSourceFile);
+
+                System.out.println(UGDestinationFile);
+
+                Path fromFile = TOFileChooser.getSelectedFile().toPath();
+                Path toFile = UGDestinationFile.toPath();
+
+                filePathValues[0] = fromFile;
+                filePathValues[1] = toFile;
+                filePathValues[2] = UGDestinationFile;
+                filePathValues[3] = extension;
+            }
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+    private void TOSaveProfileImage(String tono){
+
+        try{
+            Path fromFile = (Path) filePathValues[0];
+            Path toFile = (Path) filePathValues[1];
+            File UGDestinationFile = (File) filePathValues[2];
+
+            if (UGDestinationFile.exists()){
+                UGDestinationFile.delete();
+                Files.copy(fromFile,toFile);
+            }else{
+                Files.copy(fromFile,toFile);
+            }
+
+        }catch(Exception exc){
+
+        }
+    }
+
+    private void changeBtnState(String btn, String tono) {
+        int noOfButtons = cardButtons.length;
+        for (int i = 0; i < noOfButtons; i++){
+            if (cardButtons[i].equals(btn)){
+                dbConnection(tono);
+                cardLayout.show(TOHomeCard,cardNames[i]);
+                CardTittleLabel.setText(cardTitles[i]);
+                btnFieldNames[i].setEnabled(false);
+            }else {
+                btnFieldNames[i].setEnabled(true);
+            }
+        }
+    }
+
+    private void dbConnection(String tono) {
+        try {
+            String selectQuery = "select * from technical_officer where tono = ?";
+
+            prepStatement = conn.prepareStatement(selectQuery);
+            prepStatement.setString(1, tono);
+            ResultSet DBresult = prepStatement.executeQuery();
+
+            if (DBresult.next()) {
+                tono = DBresult.getString("tono");
+                toFname = DBresult.getString("tofname");
+                toLname = DBresult.getString("tolname");
+                toAddress = DBresult.getString("toaddress");
+                toEmail = DBresult.getString("toemail");
+                toPhno = DBresult.getString("tophno");
+                toProfImg = DBresult.getString("toProfImg");
+
+                txtTGNO.setText(tono);
+                txtFNAME.setText(toFname);
+                txtLNAME.setText(toLname);
+                txtADDRESS.setText(toAddress);
+                txtEMAIL.setText(toEmail);
+                txtPHNO.setText(toPhno);
+
+                textField7.setText(toAddress);
+                textField8.setText(toEmail);
+                textField9.setText(toPhno);
+
+                loadTOProfImage(tono);
+            } else {
+                JOptionPane.showMessageDialog(null, "Internal Error");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
 }
 
