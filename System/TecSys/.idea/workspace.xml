@@ -6,7 +6,6 @@
   <component name="ChangeListManager">
     <list default="true" id="eae00a62-4dab-4b09-9e2b-255c640ec556" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/TecSys/HomePage/UndergraduateHomePage.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/TecSys/HomePage/UndergraduateHomePage.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/HomePage/AdminHomePage.form" beforeDir="false" afterPath="$PROJECT_DIR$/src/HomePage/AdminHomePage.form" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/HomePage/AdminHomePage.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/HomePage/AdminHomePage.java" afterDir="false" />
     </list>
@@ -61,7 +60,7 @@
     "RunOnceActivity.git.unshallow": "true",
     "UI_DESIGNER_EDITOR_MODE.PaletteManager.SHOW": "true",
     "UI_DESIGNER_EDITOR_MODE.UIDesignerToolWindowManager.SHOW": "true",
-    "UI_DESIGNER_EDITOR_MODE.UIDesignerToolWindowManager.WIDTH": "283",
+    "UI_DESIGNER_EDITOR_MODE.UIDesignerToolWindowManager.WIDTH": "359",
     "git-widget-placeholder": "Gihan",
     "kotlin-language-version-configured": "true",
     "last_opened_file_path": "E:/E Drive/University Project/Java_mini_project/System/TecSys/Resources/ProfileImages",

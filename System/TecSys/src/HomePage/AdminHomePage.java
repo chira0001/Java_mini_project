@@ -122,6 +122,41 @@ public class AdminHomePage extends JFrame {
     private JButton ADaddLecCourseButton;
     private JComboBox CourseIDforADLecturer;
     private JList SelectedCourseList;
+    private JButton removeCourseButton;
+    private JComboBox comboBox4;
+    private JComboBox comboBox5;
+    private JComboBox comboBox6;
+    private JButton deleteUserButton;
+    private JTextField adminfname;
+    private JTextField adminlname;
+    private JTextField adminaddress;
+    private JTextField adminemail;
+    private JTextField adminphno;
+    private JTextField undergradfname;
+    private JTextField undergradlname;
+    private JTextField undergradaddress;
+    private JTextField undergrademail;
+    private JTextField undergradphno;
+    private JComboBox uglevel;
+    private JComboBox ugsem;
+    private JTextField lfname;
+    private JTextField llname;
+    private JTextField laddress;
+    private JTextField lemail;
+    private JTextField lphno;
+    private JList lcourses;
+    private JComboBox l_Acourses;
+    private JButton upLecCourses;
+    private JButton removeupdatecoursesbtn;
+    private JTextField tfname;
+    private JTextField tlname;
+    private JTextField taddress;
+    private JTextField temail;
+    private JTextField tphno;
+    private JButton aUpdateBtn;
+    private JButton uUpdateBtn;
+    private JButton lUpdateBtn;
+    private JButton tUpdateBtn;
     private JLabel AdminProfImgSelectedLabel;
     private JPanel UndergraduateProfImgSelectedPanel;
     private JLabel UndergraduateProfImgSelectedLabel;
@@ -149,6 +184,10 @@ public class AdminHomePage extends JFrame {
 
     private Object[] filePathValues = new Object[4];
 
+    DefaultListModel<String> courseList = new DefaultListModel<>();
+    DefaultListModel<String> courseList1 = new DefaultListModel<>();
+//    DefaultListModel<String> courseList3 = new DefaultListModel<>();
+
     private String DefualtImage = "Resources/ProfileImages/DefaultUser.png";
 
     public AdminHomePage(String userIdentity){
@@ -168,7 +207,12 @@ public class AdminHomePage extends JFrame {
         profileButton.setEnabled(false);
         CardTittleLabel.setText(cardTitles[0]);
         loadUGProfImage(userIdentity);
+
         loadCoursesForAddLecturer();
+        loadADnoForUpdateAdmin();
+        loadTGnoForUpdateUndergraduate();
+        loadLECnoForUpdateLecturer();
+        loadTOnoForUpdateTechOfficer();
 
         logoutButton.addActionListener(new ActionListener() {
             @Override
@@ -214,12 +258,7 @@ public class AdminHomePage extends JFrame {
                 ADMINUploadToPreviewProfileImage(userIdentity);
             }
         });
-//        uploadImageButton.addActionListener(new ActionListener() {
-//            @Override
-//            public void actionPerformed(ActionEvent e) {
-//                ADMINUploadToPreviewProfileImage(userIdentity);
-//            }
-//        });
+
         ADViewUserTableSetModelMethod();
 
         comboBox1.addActionListener(new ActionListener() {
@@ -262,15 +301,19 @@ public class AdminHomePage extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 AddTechnicalOfficerUser();
+
+                UserTechnicalOfficerFname.setText("");
+                UserTechnicalOfficerLname.setText("");
+                UserTechnicalOfficerAddress.setText("");
+                UserTechnicalOfficerEmail.setText("");
+                UserTechnicalOfficerPhNo.setText("");
             }
         });
 
-        DefaultListModel<String> courseList = new DefaultListModel<>();
+
         ADaddLecCourseButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-
-
                 String selectedCourse = (String) CourseIDforADLecturer.getSelectedItem();
                 courseList.addElement(selectedCourse);
 
@@ -280,78 +323,454 @@ public class AdminHomePage extends JFrame {
         LecturerAddUserBtn.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                String lec_no;
-                try{
-                    String Fname = UserLecturerFname.getText();
-                    String Lname = UserLecturerLname.getText();
-                    String Address = UserLecturerAddress.getText();
-                    String Email = UserLecturerEmail.getText();
-                    String Phno = UserLecturerPhNo.getText();
+                AddLecturerUser();
 
-                    String addQuery = "INSERT INTO lecturer (lecfname,leclname,lecaddress,lecemail,lecphno,lecProfImg) VALUES (?,?,?,?,?,?)";
-
-                    prepStatement = conn.prepareStatement(addQuery);
-                    prepStatement.setString(1,Fname);
-                    prepStatement.setString(2,Lname);
-                    prepStatement.setString(3,Address);
-                    prepStatement.setString(4,Email);
-                    prepStatement.setString(5,Phno);
-                    prepStatement.setString(6,DefualtImage);
-
-                    int Result = prepStatement.executeUpdate();
-                    if(Result > 0){
-
-                        String getLecId = "select lecno from lecturer where lecfname = ? and leclname = ? and lecemail = ?";
-
-                        prepStatement = conn.prepareStatement(getLecId);
-                        prepStatement.setString(1,Fname);
-                        prepStatement.setString(2,Lname);
-                        prepStatement.setString(3,Email);
-
-                        ResultSet resultSet = prepStatement.executeQuery();
-                        while (resultSet.next()){
-                            int i;
-                            int courseListLength = courseList.getSize();
-                            lec_no = resultSet.getString("lecno");
-                            TGNumberLabel.setText(lec_no);
-
-                            String addQueryLectureCourse = "INSERT INTO lecture_course (lecno,course_id) values(?,?)";
-                            prepStatement = conn.prepareStatement(addQueryLectureCourse);
-
-                            for (i = 0; i < courseListLength; i++){
-                                prepStatement.setString(1,lec_no);
-                                prepStatement.setString(2,courseList.getElementAt(i));
-
-                                prepStatement.executeUpdate();
-                            }
-                        }
-                        JOptionPane.showMessageDialog(null,"Lecturer User Successfully added");
-                    }else {
-                        JOptionPane.showMessageDialog(null,"Lecturer User Entry Failed");
-                    }
-                }catch (Exception exp){
-                    exp.printStackTrace();
+                UserLecturerFname.setText("");
+                UserLecturerLname.setText("");
+                UserLecturerAddress.setText("");
+                UserLecturerEmail.setText("");
+                UserLecturerPhNo.setText("");
+            }
+        });
+        removeCourseButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                int courseListLength = courseList.getSize();
+                if(courseListLength != 0){
+                    courseList.removeElementAt(courseListLength - 1);
+                    courseListLength--;
                 }
             }
         });
+        loadCredentialsAdmin();
+        comboBox3.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                loadCredentialsAdmin();
+            }
+        });
+        loadCredentialsUndergraduate();
+        comboBox4.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                loadCredentialsUndergraduate();
+            }
+        });
+        loadCredentialsLecturer();
+        comboBox5.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                int courseListLength = courseList1.getSize();
+                while (courseListLength > 0){
+                    courseList1.removeElementAt(courseListLength - 1);
+                    courseListLength--;
+                }
+
+                loadCredentialsLecturer();
+            }
+        });
+        upLecCourses.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String selectedCourse = (String) l_Acourses.getSelectedItem();
+                courseList1.addElement(selectedCourse);
+
+                lcourses.setModel(courseList1);
+            }
+        });
+        removeupdatecoursesbtn.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                int courseListLength = courseList1.getSize();
+                if(courseListLength != 0){
+                    courseList1.removeElementAt(courseListLength - 1);
+                    courseListLength--;
+                }
+            }
+        });
+        loadCredentialsTO();
+        comboBox6.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                loadCredentialsTO();
+            }
+        });
+        aUpdateBtn.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                updateCredentialsAdmin();
+            }
+        });
+        uUpdateBtn.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                updateCredentialsundergraduate();
+            }
+        });
+        tUpdateBtn.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                updateCredentialsTO();
+            }
+        });
+        lUpdateBtn.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                updateCredentialsLEC();
+            }
+        });
+    }
+
+    private void updateCredentialsLEC(){
+        String l_num = (String) comboBox5.getSelectedItem();
+        try{
+            String updateQuery = "update lecturer set lecfname = ?, leclname = ?, lecaddress = ?, lecemail = ?, lecphno = ? where lecno = ?";
+            prepStatement = conn.prepareStatement(updateQuery);
+
+            prepStatement.setString(1,lfname.getText());
+            prepStatement.setString(2,llname.getText());
+            prepStatement.setString(3,laddress.getText());
+            prepStatement.setString(4,lemail.getText());
+            prepStatement.setString(5,lphno.getText());
+            prepStatement.setString(6,l_num);
+
+            int result = prepStatement.executeUpdate();
+            if(result > 0){
+                String deleteQuery = "delete from lecture_course where lecno = ?";
+                prepStatement = conn.prepareStatement(deleteQuery);
+                prepStatement.setString(1,l_num);
+                int deleteResult = prepStatement.executeUpdate();
+                if(deleteResult > 0){
+                    int i;
+                    int courseListLength = courseList1.getSize();
+
+                    String addQueryLectureCourse = "INSERT INTO lecture_course (lecno,course_id) values(?,?)";
+                    prepStatement = conn.prepareStatement(addQueryLectureCourse);
+
+                    for (i = 0; i < courseListLength; i++){
+                        prepStatement.setString(1,l_num);
+                        prepStatement.setString(2,courseList1.getElementAt(i));
+
+                        prepStatement.executeUpdate();
+                    }
+                    JOptionPane.showMessageDialog(null,"Technical Officer user updated successfully");
+                }
+            }else {
+                JOptionPane.showMessageDialog(null,"Technical Officer user update failed");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void updateCredentialsTO(){
+        String t_num = (String) comboBox6.getSelectedItem();
+        try{
+            String updateQuery = "update technical_officer set tofname = ?, tolname = ?, toaddress = ?, toemail = ?, tophno = ? where tono = ?";
+            prepStatement = conn.prepareStatement(updateQuery);
+
+            prepStatement.setString(1,tfname.getText());
+            prepStatement.setString(2,tlname.getText());
+            prepStatement.setString(3,taddress.getText());
+            prepStatement.setString(4,temail.getText());
+            prepStatement.setString(5,tphno.getText());
+            prepStatement.setString(6,t_num);
+
+            int result = prepStatement.executeUpdate();
+            if(result > 0){
+                JOptionPane.showMessageDialog(null,"Technical Officer user updated successfully");
+            }else {
+                JOptionPane.showMessageDialog(null,"Technical Officer user update failed");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    private void updateCredentialsundergraduate(){
+        String tg_num = (String) comboBox4.getSelectedItem();
+        try{
+            String updateQuery = "update undergraduate set ugfname = ?, uglname = ?, ugaddress = ?, ugemail = ?, ugphno = ?, study_year = ?, study_semester = ? where tgno = ?";
+            prepStatement = conn.prepareStatement(updateQuery);
+
+            prepStatement.setString(1,undergradfname.getText());
+            prepStatement.setString(2,undergradlname.getText());
+            prepStatement.setString(3,undergradaddress.getText());
+            prepStatement.setString(4,undergrademail.getText());
+            prepStatement.setString(5,undergradphno.getText());
+
+            String lNumstr = (String) uglevel.getSelectedItem();
+            String sNumstr = (String) ugsem.getSelectedItem();
+
+            assert lNumstr != null;
+            prepStatement.setInt(6,Integer.parseInt(lNumstr));
+            assert sNumstr != null;
+            prepStatement.setInt(7,Integer.parseInt(sNumstr));
+
+            prepStatement.setString(8,tg_num);
+
+            int result = prepStatement.executeUpdate();
+            if(result > 0){
+                JOptionPane.showMessageDialog(null,"Undergraduate user updated successfully");
+            }else {
+                JOptionPane.showMessageDialog(null,"Undergraduate user update failed");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    private void updateCredentialsAdmin(){
+        String a_num = (String) comboBox3.getSelectedItem();
+        try{
+            String updateQuery = "update admin set adfname = ?, adlname = ?, adaddress = ?, ademail = ?, adphno = ? where adno = ?";
+            prepStatement = conn.prepareStatement(updateQuery);
+
+            prepStatement.setString(1,adminfname.getText());
+            prepStatement.setString(2,adminlname.getText());
+            prepStatement.setString(3,adminaddress.getText());
+            prepStatement.setString(4,adminemail.getText());
+            prepStatement.setString(5,adminphno.getText());
+            prepStatement.setString(6,a_num);
+
+            int result = prepStatement.executeUpdate();
+            if(result > 0){
+                JOptionPane.showMessageDialog(null,"Admin user updated successfully");
+            }else {
+                JOptionPane.showMessageDialog(null,"Admin user update failed");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void loadCredentialsAdmin(){
+        try{
+            String admin_id = (String) comboBox3.getSelectedItem();
+
+            String getInfo = "select * from admin where adno = ?";
+            prepStatement = conn.prepareStatement(getInfo);
+            prepStatement.setString(1,admin_id);
+
+            ResultSet resultSet = prepStatement.executeQuery();
+            while (resultSet.next()){
+                adminfname.setText(resultSet.getString("adfname"));
+                adminlname.setText(resultSet.getString("adlname"));
+                adminaddress.setText(resultSet.getString("adaddress"));
+                adminemail.setText(resultSet.getString("ademail"));
+                adminphno.setText(resultSet.getString("adphno"));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    private void loadCredentialsUndergraduate(){
+        try{
+            String underg_id = (String) comboBox4.getSelectedItem();
+
+            String getInfo = "select * from undergraduate where tgno = ?";
+            prepStatement = conn.prepareStatement(getInfo);
+            prepStatement.setString(1,underg_id);
+
+            ResultSet resultSet = prepStatement.executeQuery();
+            while (resultSet.next()){
+                undergradfname.setText(resultSet.getString("ugfname"));
+                undergradlname.setText(resultSet.getString("uglname"));
+                undergradaddress.setText(resultSet.getString("ugaddress"));
+                undergrademail.setText(resultSet.getString("ugemail"));
+                undergradphno.setText(resultSet.getString("ugphno"));
+                uglevel.setSelectedItem(resultSet.getString("study_year"));
+                ugsem.setSelectedItem(resultSet.getString("study_semester"));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void loadCredentialsLecturer(){
+        try{
+            String l_id = (String) comboBox5.getSelectedItem();
+
+            String getInfo = "select * from lecturer where lecno = ?";
+            prepStatement = conn.prepareStatement(getInfo);
+            prepStatement.setString(1,l_id);
+
+            ResultSet resultSet = prepStatement.executeQuery();
+            while (resultSet.next()){
+                lfname.setText(resultSet.getString("lecfname"));
+                llname.setText(resultSet.getString("leclname"));
+                laddress.setText(resultSet.getString("lecaddress"));
+                lemail.setText(resultSet.getString("lecemail"));
+                lphno.setText(resultSet.getString("lecphno"));
+            }
+
+            String getCourses = "select course_id from courses";
+
+            l_Acourses.removeAllItems();
+            prepStatement = conn.prepareStatement(getCourses);
+
+            ResultSet resultSet1 = prepStatement.executeQuery();
+            while (resultSet1.next()){
+                String Cu = resultSet1.getString("course_id");
+                l_Acourses.addItem(Cu);
+            }
+            SelectedCourseList.setModel(courseList);
+
+
+            String getInfoCourse = "select * from lecture_course where lecno = ?";
+
+            prepStatement = conn.prepareStatement(getInfoCourse);
+            prepStatement.setString(1,l_id);
+
+            ResultSet resultSet2 = prepStatement.executeQuery();
+            while (resultSet2.next()){
+                String selectedCourse = resultSet2.getString("course_id");
+                courseList1.addElement(selectedCourse);
+            }
+            lcourses.setModel(courseList1);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+   private void loadCredentialsTO(){
+       try{
+            String t_id = (String) comboBox6.getSelectedItem();
+
+            String getInfo = "select * from technical_officer where tono = ?";
+            prepStatement = conn.prepareStatement(getInfo);
+            prepStatement.setString(1,t_id);
+
+            ResultSet resultSet = prepStatement.executeQuery();
+            while (resultSet.next()){
+                tfname.setText(resultSet.getString("tofname"));
+                tlname.setText(resultSet.getString("tolname"));
+                taddress.setText(resultSet.getString("toaddress"));
+                temail.setText(resultSet.getString("toemail"));
+                tphno.setText(resultSet.getString("tophno"));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+   }
+
+    private void AddLecturerUser(){
+        String lec_no = "";
+        try{
+            String Fname = UserLecturerFname.getText();
+            String Lname = UserLecturerLname.getText();
+            String Address = UserLecturerAddress.getText();
+            String Email = UserLecturerEmail.getText();
+            String Phno = UserLecturerPhNo.getText();
+
+            String addQuery = "INSERT INTO lecturer (lecfname,leclname,lecaddress,lecemail,lecphno,lecProfImg) VALUES (?,?,?,?,?,?)";
+
+            prepStatement = conn.prepareStatement(addQuery);
+            prepStatement.setString(1,Fname);
+            prepStatement.setString(2,Lname);
+            prepStatement.setString(3,Address);
+            prepStatement.setString(4,Email);
+            prepStatement.setString(5,Phno);
+            prepStatement.setString(6,DefualtImage);
+
+            int Result = prepStatement.executeUpdate();
+            if(Result > 0){
+
+                String getLecId = "select lecno from lecturer where lecfname = ? and leclname = ? and lecemail = ?";
+
+                prepStatement = conn.prepareStatement(getLecId);
+                prepStatement.setString(1,Fname);
+                prepStatement.setString(2,Lname);
+                prepStatement.setString(3,Email);
+
+                ResultSet resultSet = prepStatement.executeQuery();
+                while (resultSet.next()){
+                    int i;
+                    int courseListLength = courseList.getSize();
+                    lec_no = resultSet.getString("lecno");
+                    LECNumberLabel.setText(lec_no);
+
+                    String addQueryLectureCourse = "INSERT INTO lecture_course (lecno,course_id) values(?,?)";
+                    prepStatement = conn.prepareStatement(addQueryLectureCourse);
+
+                    for (i = 0; i < courseListLength; i++){
+                        prepStatement.setString(1,lec_no);
+                        prepStatement.setString(2,courseList.getElementAt(i));
+
+                        prepStatement.executeUpdate();
+                    }
+                }
+                JOptionPane.showMessageDialog(null,"Lecturer User Successfully added");
+            }else {
+                JOptionPane.showMessageDialog(null,"Lecturer User Entry Failed");
+            }
+        }catch (Exception exp){
+            exp.printStackTrace();
+        }
     }
 
     private void loadCoursesForAddLecturer(){
         try{
             String getQuery = "select distinct(course_id) from courses";
-
             prepStatement = conn.prepareStatement(getQuery);
-
             ResultSet resultSet = prepStatement.executeQuery();
             while (resultSet.next()){
                 String course_id = resultSet.getString("course_id");
-
                 CourseIDforADLecturer.addItem(course_id);
-
-
-
             }
 
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void loadADnoForUpdateAdmin(){
+        try{
+            String getQuery = "select distinct(adno) from admin";
+            prepStatement = conn.prepareStatement(getQuery);
+            ResultSet resultSet = prepStatement.executeQuery();
+            while (resultSet.next()){
+                String ad_id = resultSet.getString("adno");
+                comboBox3.addItem(ad_id);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    private void loadTGnoForUpdateUndergraduate(){
+        try{
+            String getQuery = "select distinct(tgno) from undergraduate";
+            prepStatement = conn.prepareStatement(getQuery);
+            ResultSet resultSet = prepStatement.executeQuery();
+            while (resultSet.next()){
+                String tg_id = resultSet.getString("tgno");
+                comboBox4.addItem(tg_id);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    private void loadLECnoForUpdateLecturer(){
+        try{
+            String getQuery = "select distinct(lecno) from lecturer";
+            prepStatement = conn.prepareStatement(getQuery);
+            ResultSet resultSet = prepStatement.executeQuery();
+            while (resultSet.next()){
+                String l_id = resultSet.getString("lecno");
+                comboBox5.addItem(l_id);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    private void loadTOnoForUpdateTechOfficer(){
+        try{
+            String getQuery = "select distinct(tono) from technical_officer";
+            prepStatement = conn.prepareStatement(getQuery);
+            ResultSet resultSet = prepStatement.executeQuery();
+            while (resultSet.next()){
+                String t_id = resultSet.getString("tono");
+                comboBox6.addItem(t_id);
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -396,6 +815,7 @@ public class AdminHomePage extends JFrame {
             }else {
                 JOptionPane.showMessageDialog(null,"Technical Officer User Entry Failed");
             }
+
         }catch (Exception e){
             e.printStackTrace();
         }
