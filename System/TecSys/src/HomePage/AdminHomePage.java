@@ -263,6 +263,14 @@ public class AdminHomePage extends JFrame {
         });
     }
 
+    private void loadCoursesForAddLecturer(){
+        try{
+            String getQuery = "select course_id, from ";
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     private void AddTechnicalOfficerUser(){
         String to_no;
         try{
