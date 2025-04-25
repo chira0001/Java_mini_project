@@ -48,7 +48,7 @@ public class AdminHomePage extends JFrame {
     private JPanel AdminCourses;
     private JComboBox LevelNoforCourses;
     private JComboBox SemesterNoforCourses;
-    private JButton SaveCourseMaterial;
+    private JButton AddCourse;
     private JPanel AdminNotices;
     private JComboBox noticeTitleDropDown;
     private JTextArea noticeDisplayArea;
@@ -161,16 +161,17 @@ public class AdminHomePage extends JFrame {
     private JComboBox comboBox8;
     private JTextField textField3;
     private JButton addButton;
-    private JTextField textField4;
-    private JTextField textField5;
-    private JComboBox comboBox9;
-    private JTextField textField6;
-    private JTextField textField10;
-    private JTextField textField11;
-    private JTextField textField12;
-    private JTextField textField13;
+    private JTextField ADaddCourseID;
+    private JTextField ADaddCourseName;
+    private JComboBox ADaddCourseStatus;
+    private JTextField ADaddCourseQuizPerc;
+    private JTextField ADaddCourseAssessmentPerc;
+    private JTextField ADaddCourseMidPerc;
+    private JTextField ADaddCourseFTheoryPerc;
+    private JTextField ADaddCourseFPracticalPerc;
     private JTextField textField14;
     private JButton addNoticeButton;
+    private JTextArea textArea1;
     private JLabel AdminProfImgSelectedLabel;
     private JPanel UndergraduateProfImgSelectedPanel;
     private JLabel UndergraduateProfImgSelectedLabel;
@@ -461,6 +462,197 @@ public class AdminHomePage extends JFrame {
                 loadCredentialsLecturer();
             }
         });
+        AddCourse.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                AddCourses();
+
+                ADaddCourseID.getText();
+                ADaddCourseName.getText();
+                ADaddCourseStatus.getSelectedItem();
+                ADaddCourseQuizPerc.getText();
+                ADaddCourseAssessmentPerc.getText();
+                ADaddCourseMidPerc.getText();
+                ADaddCourseFTheoryPerc.getText();
+                ADaddCourseFPracticalPerc.getText();
+            }
+        });
+        LevelNoDropDown.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                getDropDownDataForADTimetable();
+                ADViewTimeTable();
+            }
+        });
+        SemesterNoDropDown.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                getDropDownDataForADTimetable();
+                ADViewTimeTable();
+            }
+        });
+        ADViewTimeTableSetModelMethod();
+        ADViewTimeTable();
+        addButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                ADViewTimeTableSetModelMethod();
+                addTimeTableData();
+                ADViewTimeTable();
+            }
+        });
+    }
+
+    private void ADViewTimeTableSetModelMethod(){
+        tableTimeTable.setModel(new DefaultTableModel(
+                null,
+                new String[]{"Course ID", "Moduele Day", "Course Time"}
+        ));
+    }
+
+    private void ADViewTimeTable(){
+        ADViewTimeTableSetModelMethod();
+        DefaultTableModel tblmodel = (DefaultTableModel) tableTimeTable.getModel();
+
+        int l_noInt;
+        String l_no = (String) LevelNoDropDown.getSelectedItem();
+        if(l_no.isEmpty() || l_no.equals("")){
+            l_no = "0";
+        }
+        l_noInt = Integer.parseInt(l_no);
+
+        int s_noInt;
+        String s_no = (String) SemesterNoDropDown.getSelectedItem();
+        if(s_no.isEmpty() || s_no.equals("")){
+            s_no = "0";
+        }
+        s_noInt = Integer.parseInt(s_no);
+
+        try{
+            String TimeTableFillQuery = "select courses.course_id,module_day,time from timetable join courses on timetable.course_id = courses.course_id where level_no = ? and semester_no = ?";
+
+            prepStatement = conn.prepareStatement(TimeTableFillQuery);
+            prepStatement.setInt(1,l_noInt);
+            prepStatement.setInt(2,s_noInt);
+            ResultSet resultSet = prepStatement.executeQuery();
+
+            while (resultSet.next()){
+                String c_id = resultSet.getString("course_id");
+                String c_day = resultSet.getString("module_day");
+                String c_time = resultSet.getString("time");
+
+
+                Object[] timeTable_det = new Object[3];
+
+                timeTable_det[0] = c_id;
+                timeTable_det[1] = c_day;
+                timeTable_det[2] = c_time;
+
+                tblmodel.addRow(timeTable_det);
+            }
+
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    private void addTimeTableData(){
+        try{
+            String courseId = (String) comboBox7.getSelectedItem();
+            String Day = (String) comboBox8.getSelectedItem();
+            String timeTxt = textField3.getText();
+
+            String insertTimetableDataQuery = "insert into timetable(course_id,module_day,time) Values (?,?,?);";
+
+            prepStatement = conn.prepareStatement(insertTimetableDataQuery);
+            prepStatement.setString(1,courseId);
+            prepStatement.setString(2,Day);
+            prepStatement.setString(3,timeTxt);
+
+            int resultSet = prepStatement.executeUpdate();
+            if(resultSet > 0){
+                JOptionPane.showMessageDialog(null,"Time Table added Successfully");
+            }else{
+                JOptionPane.showMessageDialog(null,"Time Table adding Failed");
+            }
+
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    private void getDropDownDataForADTimetable(){
+        int l_noInt;
+        String l_no = (String) LevelNoDropDown.getSelectedItem();
+        if(l_no.isEmpty() || l_no.equals("")){
+            l_no = "0";
+        }
+        l_noInt = Integer.parseInt(l_no);
+
+        int s_noInt;
+        String s_no = (String) SemesterNoDropDown.getSelectedItem();
+        if(s_no.isEmpty() || s_no.equals("")){
+            s_no = "0";
+        }
+        s_noInt = Integer.parseInt(s_no);
+
+        LoadCourseIDForADTimeTable(l_noInt,s_noInt);
+    }
+    private void LoadCourseIDForADTimeTable(int level_no, int semester_no){
+        System.out.println(level_no + " " +semester_no);
+        try{
+            String loadCourseQuery = "select distinct(course_id) from courses where level_no = ? and semester_no = ?";
+            prepStatement = conn.prepareStatement(loadCourseQuery);
+            prepStatement.setInt(1,level_no);
+            prepStatement.setInt(2,semester_no);
+
+            comboBox7.removeAllItems();
+            ResultSet resultSet = prepStatement.executeQuery();
+            while (resultSet.next()){
+                String courses = resultSet.getString("course_id");
+                comboBox7.addItem(courses);
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    private void AddCourses(){
+        try{
+            String courseLevelNo = (String) LevelNoforCourses.getSelectedItem();
+            String courseSemesterNo = (String) SemesterNoforCourses.getSelectedItem();
+            String courseIDtxt = ADaddCourseID.getText();
+            String CourseName = ADaddCourseName.getText();
+            String course_Status = (String) ADaddCourseStatus.getSelectedItem();
+            String QuizPerc = ADaddCourseQuizPerc.getText();
+            String Asses_Perc = ADaddCourseAssessmentPerc.getText();
+            String MidPerc = ADaddCourseMidPerc.getText();
+            String FTheoryPerc = ADaddCourseFTheoryPerc.getText();
+            String FPracticalPerc = ADaddCourseFPracticalPerc.getText();
+
+            String AddCourseQuery = "INSERT INTO courses(course_id,course_name,level_no,semester_no,status,quizzes_perc,assessment_perc,mid_term_perc,final_theory_perc,final_practical_perc) VALUES (?,?,?,?,?,?,?,?,?,?)";
+
+            prepStatement = conn.prepareStatement(AddCourseQuery);
+            prepStatement.setString(1,courseIDtxt);
+            prepStatement.setString(2,CourseName);
+            prepStatement.setString(3,courseLevelNo);
+            prepStatement.setString(4,courseSemesterNo);
+            prepStatement.setString(5,course_Status);
+            prepStatement.setString(6,QuizPerc);
+            prepStatement.setString(7,Asses_Perc);
+            prepStatement.setString(8,MidPerc);
+            prepStatement.setString(9,FTheoryPerc);
+            prepStatement.setString(10,FPracticalPerc);
+
+            int ResultAdd = prepStatement.executeUpdate();
+            if(ResultAdd > 0){
+                JOptionPane.showMessageDialog(null,"Course Added Successfully");
+            }else {
+                JOptionPane.showMessageDialog(null,"Course Adding Failed");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private void deleteUser(String DeleteuserType, String DeleteuserId){
@@ -1356,9 +1548,6 @@ public class AdminHomePage extends JFrame {
 
     private void ADMINUpdateCredentials(String adno){
         try{
-//            String ADaddress = textField7.getText();
-//            String UGemail = textField8.getText();
-//            String UGphno = textField9.getText();
 
             String AdFname = textField7.getText();
             String AdLname = textField8.getText();
