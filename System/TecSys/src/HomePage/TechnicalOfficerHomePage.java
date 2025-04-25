@@ -266,8 +266,10 @@ public class TechnicalOfficerHomePage extends JFrame {
 
                 String level_no = (String) AttendenceLevelNo.getSelectedItem();
                 int LevelNo = Integer.parseInt(level_no);
+
                 valuesforAttendanceTable(LevelNo,SemeterNumber,userIdentity);
                 valuesforAttendanceTable(LevelNo,1,userIdentity);
+
                 LoadAttendanceCourseNumber(userIdentity, LevelNo,1);
 
                 GlobalVariables[0] = LevelNo;
@@ -289,8 +291,8 @@ public class TechnicalOfficerHomePage extends JFrame {
                 String semester_no = (String) AttendanceSemesterNo.getSelectedItem();
                 int SemesterNo = Integer.parseInt(semester_no);
 
-                valuesforAttendanceTable(LevelNumber,SemesterNo,userIdentity);
-                valuesforAttendanceTable(2,SemesterNo,userIdentity);
+                valuesforAttendanceTable(LevelNumber,semester_no,userIdentity);
+                valuesforAttendanceTable(2,semester_no,userIdentity);
 
                 LoadAttendanceCourseNumber(userIdentity, 2, SemesterNo);
 
