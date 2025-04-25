@@ -77,6 +77,10 @@ public class LecturerHomePage extends JFrame {
     private JLabel AttendancePercWithMed;
     private JComboBox StuTGnoAttendance;
     private JTable AttendanceTable;
+    private JComboBox SemesterNoforMedical;
+    private JComboBox LevelNoforMedical;
+    private JTable LECMedicalTable;
+    private JComboBox MedicalCourseCode;
     private JComboBox comboBox2;
 
     private CardLayout cardLayout;
@@ -296,6 +300,49 @@ public class LecturerHomePage extends JFrame {
                 loadattendance(tgno);
                 attendancePersentage(tgno);
 
+            }
+        });
+        LevelNoforMedical.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String medicalLevel=(String)LevelNoforMedical.getSelectedItem();
+                assert medicalLevel != null;
+                if(medicalLevel.isEmpty()){
+                    medicalLevel = "0";
+                }
+                int medicalLevelInt= Integer.parseInt(medicalLevel);
+
+                String medicalSemester= (String)SemesterNoforMedical.getSelectedItem();
+                assert medicalSemester != null;
+                if(medicalSemester.isEmpty()){
+                    medicalSemester = "0";
+                }
+                int medicalSemesterInt= Integer.parseInt(medicalSemester);
+                System.out.println(medicalLevel+" "+medicalSemester);
+
+                SelectMediLevelCourse(userIdentity,medicalLevelInt,medicalSemesterInt);
+            }
+        });
+        SemesterNoforMedical.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String medicalSemester=(String)SemesterNoforMedical.getSelectedItem();
+                assert medicalSemester != null;
+                if(medicalSemester.isEmpty()){
+                    medicalSemester = "0";
+
+                }
+                int medicalSemesterInt= Integer.parseInt(medicalSemester);
+
+                String medicalLevel=(String)LevelNoforMedical.getSelectedItem();
+                assert medicalLevel != null;
+                if(medicalLevel.isEmpty()){
+                    medicalLevel = "0";
+                }
+                int medicalLevelInt= Integer.parseInt(medicalLevel);
+                System.out.println(medicalSemester+" "+medicalLevel);
+
+                SelectMediLevelCourse(userIdentity,medicalLevelInt,medicalSemesterInt);
             }
         });
     }
@@ -793,12 +840,27 @@ public class LecturerHomePage extends JFrame {
         ));
     }
 
+    private void SelectMediLevelCourse(String lecno,int level,int semester){
+        try{
+            MedicalCourseCode.removeAllItems();
+            String SelectMediLevelCourseQuery="select courses.course_id from courses join lecture_course on courses.course_id = lecture_course.course_id where lecno=? AND level_no=? AND semester_no=?;";
+            prepStatement=conn.prepareStatement(SelectMediLevelCourseQuery);
+            prepStatement.setString( 1, lecno);
+            prepStatement.setInt(2, level);
+            prepStatement.setInt(3, semester);
+            ResultSet resultSet = prepStatement.executeQuery();
+            while (resultSet.next()){
+                String course_id = resultSet.getString("course_id");
+                MedicalCourseCode.addItem(course_id);
 
+            }
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+    }
 
-
-//    private void UGFillUpdateFields(String tgno){
-//        String UpdateFillQuery = "select ";
-//    }
+    
 
     public static void main(String[] args) {
         new LecturerHomePage("lec5678");
