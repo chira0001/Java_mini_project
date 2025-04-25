@@ -1574,15 +1574,12 @@ public class AdminHomePage extends JFrame {
             e.printStackTrace();
         }
     }
-
     private void loadUGProfImage(String adno){
         try{
             String UGProfImageSearchQuery = "select * from admin where adno = ?";
-
             prepStatement = conn.prepareStatement(UGProfImageSearchQuery);
             prepStatement.setString(1,adno);
             ResultSet result = prepStatement.executeQuery();
-
             while (result.next()){
                 Path UGSaveImagePath = Path.of(result.getString("adProfImg"));
                 ImageIcon icon = new ImageIcon(UGSaveImagePath.toString());
@@ -1599,15 +1596,11 @@ public class AdminHomePage extends JFrame {
         }
     }
     private void LoadNotices(){
-
         String notice_Title;
-
         try{
             String noticeLoadQuery = "select * from notice";
-
             Statement statement = conn.createStatement();
             ResultSet result = statement.executeQuery(noticeLoadQuery);
-
             while(result.next()){
                 notice_Title = result.getString("noticeTitle");
 
