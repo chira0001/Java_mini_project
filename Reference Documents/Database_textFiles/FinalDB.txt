@@ -121,6 +121,19 @@ week_no int(2),
 med_reason varchar(100) default ""
 );
 
+create table course_materials(
+c_mat_no INT primary key auto_increment,
+c_id varchar(7),
+c_material varchar(50),
+c_material_desc varchar(300),
+c_material_location varchar(300)
+);
+
+insert into course_materials(c_id,c_material,c_material_desc,c_material_location) values
+("ICT0001", "Labsheet 01", "Resources/CourseMaterialDesc/ICT0001_Labsheet 01.txt", "Resources/CourseMaterial/ICT0001_Labsheet 01.pdf"),
+("ICT0002", "Labsheet 01", "Resources/CourseMaterialDesc/ICT0002_Labsheet 01.txt", "Resources/CourseMaterial/ICT0002_Labsheet 01.pdf"),
+("ICT0001", "Labsheet 02", "Resources/CourseMaterialDesc/ICT0001_Labsheet 02.txt", "Resources/CourseMaterial/ICT0001_Labsheet 02.pdf");
+
 INSERT INTO admin VALUES
 ("admin1", "Subash", "Jayasinghe", "Matara", "subash@gmail.com", 981111321, "123","./Resources/Images/5267.jpg");
 
@@ -208,13 +221,13 @@ insert into marks(tgno,course_id,quiz_one,quiz_second,quiz_third,quiz_fourth,ass
 ("tg0004","ICT0005",100,100,100,0,100,100,0,100,0),
 ("tg0005","ICT0005",100,100,100,0,100,100,0,100,0);
 
-INSERT INTO attendance(tono,tgno,course_id,week_no,course_status,atten_status,med_id) VALUES
-("to0001", "tg0001", "ICT0001", 1, "theory", "present", ""),
-("to0001", "tg0001", "ICT0001", 1, "practical", "present", ""),
-("to0001", "tg0001", "ICT0001", 2, "theory", "absent", ""),
-("to0001", "tg0001", "ICT0001", 2, "practical", "present", ""),
-("to0001", "tg0001", "ICT0001", 3, "theory", "present", ""),
-("to0001", "tg0001", "ICT0001", 3, "practical", "present", ""),
+INSERT INTO attendance(tono,tgno,course_id,week_no,course_status,atten_status) VALUES
+("to0001", "tg0001", "ICT0001", 1, "theory", "present"),
+("to0001", "tg0001", "ICT0001", 1, "practical", "present"),
+("to0001", "tg0001", "ICT0001", 2, "theory", "absent"),
+("to0001", "tg0001", "ICT0001", 2, "practical", "present"),
+("to0001", "tg0001", "ICT0001", 3, "theory", "present"),
+("to0001", "tg0001", "ICT0001", 3, "practical", "present"),
 ("to0001", "tg0001", "ICT0001", 4, "theory", "present", ""),
 ("to0001", "tg0001", "ICT0001", 4, "practical", "present", ""),
 ("to0001", "tg0001", "ICT0001", 5, "theory", "absent", ""),
@@ -240,15 +253,15 @@ INSERT INTO attendance(tono,tgno,course_id,week_no,course_status,atten_status,me
 ("to0001", "tg0001", "ICT0001", 15, "theory", "present", ""),
 ("to0001", "tg0001", "ICT0001", 15, "practical", "present", ""),
 
-("to0001", "tg0001", "ICT0002", 1, "theory", "absent", ""),
-("to0001", "tg0001", "ICT0002", 2, "theory", "present", ""),
-("to0001", "tg0001", "ICT0002", 3, "theory", "absent", ""),
-("to0001", "tg0001", "ICT0002", 4, "theory", "absent", ""),
-("to0001", "tg0001", "ICT0002", 5, "theory", "absent", ""),
-("to0001", "tg0001", "ICT0002", 6, "theory", "present", ""),
-("to0001", "tg0001", "ICT0002", 7, "theory", "absent", ""),
-("to0001", "tg0001", "ICT0002", 8, "theory", "present", ""),
-("to0001", "tg0001", "ICT0002", 9, "theory", "absent", ""),
+("to0001", "tg0001", "ICT0002", 1, "theory", "absent"),
+("to0001", "tg0001", "ICT0002", 2, "theory", "present"),
+("to0001", "tg0001", "ICT0002", 3, "theory", "absent"),
+("to0001", "tg0001", "ICT0002", 4, "theory", "absent"),
+("to0001", "tg0001", "ICT0002", 5, "theory", "absent"),
+("to0001", "tg0001", "ICT0002", 6, "theory", "present"),
+("to0001", "tg0001", "ICT0002", 7, "theory", "absent"),
+("to0001", "tg0001", "ICT0002", 8, "theory", "present"),
+("to0001", "tg0001", "ICT0002", 9, "theory", "absent"),
 ("to0001", "tg0001", "ICT0002", 10, "theory", "present", ""),
 ("to0001", "tg0001", "ICT0002", 11, "theory", "absent", ""),
 ("to0001", "tg0001", "ICT0002", 12, "theory", "absent", ""),

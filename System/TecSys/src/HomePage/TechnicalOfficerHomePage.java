@@ -50,7 +50,6 @@ public class TechnicalOfficerHomePage extends JFrame {
     private JPanel TOProfImgPanel;
     private JLabel TOProfileImage;
     private JButton uploadImageButton;
-    private JTextField textDEP;
     private JButton cancelButton;
     private JButton updateButton;
     private JPanel ProfileButton;
@@ -84,6 +83,7 @@ public class TechnicalOfficerHomePage extends JFrame {
     private JTextField TOmedTgnum;
     private JTextField TomedCid;
     private JTextField ToMedReason;
+    private JTextField textField1;
 
 
     private CardLayout cardLayout;
@@ -263,23 +263,7 @@ public class TechnicalOfficerHomePage extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 AttendanceTableSetMethod();
-
-                String level_no = (String) AttendenceLevelNo.getSelectedItem();
-                int LevelNo = Integer.parseInt(level_no);
-
-                valuesforAttendanceTable(LevelNo,SemeterNumber,userIdentity);
-                valuesforAttendanceTable(LevelNo,1,userIdentity);
-
-                LoadAttendanceCourseNumber(userIdentity, LevelNo,1);
-
-                GlobalVariables[0] = LevelNo;
-
-                int semester_no_Global = (Integer) GlobalVariables[1];
-                String course_id_Global = (String) GlobalVariables[2];
-                String course_status_Global = (String) GlobalVariables[3];
-
-                LoadAttendanceTable(userIdentity,LevelNo,semester_no_Global,course_id_Global,course_status_Global);
-
+                LoadAttendanceCourseNumber();
             }
         });
 
@@ -287,40 +271,14 @@ public class TechnicalOfficerHomePage extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 AttendanceTableSetMethod();
+                LoadAttendanceCourseNumber();
 
-                String semester_no = (String) AttendanceSemesterNo.getSelectedItem();
-                int SemesterNo = Integer.parseInt(semester_no);
-
-                valuesforAttendanceTable(LevelNumber,semester_no,userIdentity);
-                valuesforAttendanceTable(2,semester_no,userIdentity);
-
-                LoadAttendanceCourseNumber(userIdentity, 2, SemesterNo);
-
-                GlobalVariables[1] = SemesterNo;
-
-                int level_no_Global = (Integer) GlobalVariables[0];
-                String course_id_Global = (String) GlobalVariables[2];
-                String course_status_Global = (String) GlobalVariables[3];
-
-                LoadAttendanceTable(userIdentity,level_no_Global,SemesterNo,course_id_Global,course_status_Global);
             }
         });
         AttendanceSubjectCode.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                AttendanceTableSetMethod();
-
-                int level_no_Global = (Integer) GlobalVariables[0];
-                int semester_no_Global = (Integer) GlobalVariables[1];
-                String course_status_Global = (String) GlobalVariables[3];
-
-                String Atten_Subject_code = (String) AttendanceSubjectCode.getSelectedItem();
-                LoadAttendanceCourseStatus(userIdentity,level_no_Global,semester_no_Global,Atten_Subject_code);
-
-                GlobalVariables[2] = Atten_Subject_code;
-                String course_id_Global = (String) GlobalVariables[2];
-
-                LoadAttendanceTable(userIdentity,level_no_Global,semester_no_Global,course_id_Global,course_status_Global);
+                LoadAttendanceCourseStatus();
             }
         });
 
@@ -329,15 +287,8 @@ public class TechnicalOfficerHomePage extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 AttendanceTableSetMethod();
 
-                String Atten_Subject_Status = (String) AttendanceSubjectStatus.getSelectedItem();
+                valuesforAttendanceTable(userIdentity);
 
-                GlobalVariables[3] = Atten_Subject_Status;
-
-                int level_no_Global = (Integer) GlobalVariables[0];
-                int semester_no_Global = (Integer) GlobalVariables[1];
-                String course_id_Global = (String) GlobalVariables[2];
-
-                LoadAttendanceTable(userIdentity,level_no_Global,semester_no_Global,course_id_Global,Atten_Subject_Status);
             }
         });
 
@@ -579,118 +530,55 @@ private void LoadNotices() {
     private void AttendanceTableSetMethod() {
         AttendanceTable.setModel(new DefaultTableModel(
                 null,
-                new String[]{"Week No","Course No","Course Name","Attendance Status","Medical No","Medical Reason"}
+                new String[]{"TG No","Course ID","Course Name","Week No","Course Status","Attendance Status","Medical Reason"}
         ));
     }
 
-
-    private void LoadAttendanceTable(String userIdentity, int levelNo, int semesterNoGlobal, String courseIdGlobal, String courseStatusGlobal) {
+    private void LoadAttendanceCourseNumber() {
+        String levelNO = (String) AttendenceLevelNo.getSelectedItem();
+        String semesterNO = (String) AttendanceSemesterNo.getSelectedItem();
+        AttendanceSubjectCode.removeAllItems();
         try{
-            String semester_no = (String) SemesterNoDropDown.getSelectedItem();
-            String level_no = (String) LevelNoDropDown.getSelectedItem();
+            String loadQuery = "Select course_id from courses where level_no = ? and semester_no = ?";
 
-            AttendanceTableSetMethod();
-
-            DefaultTableModel tblmodel = (DefaultTableModel) AttendanceTable.getModel();
-            String LoadAttendanceQuery = "select attendance.week_no,courses.course_id,courses.course_name,atten_status,attendance.med_id,medical.med_reason from attendance join courses on attendance.course_id = courses.course_id left join medical on attendance.med_id = medical.medical_no where attendance.tgno = ? and level_no = ? and semester_no = ? and attendance.course_id = ? and attendance.course_status = ?";
-
-            prepStatement = conn.prepareStatement(LoadAttendanceQuery);
-            prepStatement.setString(1,tono);
-            prepStatement.setInt(2, Integer.parseInt(level_no));
-            prepStatement.setInt(3, Integer.parseInt(semester_no));
-            prepStatement.setString(4,course_id);
-            prepStatement.setString(5,course_status);
-
-            ResultSet resultSet = prepStatement.executeQuery();
-
-            while (resultSet.next()){
-                String table_week_no = resultSet.getString("week_no");
-                String table_course_id = resultSet.getString("course_id");
-                String table_course_name = resultSet.getString("course_name");
-                String table_atten_status = resultSet.getString("atten_status");
-                String table_med_id = resultSet.getString("med_id");
-                String med_reason = resultSet.getString("med_reason");
-
-                if(med_reason == "NULL"){
-                    med_reason = "";
-                }
-
-                Object[] attendanceTableData = new Object[6];
-
-                attendanceTableData[0] = table_week_no;
-                attendanceTableData[1] = table_course_id;
-                attendanceTableData[2] = table_course_name;
-                attendanceTableData[3] = table_atten_status;
-                attendanceTableData[4] = table_med_id;
-                attendanceTableData[5] = med_reason;
-
-                tblmodel.addRow(attendanceTableData);
-            }
-
-        }catch(Exception e){
-            e.printStackTrace();
-        }
-    }
-
-    private void LoadAttendanceCourseNumber(String tono, int level_no, int semester_no) {
-
-        String Atten_Course_Code;
-
-        try{
-            String noticeLoadQuery = "select distinct courses.course_id from attendance join courses where attendance.course_id = courses.course_id and tgno = ? and level_no = ? and semester_no = ?";
-
-            prepStatement = conn.prepareStatement(noticeLoadQuery);
-            prepStatement.setString(1,tono);
-            prepStatement.setInt(2, Integer.parseInt(level_no));
-            prepStatement.setInt(3, Integer.parseInt(semester_no));
+            prepStatement = conn.prepareStatement(loadQuery);
+            prepStatement.setString(1, levelNO);
+            prepStatement.setString(2, semesterNO);
 
             ResultSet result = prepStatement.executeQuery();
+            while (result.next()){
+                String courseID = result.getString("course_id");
 
-            AttendanceSubjectCode.removeAllItems();
-//            AttendanceSubjectCodePerc.removeAllItems();
-
-            AttendanceSubjectCode.addItem("");
-//            AttendanceSubjectCodePerc.addItem("");
-
-            while(result.next()){
-                Atten_Course_Code = result.getString("course_id");
-                AttendanceSubjectCode.addItem(Atten_Course_Code);
-//                AttendanceSubjectCodePerc.addItem(Atten_Course_Code);
+                AttendanceSubjectCode.addItem(courseID);
             }
-        }catch (Exception e){
+
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    private void LoadAttendanceCourseStatus(String tono, int level_no, int semester_no, String course_id) {
-        String Atten_Course_Status;
-
+    private void LoadAttendanceCourseStatus() {
+        String course_ID = (String) AttendanceSubjectCode.getSelectedItem();
         try{
-            String Atten_Course_StatusLoadQuery = "select distinct attendance.course_status from attendance join courses where attendance.course_id = courses.course_id and tgno = ? and level_no = ? and semester_no = ? and courses.course_id = ?";
+            String Atten_Course_StatusLoadQuery = "select status from courses where course_id = ?";
 
             prepStatement = conn.prepareStatement(Atten_Course_StatusLoadQuery);
-            prepStatement.setString(1,tono);
-            prepStatement.setInt(2,level_no);
-            prepStatement.setInt(3,semester_no);
-            prepStatement.setString(4,course_id);
+
+            prepStatement.setString(1,course_ID);
 
             ResultSet result = prepStatement.executeQuery();
 
-            AttendanceSubjectStatus.removeAllItems();
-            AttendanceSubjectStatusPerc.removeAllItems();
-
-            AttendanceSubjectStatus.addItem("");
-            AttendanceSubjectStatusPerc.addItem("");
-
             while(result.next()){
-                Atten_Course_Status = result.getString("course_status");
-                AttendanceSubjectStatus.addItem(Atten_Course_Status);
-                AttendanceSubjectStatusPerc.addItem(Atten_Course_Status);
-            }
+                String Atten_Course_Status = result.getString("status");
+                System.out.println(Atten_Course_Status);
 
-            int itemCount = AttendanceSubjectStatusPerc.getItemCount();
-            if(itemCount>2){
-                AttendanceSubjectStatusPerc.addItem("Theory/Practical");
+                if(Atten_Course_Status.equals("theory/practical")){
+                    AttendanceSubjectStatus.addItem("Theory");
+                    AttendanceSubjectStatus.addItem("Practical");
+                    AttendanceSubjectStatus.addItem("Theory/Practical");
+                }else{
+                    AttendanceSubjectStatus.addItem(Atten_Course_Status);
+                }
             }
 
         }catch (Exception e){
@@ -759,32 +647,58 @@ private void LoadNotices() {
         }
     }
 
-    private void valuesforAttendanceTable(int level_no , String semester_no, String tono) {
+    private void valuesforAttendanceTable(String tono) {
 
-        String AttendanceTableValues = "select courses.course_id,course_name,course_status,week_no,atten_status,med_id from attendance join courses where attendance.course_id = courses.course_id and tgno = ? and level_no = ? and semester_no = ?";
+        String AttendanceTableValues;
         DefaultTableModel tblmodel = (DefaultTableModel) AttendanceTable.getModel();
+
+        String courseID = (String) AttendanceSubjectCode.getSelectedItem();
+        String CourseStat = (String) AttendanceSubjectStatus.getSelectedItem();
         try{
-            prepStatement = conn.prepareStatement(AttendanceTableValues);
-            prepStatement.setString(1,tono);
-            prepStatement.setInt(2,level_no);
-            prepStatement.setInt(3, Integer.parseInt(semester_no));
+            if(CourseStat.equals("theory/practical")){
+
+                System.out.println("HI");
+                AttendanceTableValues = "select attendance.tgno,courses.course_id,courses.course_name,attendance.week_no,course_status,atten_status,med_reason from attendance join courses on attendance.course_id = courses.course_id left join medical on attendance.med_id = medical.medical_no where attendance.tono = ? and attendance.course_id = ?";
+                prepStatement = conn.prepareStatement(AttendanceTableValues);
+                prepStatement.setString(1,tono);
+                prepStatement.setString(2,courseID);
+
+            }else{
+                AttendanceTableValues = "select attendance.tgno,courses.course_id,courses.course_name,attendance.week_no,course_status,atten_status,med_reason from attendance join courses on attendance.course_id = courses.course_id left join medical on attendance.med_id = medical.medical_no where attendance.tono = ? and attendance.course_id = ? and course_status = ?";
+                prepStatement = conn.prepareStatement(AttendanceTableValues);
+
+                prepStatement.setString(1,tono);
+                prepStatement.setString(2,courseID);
+                prepStatement.setString(3,CourseStat);
+            }
+//
+//
+//            prepStatement = conn.prepareStatement(AttendanceTableValues);
+//
+//            prepStatement.setString(1,tono);
+//            prepStatement.setString(2,courseID);
+//            prepStatement.setString(3,CourseStat);
+
             ResultSet result = prepStatement.executeQuery();
+
             while (result.next()){
-                String courseID = result.getString("course_id");
-                String courseName = result.getString("course_name");
-                String course_status = result.getString("course_status");
+                String tg = result.getString("tgno");
+                String c_id = result.getString("course_id");
+                String c_Name = result.getString("course_name");
                 String week_no = result.getString("week_no");
+                String course_status = result.getString("course_status");
                 String atten_status = result.getString("atten_status");
-                String med_id = result.getString("med_id");
+                String med_reason = result.getString("med_reason");
 
-                Object[] AttendanceTableData = new Object[6];
+                Object[] AttendanceTableData = new Object[7];
 
-                AttendanceTableData[0] = week_no;
-                AttendanceTableData[1] = courseID;
-                AttendanceTableData[2] = courseName;
-                AttendanceTableData[3] = course_status;
-                AttendanceTableData[4] = atten_status;
-                AttendanceTableData[5] = med_id;
+                AttendanceTableData[0] = tg;
+                AttendanceTableData[1] = c_id;
+                AttendanceTableData[2] = c_Name;
+                AttendanceTableData[3] = week_no;
+                AttendanceTableData[4] = course_status;
+                AttendanceTableData[5] = atten_status;
+                AttendanceTableData[6] = med_reason;
 
                 tblmodel.addRow(AttendanceTableData);
             }
@@ -946,7 +860,7 @@ private void LoadNotices() {
                 toAddress = DBresult.getString("toaddress");
                 toEmail = DBresult.getString("toemail");
                 toPhno = DBresult.getString("tophno");
-                textDEP =DBresult.getString("todepartment");
+//                textDEP =DBresult.getString("todepartment");
                 toProfImg = DBresult.getString("toProfImg");
 
 
@@ -956,6 +870,7 @@ private void LoadNotices() {
                 txtADDRESS.setText(toAddress);
                 txtEMAIL.setText(toEmail);
                 txtPHNO.setText(toPhno);
+//                textField1.setText(DBresult.getString("todepartment"));
 
                 textField7.setText(toAddress);
                 textField8.setText(toEmail);
