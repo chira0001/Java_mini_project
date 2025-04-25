@@ -280,10 +280,10 @@ public class LecturerHomePage extends JFrame {
         AttendanceSubjectStatus.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                AttendencetableMethod();
+                AllAttendanceTableMethod();
                 String subjectstatus = (String) AttendanceSubjectStatus.getSelectedItem();
                 String subjectcode = (String) AttendanceSubjectCode.getSelectedItem();
-                loadattendance(subjectcode,subjectstatus);
+                attendanncepercentage(subjectcode,subjectstatus);
             }
         });
     }
@@ -698,10 +698,50 @@ public class LecturerHomePage extends JFrame {
         }
     }
 
+    private void attendanncepercentage(String subject_code,String subject_status){
+        try{
+            AllAttendanceTableMethod();
+            DefaultTableModel tablemodel = (DefaultTableModel) AttendanceTable.getModel();
+
+            String AttendancepercentageQuery="select tgno,COUNT(*) AS total_sessions,SUM(CASE WHEN atten_status='present' THEN 1 ELSE 0 END)AS present_sessions,ROUND(SUM(CASE WHEN atten_status='present' THEN 1 ELSE 0 END)*100.0/COUNT(*),2)AS attendance_percentage FROM attendance WHERE course_id=? AND course_status=? GROUP BY tgno;";
+            prepStatement=conn.prepareStatement(AttendancepercentageQuery);
+            prepStatement.setString(1,subject_code);
+            prepStatement.setString(2,subject_status);
+//            prepStatement.setString(1,subject_code);
+//            prepStatement.setString(2,subject_status);
+            ResultSet resultSet = prepStatement.executeQuery();
+
+            while (resultSet.next()){
+                String tgno = resultSet.getString("tgno");
+                int total_sessions = resultSet.getInt("total_sessions");
+                int present_sessions = resultSet.getInt("present_sessions");
+                int attendance_percentage = resultSet.getInt("attendance_percentage");
+                Object[] attendanceData = new Object[4];
+                attendanceData[0] = tgno;
+                attendanceData[1] = total_sessions;
+                attendanceData[2] = present_sessions;
+                attendanceData[3] = attendance_percentage;
+                tablemodel.addRow(attendanceData);
+            }
+
+
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
     private void AttendencetableMethod(){
         AttendanceTable.setModel(new DefaultTableModel(
                 null,
-                new String[]{"tgno","week_no","atten_status"} ));
+                new String[]{"Student_tgno","week_no","atten_status"} ));
+    }
+
+    private void AllAttendanceTableMethod(){
+        AttendanceTable.setModel(new DefaultTableModel(
+                null,
+                new String[]{"Student_tgno","Total_Sessions","Present_Sessions","Attendance_Percentage(%)"}
+        ));
     }
 
 
@@ -712,6 +752,6 @@ public class LecturerHomePage extends JFrame {
 //    }
 
     public static void main(String[] args) {
-        new LecturerHomePage("lec1234");
+        new LecturerHomePage("lec5678");
     }
 }
