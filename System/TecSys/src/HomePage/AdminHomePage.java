@@ -9,13 +9,16 @@ import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileWriter;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.util.Scanner;
 
 public class AdminHomePage extends JFrame {
 
@@ -171,7 +174,7 @@ public class AdminHomePage extends JFrame {
     private JTextField ADaddCourseFPracticalPerc;
     private JTextField textField14;
     private JButton addNoticeButton;
-    private JTextArea textArea1;
+    private JTextArea noticeGetArea;
     private JLabel AdminProfImgSelectedLabel;
     private JPanel UndergraduateProfImgSelectedPanel;
     private JLabel UndergraduateProfImgSelectedLabel;
@@ -194,6 +197,8 @@ public class AdminHomePage extends JFrame {
     DBCONNECTION _dbconn = new DBCONNECTION();
     Connection conn = _dbconn.Conn();
     private PreparedStatement prepStatement;
+    BufferedWriter writer;
+    private Scanner input;
 
     private CardLayout cardLayout;
 
@@ -501,6 +506,74 @@ public class AdminHomePage extends JFrame {
                 ADViewTimeTable();
             }
         });
+        addNoticeButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                LoadNotices();
+                addNotices();
+            }
+        });
+        noticeTitleDropDown.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String notice = (String) noticeTitleDropDown.getSelectedItem();
+                viewNotice(notice);
+            }
+        });
+    }
+
+    private void viewNotice(String selected_notice_title){
+        String view_notice_Query_details = "Select * from notice where noticeTitle = ?";
+        try{
+            prepStatement = conn.prepareStatement(view_notice_Query_details);
+            prepStatement.setString(1,selected_notice_title);
+
+            ResultSet resultSet = prepStatement.executeQuery();
+            while (resultSet.next()){
+                String notice_FilePath = resultSet.getString("noticeFilePath");
+
+                System.out.println(notice_FilePath);
+
+                File notice = new File(notice_FilePath);
+                input = new Scanner(notice);
+
+                StringBuilder noticeContent = new StringBuilder();
+
+                while (input.hasNextLine()){
+                    noticeContent.append(input.nextLine()).append("\n");
+                }
+                noticeDisplayArea.setText(noticeContent.toString());
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    private void addNotices(){
+        try{
+            String noticeTitle = textField14.getText();
+            String text = noticeGetArea.getText();
+
+            String filePath = "Resources/Notices/"+noticeTitle+".txt";
+
+            String addNoticeQuery = "Insert into notice(noticeTitle,noticeFilePath) values(?,?)";
+
+            prepStatement = conn.prepareStatement(addNoticeQuery);
+            prepStatement.setString(1,noticeTitle);
+            prepStatement.setString(2,filePath);
+
+            int resultAddNotice = prepStatement.executeUpdate();
+            if(resultAddNotice > 0){
+                writer = new BufferedWriter(new FileWriter(filePath));
+                writer.write(text);
+                writer.close();
+                JOptionPane.showMessageDialog(null,"Notice Successfully added");
+            }else{
+                JOptionPane.showMessageDialog(null,"Notice addeing failed");
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
     }
 
     private void ADViewTimeTableSetModelMethod(){
@@ -1525,7 +1598,6 @@ public class AdminHomePage extends JFrame {
             ex.printStackTrace();
         }
     }
-
     private void LoadNotices(){
 
         String notice_Title;
