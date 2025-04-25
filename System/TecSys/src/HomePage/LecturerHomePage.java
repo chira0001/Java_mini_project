@@ -81,6 +81,14 @@ public class LecturerHomePage extends JFrame {
     private JComboBox LevelNoforMedical;
     private JTable LECMedicalTable;
     private JComboBox MedicalCourseCode;
+    private JPanel LECGrades;
+    private JComboBox UGSemesterNoforMarksDropDown;
+    private JComboBox UGLevelNoforMarksDropDown;
+    private JLabel lblCGPA;
+    private JLabel lblSGPA;
+    private JLabel UGClass;
+    private JTable UGGradeTable;
+    private JButton GradesButton;
     private JComboBox comboBox2;
 
     private CardLayout cardLayout;
@@ -93,10 +101,10 @@ public class LecturerHomePage extends JFrame {
     private String LecPhno;
     private String LecProfImg;
 
-    private String[] cardButtons = {"Profile", "Attendance", "Time Table", "Courses", "Medical", "Notices", "Marks", "Settings"};
-    private String[] cardNames = {"LECProfileCard", "LECAttendanceCard", "LECTimeTableCard", "LECCoursesCard", "LECMedicalsCard", "LECNoticesCard", "LECMarksCard", "LECSettingsCard"};
-    JButton[] btnFieldNames = {profileButton,attendanceButton,timeTableButton,coursesButton,medicalButton,noticesButton,marksButton,settingsButton};
-    private String[] cardTitles = {"Welcome..!", "Attendance Details", "Lecturer Time Table","Your Courses","Medical Information", "Notices", "Marks","Settings Configuration"};;
+    private String[] cardButtons = {"Profile", "Attendance", "Time Table", "Courses", "Medical", "Notices", "Grades" ,"Marks", "Settings"};
+    private String[] cardNames = {"LECProfileCard", "LECAttendanceCard", "LECTimeTableCard", "LECCoursesCard", "LECMedicalsCard", "LECNoticesCard","LECGradesCards", "LECMarksCard", "LECSettingsCard"};
+    JButton[] btnFieldNames = {profileButton,attendanceButton,timeTableButton,coursesButton,medicalButton,noticesButton,GradesButton,marksButton,settingsButton};
+    private String[] cardTitles = {"Welcome..!", "Attendance Details", "Lecturer Time Table","Your Courses","Medical Information", "Notices", "Student Grades","Marks","Settings Configuration"};;
 
 
     private Object[] filePathValues = new Object[4];
@@ -138,6 +146,8 @@ public class LecturerHomePage extends JFrame {
         coursesButton.addActionListener(listener);
         timeTableButton.addActionListener(listener);
         attendanceButton.addActionListener(listener);
+        GradesButton.addActionListener(listener);
+
 
         logoutButton.addActionListener(new ActionListener() {
             @Override
@@ -343,6 +353,7 @@ public class LecturerHomePage extends JFrame {
                 System.out.println(medicalSemester+" "+medicalLevel);
 
                 SelectMediLevelCourse(userIdentity,medicalLevelInt,medicalSemesterInt);
+                LoadMedicalTable(userIdentity,medicalLevelInt,medicalSemesterInt);
             }
         });
     }
@@ -860,7 +871,51 @@ public class LecturerHomePage extends JFrame {
         }
     }
 
-    
+    private void MedicalTableMethod(){
+        LECMedicalTable.setModel(new DefaultTableModel(
+                null,
+                new String[]{"Medical_No","Student_tgno","Week_No","Course_Status","Medical_Reason"}
+        ));
+    }
+
+    private void LoadMedicalTable(String lecno,int level,int semester){
+        try {
+            MedicalTableMethod();
+            DefaultTableModel tableModel = (DefaultTableModel) LECMedicalTable.getModel();
+
+            String LoadMediQuery="SELECT att.med_id, att.tgno, att.week_no,att.course_status, med.med_reason FROM attendance att JOIN medical med ON att.med_id = med.medical_no JOIN lecture_course lc ON att.course_id = lc.course_id JOIN courses c ON att.course_id = c.course_id WHERE lc.lecno = ? AND c.level_no = ? AND c.semester_no = ?;";
+            prepStatement=conn.prepareStatement(LoadMediQuery);
+            prepStatement.setString(1, lecno);
+            prepStatement.setInt(2, level);
+            prepStatement.setInt(3, semester);
+            ResultSet resultSet = prepStatement.executeQuery();
+            while (resultSet.next()){
+                String med_id = resultSet.getString("med_id");
+                String tgno = resultSet.getString("tgno");
+                String week_no = resultSet.getString("week_no");
+                String course_status = resultSet.getString("course_status");
+                String med_reason = resultSet.getString("med_reason");
+
+                Object[]medical=new Object[5];
+                medical[0]=med_id;
+                medical[1]=tgno;
+                medical[2]=week_no;
+                medical[3]=course_status;
+                medical[4]=med_reason;
+                tableModel.addRow(medical);
+
+            }
+
+        } catch (Exception e) {
+           e.printStackTrace();
+        }
+
+
+
+
+    }
+
+
 
     public static void main(String[] args) {
         new LecturerHomePage("lec5678");
