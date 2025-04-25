@@ -1,0 +1,41 @@
+CREATE TABLE basicdata(
+stu_id varchar(6) primary key,
+stu_name varchar(20),
+stu_address varchar(50)
+);
+
+CREATE TABLE marks(
+stu_id varchar(6) primary key,
+chemistry int(3),
+physics int(3),
+maths int(3)
+);
+
+INSERT INTO basicdata VALUES
+("TG/001","Amila","Matara"),
+("TG/002","Basil","Hambanthota"),
+("TG/003","Charles","Jaffna"),
+("TG/004","Debian","Colombo");
+
+INSERT INTO marks VALUES
+("TG/001",65,75,80),
+("TG/002",50,40,60),
+("TG/003",55,85,35),
+("TG/004",85,75,85);
+
+
+
+
+INSERT INTO basicdata VALUES ("TG/001","Amila","Matara")
+
+
+
+
+
+
+
+
+
+
+
+
