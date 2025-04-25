@@ -44,6 +44,8 @@ public class TechnicalOfficerHomePage extends JFrame {
     private JPanel TOMedicals;
     private JPanel TONotices;
     private JPanel TOSettings;
+    private JTextField textField1;
+    private JTextField textField2;
     private JTextField textField7;
     private JTextField textField9;
     private JTextField textField8;
@@ -80,10 +82,12 @@ public class TechnicalOfficerHomePage extends JFrame {
     private JPanel toupdatemedical;
     private JButton ToupdateMedicalBtn;
     private JButton medicalupdatecancel;
-    private JTextField TOmedTgnum;
-    private JTextField TomedCid;
-    private JTextField ToMedReason;
-    private JTextField textField1;
+    private JTextField textFieldTG;
+    private JTextField textFieldreason;
+    private JTextField textDEP;
+    private JTextField textFieldweek;
+    private JButton ToaddmedBtn;
+    private JTextField textFieldCid;
 
 
     private CardLayout cardLayout;
@@ -114,9 +118,6 @@ public class TechnicalOfficerHomePage extends JFrame {
     private int SemeterNumber;
     private int LevelNumber;
 
-   // private int Atten_Level_No_Global;
-  //  private int Atten_Semester_No_Global;
-  //  private String Atten_Course_Number;
 
     public TechnicalOfficerHomePage(String userIdentity) {
 
@@ -193,10 +194,10 @@ public class TechnicalOfficerHomePage extends JFrame {
         viewMedicalsButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                cardLayout.show(TOHomeCard, cardNames[4]);
+                cardLayout.show(TOHomeCard, cardNames[3]);
                 attendanceButton.setEnabled(true);
                 medicalButton.setEnabled(false);
-                CardTittleLabel.setText(cardTitles[4]);
+                CardTittleLabel.setText(cardTitles[3]);
             }
         });
         noticeTitleDropDown.addActionListener(new ActionListener() {
@@ -375,12 +376,90 @@ public class TechnicalOfficerHomePage extends JFrame {
         ToupdateMedicalBtn.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                ToUpdatemedical();
+            }
+        });
 
+        //To add medical
+        ToaddmedBtn.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Toaddmedical(userIdentity);
             }
         });
     }
 
-//Notices
+    private void Toaddmedical(String useridentity) {
+        try {
+            String Medical_Tgnumber = textFieldTG.getText();
+            String Medical_Cid = textFieldCid.getText();
+            Integer Medical_week = Integer.valueOf(textFieldweek.getText());
+            String Medical_reason = textFieldreason.getText();
+
+            String extension = (String) filePathValues[3];
+
+            String TOaddMedicalQuery = "INSERT INTO medical (tono, tgno, course_id, week_no, med_reason) VALUES ("
+                    + "'" + useridentity + "', "
+                    + "'" + Medical_Tgnumber + "', "
+                    + "'" + Medical_Cid + "', "
+                    + Medical_week + ", "
+                    + "'" + Medical_reason + "')";
+
+
+
+            Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/javatest", "root", "1234");
+            Statement statement = connection.createStatement();
+            int resultSet = statement.executeUpdate(TOaddMedicalQuery);
+
+            if (resultSet > 0) {
+                //  TOsaveupdatedmedical();
+                JOptionPane.showMessageDialog(null, "Medical record add successfully");
+            } else {
+                JOptionPane.showMessageDialog(null, "Error in adding medical record");
+            }
+
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+            ex.getMessage();
+        }
+    }
+
+    private void ToUpdatemedical() {
+        try {
+            String Medical_Tgnumber = textFieldTG.getText();
+            String Medical_Cid = textFieldCid.getText();
+            Integer Medical_week = Integer.valueOf(textFieldweek.getText());
+            String Medical_reason = textFieldreason.getText();
+
+            String extension = (String) filePathValues[3];
+
+            String TOupdateMedicalQuery = "UPDATE medical SET "
+                    + "tgno = '" + Medical_Tgnumber + "', "
+                    + "course_id = '" + Medical_Cid + "', "
+                    + "week_no = " + Medical_week + ", "
+                    + "med_reason = '" + Medical_reason + "' "
+                    + "WHERE tgno = '" + Medical_Tgnumber + "'";
+
+
+            Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/javatest", "root", "1234");
+            Statement statement = connection.createStatement();
+            int resultSet = statement.executeUpdate(TOupdateMedicalQuery);
+
+            if (resultSet > 0) {
+              //  TOsaveupdatedmedical();
+                JOptionPane.showMessageDialog(null, "Medical record updated successfully");
+            } else {
+                JOptionPane.showMessageDialog(null, "Error in updating medical record");
+            }
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+
+
+
+    //Notices
 private void LoadNotices() {
     String notice_Title;
 
@@ -424,6 +503,7 @@ private void LoadNotices() {
             }
         }catch (Exception e){
             e.printStackTrace();
+
         }
     }
 
@@ -475,7 +555,7 @@ private void LoadNotices() {
 
 
     //Timetable
-    private void TimeTableSetModelMethod() {
+    private void TimeTableSetModelMethod(){
         tableTimeTable.setModel(new DefaultTableModel(
                 null,
                 new String[]{"Day", "Course Code", "Course Module","Time"}
@@ -492,6 +572,7 @@ private void LoadNotices() {
         timeTableColumns.getColumn(1).setCellRenderer(timeTableCells);
         timeTableColumns.getColumn(3).setCellRenderer(timeTableCells);
     }
+
 
     private void valuesForTimeTable(int levelNo, int semesterNo) {
         String semester_no = (String) SemesterNoDropDown.getSelectedItem();
@@ -671,13 +752,6 @@ private void LoadNotices() {
                 prepStatement.setString(2,courseID);
                 prepStatement.setString(3,CourseStat);
             }
-//
-//
-//            prepStatement = conn.prepareStatement(AttendanceTableValues);
-//
-//            prepStatement.setString(1,tono);
-//            prepStatement.setString(2,courseID);
-//            prepStatement.setString(3,CourseStat);
 
             ResultSet result = prepStatement.executeQuery();
 
@@ -713,6 +787,8 @@ private void LoadNotices() {
             String TOaddress = textField7.getText();
             String TOemail = textField8.getText();
             String TOphno = textField9.getText();
+            String TOFname =textField2.getText();
+            String TOLname =textField1.getText();
 
             String extension = (String) filePathValues[3];
 
@@ -720,9 +796,23 @@ private void LoadNotices() {
             System.out.println(TOProfileImagePath);
             String TOCredentialupdateQuery;
             if (extension == null){
-                TOCredentialupdateQuery = "Update technical_officer set toaddress = '" + toAddress + "', TOemail = '"+ TOemail +"',TOphno = '"+ TOphno+"' where tgno = '" + tono + "'";
+                TOCredentialupdateQuery = "UPDATE technical_officer SET "
+                        + "toaddress = '" + TOaddress + "', "
+                        + "TOemail = '" + TOemail + "', "
+                        + "TOphno = '" + TOphno + "', "
+                        + "TOFname = '" + TOFname + "', "
+                        + "TOLname = '" + TOLname + "' "
+                        + "WHERE tono = '" + tono + "'";
             }else {
-                TOCredentialupdateQuery = "Update technical_officer set toaddress = '" + toAddress + "', toemail = '"+ toEmail +"',tophno = '"+ toPhno+"',toProfImg ='" + toProfImg + "' where tono = '" + tono + "'";
+                TOCredentialupdateQuery = "UPDATE technical_officer SET "
+                        + "toaddress = '" + toAddress + "', "
+                        + "toemail = '" + toEmail + "', "
+                        + "tophno = '" + toPhno + "', "
+                        + "toProfImg = '" + toProfImg + "', "
+                        + "toFname = '" + toFname + "', "
+                        + "toLname = '" + toLname + "' "
+                        + "WHERE tono = '" + tono + "'";
+
             }
 
             Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/javatest","root","1234");
@@ -738,6 +828,7 @@ private void LoadNotices() {
 
         }catch (Exception e){
             e.printStackTrace();
+            e.getMessage();
         }
     }
 
@@ -870,11 +961,13 @@ private void LoadNotices() {
                 txtADDRESS.setText(toAddress);
                 txtEMAIL.setText(toEmail);
                 txtPHNO.setText(toPhno);
-//                textField1.setText(DBresult.getString("todepartment"));
+                textDEP.setText(DBresult.getString("todepartment"));
 
                 textField7.setText(toAddress);
                 textField8.setText(toEmail);
                 textField9.setText(toPhno);
+                textField2.setText(toFname);
+                textField1.setText(toLname);
 
                 loadTOProfImage(tono);
             } else {
