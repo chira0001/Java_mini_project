@@ -157,6 +157,9 @@ public class AdminHomePage extends JFrame {
     private JButton uUpdateBtn;
     private JButton lUpdateBtn;
     private JButton tUpdateBtn;
+    private JTable ADDeleteTable;
+    private JComboBox ADDeleteUserType;
+    private JComboBox ADDeleteUserID;
     private JLabel AdminProfImgSelectedLabel;
     private JPanel UndergraduateProfImgSelectedPanel;
     private JLabel UndergraduateProfImgSelectedLabel;
@@ -213,6 +216,12 @@ public class AdminHomePage extends JFrame {
         loadTGnoForUpdateUndergraduate();
         loadLECnoForUpdateLecturer();
         loadTOnoForUpdateTechOfficer();
+        loadCredentialsTO();
+        ADDeleteUserTableSetModelMethod();
+        loadCredentialsLecturer();
+        loadCredentialsUndergraduate();
+        loadCredentialsAdmin();
+        ADViewUserTableSetModelMethod();
 
         logoutButton.addActionListener(new ActionListener() {
             @Override
@@ -259,8 +268,6 @@ public class AdminHomePage extends JFrame {
             }
         });
 
-        ADViewUserTableSetModelMethod();
-
         comboBox1.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -275,12 +282,10 @@ public class AdminHomePage extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 String userType = (String) comboBox1.getSelectedItem();
-
                 String user_id = (String) comboBox2.getSelectedItem();
-
-                System.out.println(user_id);
-
                 FillAdViewUser(user_id,userType);
+//                FillAdViewUser();
+
             }
         });
 
@@ -342,21 +347,21 @@ public class AdminHomePage extends JFrame {
                 }
             }
         });
-        loadCredentialsAdmin();
+
         comboBox3.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 loadCredentialsAdmin();
             }
         });
-        loadCredentialsUndergraduate();
+
         comboBox4.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 loadCredentialsUndergraduate();
             }
         });
-        loadCredentialsLecturer();
+
         comboBox5.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -388,7 +393,7 @@ public class AdminHomePage extends JFrame {
                 }
             }
         });
-        loadCredentialsTO();
+
         comboBox6.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -419,7 +424,27 @@ public class AdminHomePage extends JFrame {
                 updateCredentialsLEC();
             }
         });
+
+
+        ADDeleteUserType.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                ADDeleteUserTableSetModelMethod();
+                String deleteUserType = (String) ADDeleteUserType.getSelectedItem();
+
+                ADDeleteUserFilter(deleteUserType);
+                FillDeleteViewUserTable(deleteUserType);
+            }
+        });
+        deleteUserButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+            }
+        });
     }
+
+
 
     private void updateCredentialsLEC(){
         String l_num = (String) comboBox5.getSelectedItem();
@@ -914,8 +939,8 @@ public class AdminHomePage extends JFrame {
         }
     }
 
-    private void FillViewUserTable(String userType){
-        DefaultTableModel tblmodel = (DefaultTableModel) AdminViewUserTable.getModel();
+    private void FillDeleteViewUserTable(String userType){
+        DefaultTableModel tblmodel = (DefaultTableModel) ADDeleteTable.getModel();
 
         try{
             String userTableFillQuery = "";
@@ -927,6 +952,9 @@ public class AdminHomePage extends JFrame {
             }
             else if(userType.equals("Technical Officer")){
                 userTableFillQuery = "select tono as user_id, tofname as fname, tolname as lname, tophno as phno from technical_officer";
+            }
+            else if(userType.equals("Admin")){
+                userTableFillQuery = "select adno as user_id, adfname as fname, adlname as lname, adphno as phno from admin";
             }
 
             prepStatement = conn.prepareStatement(userTableFillQuery);
@@ -954,6 +982,57 @@ public class AdminHomePage extends JFrame {
         }
     }
 
+    private void FillViewUserTable(String userType){
+
+        DefaultTableModel tblmodel = (DefaultTableModel) AdminViewUserTable.getModel();
+
+        try{
+            String userTableFillQuery = "";
+            if(userType.equals("Undergraduate")){
+                userTableFillQuery = "select tgno as user_id, ugfname as fname, uglname as lname, ugphno as phno from undergraduate";
+            }
+            else if(userType.equals("Lecturer")){
+                userTableFillQuery = "select lecno as user_id, lecfname as fname, leclname as lname, lecphno as phno from lecturer";
+            }
+            else if(userType.equals("Technical Officer")){
+                userTableFillQuery = "select tono as user_id, tofname as fname, tolname as lname, tophno as phno from technical_officer";
+            }
+            else if(userType.equals("Admin")){
+                userTableFillQuery = "select adno as user_id, adfname as fname, adlname as lname, adphno as phno from admin";
+            }
+
+            prepStatement = conn.prepareStatement(userTableFillQuery);
+
+            ResultSet resultSet = prepStatement.executeQuery();
+
+            while (resultSet.next()){
+                String user_id = resultSet.getString("user_id");
+                String fname = resultSet.getString("fname");
+                String lname = resultSet.getString("lname");
+                String phno = resultSet.getString("phno");
+
+                Object[] user_det = new Object[4];
+
+                user_det[0] = user_id;
+                user_det[1] = fname;
+                user_det[2] = lname;
+                user_det[3] = phno;
+
+                tblmodel.addRow(user_det);
+            }
+
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    private void ADDeleteUserTableSetModelMethod(){
+        ADDeleteTable.setModel(new DefaultTableModel(
+                null,
+                new String[]{"User ID", "First Name", "Last Name", "Phone Number"}
+        ));
+    }
+
     private void ADViewUserTableSetModelMethod(){
         AdminViewUserTable.setModel(new DefaultTableModel(
                 null,
@@ -962,6 +1041,7 @@ public class AdminHomePage extends JFrame {
     }
 
     private void FillAdViewUser(String userNo, String userType){
+//        System.out.println("User No - " + userNo + ", userType - " + userType);
         try{
             String userFillQuery = "";
             if(userType.equals("Undergraduate")){
@@ -972,6 +1052,9 @@ public class AdminHomePage extends JFrame {
             }
             else if(userType.equals("Technical Officer")){
                 userFillQuery = "select tofname as fname, tolname as lname, toaddress as address, toemail as email, tophno as phno, toprofimg as profimg from technical_officer where tono = ?";
+            }
+            else if(userType.equals("Admin")){
+                userFillQuery = "select adfname as fname, adlname as lname, adaddress as address, ademail as email, adphno as phno, adProfImg as profimg from admin where adno = ?";
             }
 
             prepStatement = conn.prepareStatement(userFillQuery);
@@ -1008,7 +1091,7 @@ public class AdminHomePage extends JFrame {
         }
     }
 
-    private void ADUserFilter(String userType){
+    private void ADDeleteUserFilter(String userType){
         try{
             String usersQuery = "";
 
@@ -1021,9 +1104,45 @@ public class AdminHomePage extends JFrame {
             else if(userType.equals("Technical Officer")){
                 usersQuery = "select tono as userNo from technical_officer";
             }
+            else if(userType.equals("Admin")){
+                usersQuery = "select adno as userNo from admin";
+            }
+
+            ADDeleteUserID.removeAllItems();
+            ADDeleteUserID.addItem("");
+
+            prepStatement = conn.prepareStatement(usersQuery);
+            ResultSet resultSet = prepStatement.executeQuery();
+
+            while (resultSet.next()){
+                String user = resultSet.getString("userNo");
+                ADDeleteUserID.addItem(user);
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    private void ADUserFilter(String userType){
+
+        try{
+            String usersQuery = "";
+
+            if(userType.equals("Undergraduate")){
+                usersQuery = "select tgno as userNo from undergraduate";
+            }
+            else if(userType.equals("Lecturer")){
+                usersQuery = "select lecno as userNo from Lecturer";
+            }
+            else if(userType.equals("Technical Officer")){
+                usersQuery = "select tono as userNo from technical_officer";
+            }
+            else if(userType.equals("Admin")){
+                usersQuery = "select adno as userNo from admin";
+            }
 
             comboBox2.removeAllItems();
-            comboBox2.addItem("");
+//            comboBox2.addItem("");
 
             prepStatement = conn.prepareStatement(usersQuery);
             ResultSet resultSet = prepStatement.executeQuery();
@@ -1075,8 +1194,6 @@ public class AdminHomePage extends JFrame {
                 UGSourceFile = new File(adno + "." + extension);
 
                 File ADMINDestinationFile = new File(UGSaveImagePath + UGSourceFile);
-
-                System.out.println(ADMINDestinationFile);
 
                 Path fromFile = UGFileChooser.getSelectedFile().toPath();
                 Path toFile = ADMINDestinationFile.toPath();
@@ -1205,7 +1322,6 @@ public class AdminHomePage extends JFrame {
             String extension = (String) filePathValues[3];
 
             String ADMINProfileImagePath = "Resources/ProfileImages/" + adno + "." + extension;
-            System.out.println(ADMINProfileImagePath);
             String UGCredentialupdateQuery;
 
             if (extension == null){
