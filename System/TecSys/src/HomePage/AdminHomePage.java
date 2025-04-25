@@ -48,9 +48,6 @@ public class AdminHomePage extends JFrame {
     private JPanel AdminCourses;
     private JComboBox LevelNoforCourses;
     private JComboBox SemesterNoforCourses;
-    private JComboBox CourseforCourses;
-    private JTextArea DescriptionforCourseMaterial;
-    private JComboBox CourseMaterialforCourses;
     private JButton SaveCourseMaterial;
     private JPanel AdminNotices;
     private JComboBox noticeTitleDropDown;
@@ -160,6 +157,20 @@ public class AdminHomePage extends JFrame {
     private JTable ADDeleteTable;
     private JComboBox ADDeleteUserType;
     private JComboBox ADDeleteUserID;
+    private JComboBox comboBox7;
+    private JComboBox comboBox8;
+    private JTextField textField3;
+    private JButton addButton;
+    private JTextField textField4;
+    private JTextField textField5;
+    private JComboBox comboBox9;
+    private JTextField textField6;
+    private JTextField textField10;
+    private JTextField textField11;
+    private JTextField textField12;
+    private JTextField textField13;
+    private JTextField textField14;
+    private JButton addNoticeButton;
     private JLabel AdminProfImgSelectedLabel;
     private JPanel UndergraduateProfImgSelectedPanel;
     private JLabel UndergraduateProfImgSelectedLabel;
@@ -439,12 +450,48 @@ public class AdminHomePage extends JFrame {
         deleteUserButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+               String deleteUserType = (String) ADDeleteUserType.getSelectedItem();
+               String deleteUserId = (String) ADDeleteUserID.getSelectedItem();
 
+                deleteUser(deleteUserType,deleteUserId);
+
+                loadCredentialsAdmin();
+                loadCredentialsTO();
+                loadCredentialsUndergraduate();
+                loadCredentialsLecturer();
             }
         });
     }
 
+    private void deleteUser(String DeleteuserType, String DeleteuserId){
 
+        System.out.println("Type = " + DeleteuserType + " ID = " + DeleteuserId);
+
+        String deleteQuery = "";
+        try{
+            if(DeleteuserType.equals("Admin")){
+                deleteQuery = "delete from admin where adno = ?";
+            } else if (DeleteuserType.equals("Undergraduate")) {
+                deleteQuery = "delete from undergraduate where tgno = ?";
+            } else if (DeleteuserType.equals("Lecturer")) {
+                deleteQuery = "delete from lecturer where lecno = ?";
+            } else if (DeleteuserType.equals("Technical Officer")) {
+                deleteQuery = "delete from technical_officer where tono = ?";
+            }
+
+            prepStatement = conn.prepareStatement(deleteQuery);
+            prepStatement.setString(1,DeleteuserId);
+
+            int resultDelete = prepStatement.executeUpdate();
+            if(resultDelete > 0){
+                JOptionPane.showMessageDialog(null,"User Deleted Successfully");
+            }else {
+                JOptionPane.showMessageDialog(null,"User Delete failed");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
     private void updateCredentialsLEC(){
         String l_num = (String) comboBox5.getSelectedItem();
@@ -1364,6 +1411,6 @@ public class AdminHomePage extends JFrame {
     }
 
     public static void main(String[] args) {
-        new AdminHomePage("ad0001");
+        new AdminHomePage("ad0002");
     }
 }

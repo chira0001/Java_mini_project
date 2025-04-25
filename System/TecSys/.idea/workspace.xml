@@ -5,11 +5,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="eae00a62-4dab-4b09-9e2b-255c640ec556" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/uiDesigner.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/uiDesigner.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/TecSys/HomePage/LecturerHomePage$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/TecSys/HomePage/LecturerHomePage$1.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/TecSys/HomePage/LecturerHomePage$2.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/TecSys/HomePage/LecturerHomePage$2.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/TecSys/HomePage/LecturerHomePage$3.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/TecSys/HomePage/LecturerHomePage$3.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/TecSys/HomePage/LecturerHomePage.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/TecSys/HomePage/LecturerHomePage.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/HomePage/AdminHomePage.form" beforeDir="false" afterPath="$PROJECT_DIR$/src/HomePage/AdminHomePage.form" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/HomePage/AdminHomePage.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/HomePage/AdminHomePage.java" afterDir="false" />
     </list>
