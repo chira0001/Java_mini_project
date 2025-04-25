@@ -121,6 +121,19 @@ week_no int(2),
 med_reason varchar(100) default ""
 );
 
+create table course_materials(
+c_mat_no INT primary key auto_increment,
+c_id varchar(7),
+c_material varchar(50),
+c_material_desc varchar(300),
+c_material_location varchar(300)
+);
+
+insert into course_materials(c_id,c_material,c_material_desc,c_material_location) values
+("ICT0001", "Labsheet 01", "Resources/CourseMaterialDesc/ICT0001_Labsheet 01.txt", "Resources/CourseMaterial/ICT0001_Labsheet 01.pdf"),
+("ICT0002", "Labsheet 01", "Resources/CourseMaterialDesc/ICT0002_Labsheet 01.txt", "Resources/CourseMaterial/ICT0002_Labsheet 01.pdf"),
+("ICT0001", "Labsheet 02", "Resources/CourseMaterialDesc/ICT0001_Labsheet 02.txt", "Resources/CourseMaterial/ICT0001_Labsheet 02.pdf");
+
 INSERT INTO admin VALUES
 ("admin1", "Subash", "Jayasinghe", "Matara", "subash@gmail.com", 981111321, "123","./Resources/Images/5267.jpg");
 
