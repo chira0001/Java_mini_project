@@ -860,14 +860,6 @@
                                 <properties/>
                                 <border type="none"/>
                                 <children>
-                                  <component id="e4113" class="javax.swing.JButton" binding="viewMedicalsButton" default-binding="true">
-                                    <constraints>
-                                      <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
-                                    </constraints>
-                                    <properties>
-                                      <text value="View Medicals"/>
-                                    </properties>
-                                  </component>
                                   <hspacer id="9d82a">
                                     <constraints>
                                       <grid row="0" column="6" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
@@ -882,7 +874,7 @@
                                       <text value="Attendance Percentage :"/>
                                     </properties>
                                   </component>
-                                  <component id="1b6eb" class="javax.swing.JLabel" binding="AttendancePercWithoutMed">
+                                  <component id="1b6eb" class="javax.swing.JLabel" binding="Percentage">
                                     <constraints>
                                       <grid row="0" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                                     </constraints>
@@ -897,7 +889,7 @@
                                     </constraints>
                                     <properties>
                                       <font size="12"/>
-                                      <text value="Attendance with Medica Percentage :"/>
+                                      <text value="Attendance with Medical Percentage :"/>
                                     </properties>
                                   </component>
                                   <component id="57a53" class="javax.swing.JLabel" binding="AttendancePercWithMed">
@@ -909,12 +901,20 @@
                                       <text value="Label"/>
                                     </properties>
                                   </component>
-                                  <component id="fbc16" class="javax.swing.JComboBox" binding="AttendanceSubjectStatusPerc">
+                                  <component id="fbc16" class="javax.swing.JComboBox" binding="StuTGnoAttendance">
                                     <constraints>
                                       <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="2" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
                                     </constraints>
                                     <properties>
                                       <model/>
+                                    </properties>
+                                  </component>
+                                  <component id="18245" class="javax.swing.JLabel">
+                                    <constraints>
+                                      <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                                    </constraints>
+                                    <properties>
+                                      <text value="Student TG_No"/>
                                     </properties>
                                   </component>
                                 </children>

@@ -73,10 +73,9 @@ public class LecturerHomePage extends JFrame {
     private JComboBox AttendanceLevelNo;
     private JComboBox AttendanceSubjectCode;
     private JComboBox AttendanceSubjectStatus;
-    private JButton viewMedicalsButton;
-    private JLabel AttendancePercWithoutMed;
+    private JLabel Percentage;
     private JLabel AttendancePercWithMed;
-    private JComboBox AttendanceSubjectStatusPerc;
+    private JComboBox StuTGnoAttendance;
     private JTable AttendanceTable;
     private JComboBox comboBox2;
 
@@ -266,6 +265,10 @@ public class LecturerHomePage extends JFrame {
                 int levelnoattendInt= Integer.parseInt(levelnoattend);
 
                 lecattendanceMethod(userIdentity,levelnoattendInt,semesternoattendInt);
+
+                String subjectstatus = (String) AttendanceSubjectStatus.getSelectedItem();
+                String subjectcode = (String) AttendanceSubjectCode.getSelectedItem();
+                showtgnumberAttendance(subjectcode,subjectstatus);
             }
         });
 
@@ -273,7 +276,6 @@ public class LecturerHomePage extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 String subjectstatus = (String) AttendanceSubjectCode.getSelectedItem();
-
                 lecattendancesubjectstatus(subjectstatus);
             }
         });
@@ -284,6 +286,16 @@ public class LecturerHomePage extends JFrame {
                 String subjectstatus = (String) AttendanceSubjectStatus.getSelectedItem();
                 String subjectcode = (String) AttendanceSubjectCode.getSelectedItem();
                 attendanncepercentage(subjectcode,subjectstatus);
+            }
+        });
+        StuTGnoAttendance.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+                String tgno = (String) StuTGnoAttendance.getSelectedItem();
+                loadattendance(tgno);
+                attendancePersentage(tgno);
+
             }
         });
     }
@@ -667,24 +679,23 @@ public class LecturerHomePage extends JFrame {
         }
     }
 
-    private void loadattendance(String subject_code,String subject_status){
+    private void loadattendance(String tgno){
         try{
             AttendencetableMethod();
             DefaultTableModel tablemodel = (DefaultTableModel) AttendanceTable.getModel();
 
-            String loadAttendanceQuery = "select tgno,week_no,atten_status from attendance where course_id=? AND course_status=?;";
+            String loadAttendanceQuery = "select tgno,week_no,atten_status from attendance where tgno=?;";
             prepStatement=conn.prepareStatement(loadAttendanceQuery);
-            prepStatement.setString(1,subject_code);
-            prepStatement.setString(2,subject_status);
+            prepStatement.setString(1,tgno);
 
             ResultSet resultSet = prepStatement.executeQuery();
             while (resultSet.next()){
-                String tgno = resultSet.getString("tgno");
+                String tg_no = resultSet.getString("tgno");
                 String week_no = resultSet.getString("week_no");
                 String atten_status = resultSet.getString("atten_status");
 
                 Object[] attendanceData = new Object[3];
-                attendanceData[0] = tgno;
+                attendanceData[0] = tg_no;
                 attendanceData[1] = week_no;
                 attendanceData[2] = atten_status;
 
@@ -723,6 +734,44 @@ public class LecturerHomePage extends JFrame {
                 attendanceData[3] = attendance_percentage;
                 tablemodel.addRow(attendanceData);
             }
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    private void showtgnumberAttendance(String subject_code,String subject_status){
+        try{
+            StuTGnoAttendance.removeAllItems();
+
+            String ShowAttendanceTGnumberQuery="select distinct(tgno)from attendance WHERE course_id=? AND course_status=?;";
+            prepStatement=conn.prepareStatement(ShowAttendanceTGnumberQuery);
+            prepStatement.setString(1,subject_code);
+            prepStatement.setString(2,subject_status);
+            ResultSet resultSet = prepStatement.executeQuery();
+            while (resultSet.next()){
+                String tgno = resultSet.getString("tgno");
+                StuTGnoAttendance.addItem(tgno);
+            }
+
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    private void attendancePersentage(String tgno){
+        try{
+            String percentageQuery="select ROUND(SUM(CASE WHEN atten_status='present' THEN 1 ELSE 0 END)*100.0/COUNT(*),2)AS attendance_percentage FROM attendance WHERE tgno=?;";
+            prepStatement=conn.prepareStatement(percentageQuery);
+            prepStatement.setString(1,tgno);
+            ResultSet resultSet = prepStatement.executeQuery();
+
+            if(resultSet.next()){
+                int attendance_percentage = resultSet.getInt("attendance_percentage");
+                Percentage.setText(attendance_percentage+"%");
+            }
+
 
 
         }
