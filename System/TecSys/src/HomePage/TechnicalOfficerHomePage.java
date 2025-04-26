@@ -77,7 +77,7 @@ public class TechnicalOfficerHomePage extends JFrame {
     private JButton attendenceUpdateBtn;
     private JComboBox SemesterNoforMedical;
     private JComboBox LevelNoforMedical;
-    private JTable UGMedicalTable;
+    private JTable TOMedicalTable;
     private JPanel Notice;
     private JPanel toupdatemedical;
     private JButton ToupdateMedicalBtn;
@@ -88,6 +88,12 @@ public class TechnicalOfficerHomePage extends JFrame {
     private JTextField textFieldweek;
     private JButton ToaddmedBtn;
     private JTextField textFieldCid;
+    private JTextField AttenUpdateTgNo;
+    private JTextField AttenUpdateCid;
+    private JTextField AttenUpdateWno;
+    private JTextField AttenUpdateCstatus;
+    private JTextField AttenUpdateAttSt;
+    private JButton addButton;
 
 
     private CardLayout cardLayout;
@@ -279,6 +285,7 @@ public class TechnicalOfficerHomePage extends JFrame {
         AttendanceSubjectCode.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+
                 LoadAttendanceCourseStatus();
             }
         });
@@ -287,7 +294,6 @@ public class TechnicalOfficerHomePage extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 AttendanceTableSetMethod();
-
                 valuesforAttendanceTable(userIdentity);
 
             }
@@ -309,6 +315,8 @@ public class TechnicalOfficerHomePage extends JFrame {
         attendenceUpdateBtn.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                TOUpdateAttendance();
+                valuesforAttendanceTable(tono);
 
             }
         });
@@ -387,6 +395,80 @@ public class TechnicalOfficerHomePage extends JFrame {
                 Toaddmedical(userIdentity);
             }
         });
+        addButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                TOAddAttendance();
+            }
+        });
+    }
+
+    private void TOAddAttendance() {
+        try{
+            String AtUpdateTG = AttenUpdateTgNo.getText();
+            String AtUpdateCid = AttenUpdateCid.getText();
+            String AtUpdateweekno = AttenUpdateWno.getText();
+            String AtUpdateCstatus = AttenUpdateCstatus.getText();
+            String AtUpdateAttstatus = AttenUpdateAttSt.getText();
+
+            String extension = (String) filePathValues[3];
+
+            String TOAddattendanceQuery = "INSERT INTO attendance(course_status,atten_status) VALUES " +
+                    "course_status = '" + AtUpdateCstatus + "', " +
+                    "atten_status = '" + AtUpdateAttstatus + "' " +
+                    "WHERE tgno = '" + AtUpdateTG + "' AND " +
+                    "course_id = '" + AtUpdateCid + "' AND " +
+                    "week_no = " + AtUpdateweekno + ");";
+
+            Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/javatest", "root", "1234");
+            Statement statement = connection.createStatement();
+            int resultSet = statement.executeUpdate(TOAddattendanceQuery);
+
+
+            if (resultSet > 0) {
+                //  TOsaveupdatedmedical();
+                JOptionPane.showMessageDialog(null, "Attendance record Add successfully");
+            } else {
+                JOptionPane.showMessageDialog(null, "Error in adding Attendance record");
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void TOUpdateAttendance() {
+        try{
+            String AtUpdateTG = AttenUpdateTgNo.getText();
+            String AtUpdateCid = AttenUpdateCid.getText();
+            String AtUpdateweekno = AttenUpdateWno.getText();
+            String AtUpdateCstatus = AttenUpdateCstatus.getText();
+            String AtUpdateAttstatus = AttenUpdateAttSt.getText();
+
+            String extension = (String) filePathValues[3];
+
+            String TOupdateattendanceQuery = "UPDATE attendance SET " +
+                    "course_status = '" + AtUpdateCstatus + "', " +
+                    "atten_status = '" + AtUpdateAttstatus + "' " +
+                    "WHERE tgno = '" + AtUpdateTG + "' AND " +
+                    "course_id = '" + AtUpdateCid + "' AND " +
+                    "week_no = " + AtUpdateweekno;
+
+            Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/javatest", "root", "1234");
+            Statement statement = connection.createStatement();
+            int resultSet = statement.executeUpdate(TOupdateattendanceQuery);
+
+            if (resultSet > 0) {
+                //  TOsaveupdatedmedical();
+                JOptionPane.showMessageDialog(null, "Attendance record updated successfully");
+            } else {
+                JOptionPane.showMessageDialog(null, "Error in updating Attendance record");
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
     }
 
     private void Toaddmedical(String useridentity) {
@@ -509,7 +591,7 @@ private void LoadNotices() {
 
     //Medical
     private void MedicalTableSetModelMethod(){
-        UGMedicalTable.setModel(new DefaultTableModel(
+        TOMedicalTable.setModel(new DefaultTableModel(
                 null,
                 new String[]{"Medical No","Course code","Course Name","Course Status","Week No","Medical Reason"}
         ));
@@ -518,7 +600,7 @@ private void LoadNotices() {
     private void LoadMedicalTable(String tono, int level_no, int semester_no){
         System.out.println("Lev " + level_no + " Sem - " +semester_no);
 
-        DefaultTableModel tblmodel = (DefaultTableModel) UGMedicalTable.getModel();
+        DefaultTableModel tblmodel = (DefaultTableModel) TOMedicalTable.getModel();
 //        MedicalTableSetModelMethod();
 
         try{
@@ -735,6 +817,7 @@ private void LoadNotices() {
 
         String courseID = (String) AttendanceSubjectCode.getSelectedItem();
         String CourseStat = (String) AttendanceSubjectStatus.getSelectedItem();
+
         try{
             if(CourseStat.equals("theory/practical")){
 
@@ -968,6 +1051,7 @@ private void LoadNotices() {
                 textField9.setText(toPhno);
                 textField2.setText(toFname);
                 textField1.setText(toLname);
+
 
                 loadTOProfImage(tono);
             } else {
