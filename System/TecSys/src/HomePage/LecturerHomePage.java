@@ -4,6 +4,9 @@ import Login.Login;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
+import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableColumnModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -61,6 +64,44 @@ public class LecturerHomePage extends JFrame {
     private JLabel LecturerHomePageProfileLable;
     private JPanel LecProfileImagePanel;
     private JLabel LecProfileImage;
+    private JComboBox LECSemesterCombobox;
+    private JComboBox LECLevelComboBox;
+    private JTable tableTimeTable;
+    private JComboBox SemesterNoDropDown;
+    private JComboBox LevelNoDropDown;
+    private JComboBox AttendanceSemesterNo;
+    private JComboBox AttendanceLevelNo;
+    private JComboBox AttendanceSubjectCode;
+    private JComboBox AttendanceSubjectStatus;
+    private JLabel Percentage;
+    private JLabel AttendancePercWithMedi;
+    private JComboBox StuTGnoAttendance;
+    private JTable AttendanceTable;
+    private JComboBox SemesterNoforMedical;
+    private JComboBox LevelNoforMedical;
+    private JTable LECMedicalTable;
+    private JComboBox MedicalCourseCode;
+    private JPanel LECGrades;
+    private JComboBox UGSemesterNoforMarksDropDown;
+    private JComboBox UGLevelNoforMarksDropDown;
+    private JLabel lblCGPA;
+    private JLabel lblSGPA;
+    private JLabel UGClass;
+    private JTable UGGradeTable;
+    private JButton GradesButton;
+    private JComboBox comboBox1;
+    private JTextField textField3;
+    private JTextField textField4;
+    private JTextField textField5;
+    private JTextField textField6;
+    private JTextField textField10;
+    private JTextField textField11;
+    private JTextField textField12;
+    private JTextField textField13;
+    private JTextField textField14;
+    private JTextField textField15;
+    private JButton uploadMarksButton;
+    private JComboBox comboBox2;
 
     private CardLayout cardLayout;
 
@@ -72,10 +113,10 @@ public class LecturerHomePage extends JFrame {
     private String LecPhno;
     private String LecProfImg;
 
-    private String[] cardButtons = {"Profile", "Attendance", "Time Table", "Courses", "Medical", "Notices", "Marks", "Settings"};
-    private String[] cardNames = {"LECProfileCard", "LECAttendanceCard", "LECTimeTableCard", "LECCoursesCard", "LECMedicalsCard", "LECNoticesCard", "LECMarksCard", "LECSettingsCard"};
-    JButton[] btnFieldNames = {profileButton,attendanceButton,timeTableButton,coursesButton,medicalButton,noticesButton,marksButton,settingsButton};
-    private String[] cardTitles = {"Welcome..!", "Attendance Details", "Undergraduate Time Table","Your Courses","Medical Information", "Notices", "Marks","Settings Configuration"};;
+    private String[] cardButtons = {"Profile", "Attendance", "Time Table", "Courses", "Medical", "Notices", "Grades" ,"Marks", "Settings"};
+    private String[] cardNames = {"LECProfileCard", "LECAttendanceCard", "LECTimeTableCard", "LECCoursesCard", "LECMedicalsCard", "LECNoticesCard","LECGradesCards", "LECMarksCard", "LECSettingsCard"};
+    JButton[] btnFieldNames = {profileButton,attendanceButton,timeTableButton,coursesButton,medicalButton,noticesButton,GradesButton,marksButton,settingsButton};
+    private String[] cardTitles = {"Welcome..!", "Attendance Details", "Lecturer Time Table","Your Courses","Medical Information", "Notices", "Student Grades","Marks","Settings Configuration"};;
 
 
     private Object[] filePathValues = new Object[4];
@@ -105,6 +146,7 @@ public class LecturerHomePage extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 cardCommand = e.getActionCommand();
+//                System.out.println(cardCommand);
                 changeBtnState(cardCommand,userIdentity);
             }
         };
@@ -116,6 +158,8 @@ public class LecturerHomePage extends JFrame {
         coursesButton.addActionListener(listener);
         timeTableButton.addActionListener(listener);
         attendanceButton.addActionListener(listener);
+        GradesButton.addActionListener(listener);
+
 
         logoutButton.addActionListener(new ActionListener() {
             @Override
@@ -145,6 +189,187 @@ public class LecturerHomePage extends JFrame {
                 viewNotice(notice);
             }
         });
+
+        LECLevelComboBox.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                updateCoursesIfReady(userIdentity);
+            }
+        });
+
+        LECSemesterCombobox.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                updateCoursesIfReady(userIdentity);
+            }
+        });
+
+        LevelNoDropDown.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                TimeTableSetModelMethod();
+
+                String level_no = (String) LevelNoDropDown.getSelectedItem();
+                assert level_no != null;
+                if(level_no.isEmpty()){
+                    level_no = "0";
+                }
+                int LevelNo = Integer.parseInt(level_no);
+
+                String semester_no = (String) SemesterNoDropDown.getSelectedItem();
+                assert semester_no != null;
+                if(semester_no.isEmpty()){
+                    semester_no = "0";
+                }
+
+                int SemesterNo = Integer.parseInt(semester_no);
+
+                valuesForTimeTable(LevelNo,SemesterNo);
+            }
+        });
+
+
+        SemesterNoDropDown.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                TimeTableSetModelMethod();
+
+                String semester_no = (String) SemesterNoDropDown.getSelectedItem();
+                assert semester_no != null;
+                if (semester_no.isEmpty()) {
+                    semester_no = "0";
+                }
+                int SemesterNo = Integer.parseInt(semester_no);
+
+                String level_no = (String) LevelNoDropDown.getSelectedItem();
+                assert level_no != null;
+                if (level_no.isEmpty()) {
+                    level_no = "0";
+                }
+                int LevelNo = Integer.parseInt(level_no);
+
+                valuesForTimeTable(LevelNo, SemesterNo);
+            }
+        });
+        AttendanceLevelNo.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+              String levelnoattend=  (String) AttendanceLevelNo.getSelectedItem();
+                assert levelnoattend != null;
+                if(levelnoattend.isEmpty()){
+                  levelnoattend = "0";
+                }
+              int levelnoattendInt= Integer.parseInt(levelnoattend);
+
+
+              String semesternoattend=  (String) AttendanceSemesterNo.getSelectedItem();
+                assert semesternoattend != null;
+                if(semesternoattend.isEmpty()){
+                  semesternoattend = "0";
+                }
+              int semesternoattendInt= Integer.parseInt(semesternoattend);
+
+              lecattendanceMethod(userIdentity,levelnoattendInt,semesternoattendInt);
+            }
+
+        });
+        AttendanceSemesterNo.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String semesternoattend=  (String) AttendanceSemesterNo.getSelectedItem();
+                assert semesternoattend != null;
+                if(semesternoattend.isEmpty()){
+                    semesternoattend = "0";
+                }
+                int semesternoattendInt= Integer.parseInt(semesternoattend);
+
+                String levelnoattend=  (String) AttendanceLevelNo.getSelectedItem();
+                assert levelnoattend != null;
+                if(levelnoattend.isEmpty()){
+                    levelnoattend = "0";
+                }
+                int levelnoattendInt= Integer.parseInt(levelnoattend);
+
+                lecattendanceMethod(userIdentity,levelnoattendInt,semesternoattendInt);
+
+                String subjectstatus = (String) AttendanceSubjectStatus.getSelectedItem();
+                String subjectcode = (String) AttendanceSubjectCode.getSelectedItem();
+                showtgnumberAttendance(subjectcode,subjectstatus);
+            }
+        });
+
+        AttendanceSubjectCode.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String subjectstatus = (String) AttendanceSubjectCode.getSelectedItem();
+                lecattendancesubjectstatus(subjectstatus);
+            }
+        });
+        AttendanceSubjectStatus.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                AllAttendanceTableMethod();
+                String subjectstatus = (String) AttendanceSubjectStatus.getSelectedItem();
+                String subjectcode = (String) AttendanceSubjectCode.getSelectedItem();
+
+                attendancepercentagemedi(subjectcode,subjectstatus);
+            }
+        });
+        StuTGnoAttendance.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+                String tgno = (String) StuTGnoAttendance.getSelectedItem();
+                loadattendance(tgno);
+                attendancePersentage(tgno);
+                AttendancePerengeMediLabel(tgno);
+
+            }
+        });
+        LevelNoforMedical.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String medicalLevel=(String)LevelNoforMedical.getSelectedItem();
+                assert medicalLevel != null;
+                if(medicalLevel.isEmpty()){
+                    medicalLevel = "0";
+                }
+                int medicalLevelInt= Integer.parseInt(medicalLevel);
+
+                String medicalSemester= (String)SemesterNoforMedical.getSelectedItem();
+                assert medicalSemester != null;
+                if(medicalSemester.isEmpty()){
+                    medicalSemester = "0";
+                }
+                int medicalSemesterInt= Integer.parseInt(medicalSemester);
+                System.out.println(medicalLevel+" "+medicalSemester);
+
+                SelectMediLevelCourse(userIdentity,medicalLevelInt,medicalSemesterInt);
+            }
+        });
+        SemesterNoforMedical.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String medicalSemester=(String)SemesterNoforMedical.getSelectedItem();
+                assert medicalSemester != null;
+                if(medicalSemester.isEmpty()){
+                    medicalSemester = "0";
+
+                }
+                int medicalSemesterInt= Integer.parseInt(medicalSemester);
+
+                String medicalLevel=(String)LevelNoforMedical.getSelectedItem();
+                assert medicalLevel != null;
+                if(medicalLevel.isEmpty()){
+                    medicalLevel = "0";
+                }
+                int medicalLevelInt= Integer.parseInt(medicalLevel);
+                System.out.println(medicalSemester+" "+medicalLevel);
+
+                SelectMediLevelCourse(userIdentity,medicalLevelInt,medicalSemesterInt);
+                LoadMedicalTable(userIdentity,medicalLevelInt,medicalSemesterInt);
+            }
+        });
     }
 
     public void changeBtnState(String btn, String lecno){
@@ -165,6 +390,10 @@ public class LecturerHomePage extends JFrame {
             }
         }
     }
+
+    private void LECCourse(String lecno) {
+    }
+
 
     private void dbConnection(String lecno){
         try{
@@ -199,6 +428,55 @@ public class LecturerHomePage extends JFrame {
 
             }else{
                 JOptionPane.showMessageDialog(null,"Internal Error");
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    private void TimeTableSetModelMethod(){
+        tableTimeTable.setModel(new DefaultTableModel(
+                null,
+                new String[]{"Day", "Course Code", "Course Module","Time"}
+        ));
+
+        TableColumnModel timeTableColumns = tableTimeTable.getColumnModel();
+        timeTableColumns.getColumn(2).setMinWidth(100);
+        timeTableColumns.getColumn(3).setMinWidth(20);
+
+        DefaultTableCellRenderer timeTableCells = new DefaultTableCellRenderer();
+        timeTableCells.setHorizontalAlignment(JLabel.CENTER);
+
+        timeTableColumns.getColumn(0).setCellRenderer(timeTableCells);
+        timeTableColumns.getColumn(1).setCellRenderer(timeTableCells);
+        timeTableColumns.getColumn(3).setCellRenderer(timeTableCells);
+    }
+
+    private void valuesForTimeTable(int level_no, int semester_no){
+
+        System.out.println("Level " + level_no + " Semester " + semester_no);
+
+        String TimeTableValues = "select time_table_id, Courses.course_id, module_day, course_name, time from timeTable join Courses where timeTable.course_id = Courses.course_id and level_no = ? and semester_no = ? ORDER BY CASE module_day WHEN 'Monday' THEN 1 WHEN 'Tuesday' THEN 2 WHEN 'Wednesday' THEN 3 WHEN 'Thursday' THEN 4 WHEN 'Friday' THEN 5 WHEN 'Saturday' THEN 6 WHEN 'Sunday' THEN 7 END";
+        DefaultTableModel tblmodel = (DefaultTableModel) tableTimeTable.getModel();
+        try{
+            prepStatement = conn.prepareStatement(TimeTableValues);
+            prepStatement.setInt(1,level_no);
+            prepStatement.setInt(2,semester_no);
+            ResultSet result = prepStatement.executeQuery();
+            while (result.next()){
+                String courseID = result.getString("course_id");
+                String moduleDay = result.getString("module_day");
+                String courseName = result.getString("course_name");
+                String courseTime = result.getString("time");
+
+                Object[] timeTableData = new Object[4];
+
+                timeTableData[0] = moduleDay;
+                timeTableData[1] = courseID;
+                timeTableData[2] = courseName;
+                timeTableData[3] = courseTime;
+
+                tblmodel.addRow(timeTableData);
             }
         }catch (Exception e){
             e.printStackTrace();
@@ -334,15 +612,36 @@ public class LecturerHomePage extends JFrame {
         }
     }
 
-    private void LECCourse(String lecno){
+    private void updateCoursesIfReady(String lecno) {
+        String LecLevel = (String) LECLevelComboBox.getSelectedItem();
+        String LecSemester = (String) LECSemesterCombobox.getSelectedItem();
+
+
+        if (LecLevel != null && !LecLevel.isEmpty() && LecSemester != null && !LecSemester.isEmpty()) {
+            try {
+
+                int level = Integer.parseInt(LecLevel);
+                int semester = Integer.parseInt(LecSemester);
+
+                LECCourse(lecno,level, semester);
+            } catch (NumberFormatException ex) {
+                ex.printStackTrace();
+            }
+        }
+    }
+
+
+    private void LECCourse(String lecno,int level, int semester) {
         try {
             DefaultListModel<String> model = new DefaultListModel<>();
-            Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/javatest","root","1234");
-            Statement statement = connection.createStatement();
-            String query = "SELECT c.course_name FROM courses c " +
-                    "JOIN lecture_course lc ON c.course_id = lc.course_id " +
-                    "WHERE lc.lecno = '" + lecno + "'";
-            ResultSet resultSet = statement.executeQuery(query);
+            String query = "select courses.course_name from courses join lecture_course on courses.course_id = lecture_course.course_id where lecture_course.lecno = ? and courses.level_no = ? and courses.semester_no = ?";
+            prepStatement = conn.prepareStatement(query);
+            prepStatement.setString(1, lecno);
+            prepStatement.setInt(2, level);
+            prepStatement.setInt(3, semester);
+
+            ResultSet resultSet = prepStatement.executeQuery();
+
 
             while (resultSet.next()) {
                 String courseName = resultSet.getString("course_name");
@@ -403,7 +702,291 @@ public class LecturerHomePage extends JFrame {
         }
     }
 
-//    private void UGFillUpdateFields(String tgno){
-//        String UpdateFillQuery = "select ";
-//    }
+    private void lecattendanceMethod(String lecno,int level,int semester){
+        System.out.println(lecno+" "+level + " " + semester);
+
+        try{
+            String attendanceQuery = "select courses.course_id from courses join lecture_course on courses.course_id = lecture_course.course_id where lecno=? AND level_no=? AND semester_no=?;";
+            prepStatement=conn.prepareStatement(attendanceQuery);
+            prepStatement.setString(1,lecno);
+            prepStatement.setInt(2,level);
+            prepStatement.setInt(3,semester);
+
+            ResultSet resultSet = prepStatement.executeQuery();
+            AttendanceSubjectCode.removeAllItems();
+            while (resultSet.next()){
+                String CourseID = resultSet.getString("course_id");
+                AttendanceSubjectCode.addItem(CourseID);
+
+            }
+
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
+    }
+
+    private void lecattendancesubjectstatus(String subject_code){
+        try{
+            String subjectStatusQuery="select status from courses where course_id=?;";
+            prepStatement=conn.prepareStatement(subjectStatusQuery);
+            prepStatement.setString(1,subject_code);
+
+            ResultSet resultSet = prepStatement.executeQuery();
+            AttendanceSubjectStatus.removeAllItems();
+            while (resultSet.next()){
+                String status = resultSet.getString("status");
+                System.out.println(status);
+
+                if(status.equals("theory/practical")){
+                    AttendanceSubjectStatus.addItem("theory");
+                    AttendanceSubjectStatus.addItem("practical");
+                }
+                AttendanceSubjectStatus.addItem(status);
+
+            }
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    private void loadattendance(String tgno){
+        try{
+            AttendencetableMethod();
+            DefaultTableModel tablemodel = (DefaultTableModel) AttendanceTable.getModel();
+
+            String loadAttendanceQuery = "select tgno,week_no,atten_status from attendance where tgno=?;";
+            prepStatement=conn.prepareStatement(loadAttendanceQuery);
+            prepStatement.setString(1,tgno);
+
+            ResultSet resultSet = prepStatement.executeQuery();
+            while (resultSet.next()){
+                String tg_no = resultSet.getString("tgno");
+                String week_no = resultSet.getString("week_no");
+                String atten_status = resultSet.getString("atten_status");
+
+                Object[] attendanceData = new Object[3];
+                attendanceData[0] = tg_no;
+                attendanceData[1] = week_no;
+                attendanceData[2] = atten_status;
+
+                tablemodel.addRow(attendanceData);
+            }
+
+
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    private void attendanncepercentage(String subject_code,String subject_status){
+        try{
+            AllAttendanceTableMethod();
+            DefaultTableModel tablemodel = (DefaultTableModel) AttendanceTable.getModel();
+
+            String AttendancepercentageQuery="select tgno,COUNT(*) AS total_sessions,SUM(CASE WHEN atten_status='present' THEN 1 ELSE 0 END)AS present_sessions,ROUND(SUM(CASE WHEN atten_status='present' THEN 1 ELSE 0 END)*100.0/COUNT(*),2)AS attendance_percentage FROM attendance WHERE course_id=? AND course_status=? GROUP BY tgno;";
+            prepStatement=conn.prepareStatement(AttendancepercentageQuery);
+            prepStatement.setString(1,subject_code);
+            prepStatement.setString(2,subject_status);
+//            prepStatement.setString(1,subject_code);
+//            prepStatement.setString(2,subject_status);
+            ResultSet resultSet = prepStatement.executeQuery();
+
+            while (resultSet.next()){
+                String tgno = resultSet.getString("tgno");
+                int total_sessions = resultSet.getInt("total_sessions");
+                int present_sessions = resultSet.getInt("present_sessions");
+                int attendance_percentage = resultSet.getInt("attendance_percentage");
+                Object[] attendanceData = new Object[4];
+                attendanceData[0] = tgno;
+                attendanceData[1] = total_sessions;
+                attendanceData[2] = present_sessions;
+                attendanceData[3] = attendance_percentage;
+                tablemodel.addRow(attendanceData);
+            }
+
+
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    private void attendancepercentagemedi(String subject_code,String subject_status){
+        try{
+            AllAttendanceTableMethod();
+            DefaultTableModel tablemodel = (DefaultTableModel) AttendanceTable.getModel();
+
+            String AttendancepercentageMedicalQuery="select tgno,COUNT(*) AS total_sessions,SUM(CASE WHEN atten_status IN('present','medical') THEN 1 ELSE 0 END)AS present_sessions,ROUND(SUM(CASE WHEN atten_status in('present','medical') THEN 1 ELSE 0 END)*100.0/COUNT(*),2)AS attendance_percentage FROM attendance WHERE course_id=? AND course_status=? GROUP BY tgno;";
+            prepStatement=conn.prepareStatement(AttendancepercentageMedicalQuery);
+            prepStatement.setString(1,subject_code);
+            prepStatement.setString(2,subject_status);
+//            prepStatement.setString(1,subject_code);
+//            prepStatement.setString(2,subject_status);
+            ResultSet resultSetMedi = prepStatement.executeQuery();
+
+            while (resultSetMedi.next()){
+                String tgno = resultSetMedi.getString("tgno");
+                int total_sessions = resultSetMedi.getInt("total_sessions");
+                int present_sessions = resultSetMedi.getInt("present_sessions");
+                int attendance_percentage = resultSetMedi.getInt("attendance_percentage");
+                Object[] attendanceData = new Object[4];
+                attendanceData[0] = tgno;
+                attendanceData[1] = total_sessions;
+                attendanceData[2] = present_sessions;
+                attendanceData[3] = attendance_percentage;
+                tablemodel.addRow(attendanceData);
+            }
+
+
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    private void showtgnumberAttendance(String subject_code,String subject_status){
+        try{
+            StuTGnoAttendance.removeAllItems();
+
+            String ShowAttendanceTGnumberQuery="select distinct(tgno)from attendance WHERE course_id=? AND course_status=?;";
+            prepStatement=conn.prepareStatement(ShowAttendanceTGnumberQuery);
+            prepStatement.setString(1,subject_code);
+            prepStatement.setString(2,subject_status);
+            ResultSet resultSet = prepStatement.executeQuery();
+            while (resultSet.next()){
+                String tgno = resultSet.getString("tgno");
+                StuTGnoAttendance.addItem(tgno);
+            }
+
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    private void attendancePersentage(String tgno){
+        try{
+            String percentageQuery="select ROUND(SUM(CASE WHEN atten_status='present' THEN 1 ELSE 0 END)*100.0/COUNT(*),2)AS attendance_percentage FROM attendance WHERE tgno=?;";
+            prepStatement=conn.prepareStatement(percentageQuery);
+            prepStatement.setString(1,tgno);
+            ResultSet resultSet = prepStatement.executeQuery();
+
+            if(resultSet.next()){
+                int attendance_percentage = resultSet.getInt("attendance_percentage");
+                Percentage.setText(attendance_percentage+"%");
+            }
+
+
+
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    private void AttendancePerengeMediLabel(String tgno){
+        try{
+            String percentageQuery="select ROUND(SUM(CASE WHEN atten_status in('present','medical') THEN 1 ELSE 0 END)*100.0/COUNT(*),2)AS attendance_percentage FROM attendance WHERE tgno=?;";
+            prepStatement=conn.prepareStatement(percentageQuery);
+            prepStatement.setString(1,tgno);
+            ResultSet resultSet = prepStatement.executeQuery();
+
+            if(resultSet.next()){
+                int attendance_percentage = resultSet.getInt("attendance_percentage");
+                AttendancePercWithMedi.setText(attendance_percentage+"%");
+            }
+
+
+
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+
+    }
+
+    private void AttendencetableMethod(){
+        AttendanceTable.setModel(new DefaultTableModel(
+                null,
+                new String[]{"Student_tgno","week_no","atten_status"} ));
+    }
+
+    private void AllAttendanceTableMethod(){
+        AttendanceTable.setModel(new DefaultTableModel(
+                null,
+                new String[]{"Student_tgno","Total_Sessions","Present_Sessions","Attendance_Percentage(%)"}
+        ));
+    }
+
+    private void SelectMediLevelCourse(String lecno,int level,int semester){
+        try{
+            MedicalCourseCode.removeAllItems();
+            String SelectMediLevelCourseQuery="select courses.course_id from courses join lecture_course on courses.course_id = lecture_course.course_id where lecno=? AND level_no=? AND semester_no=?;";
+            prepStatement=conn.prepareStatement(SelectMediLevelCourseQuery);
+            prepStatement.setString( 1, lecno);
+            prepStatement.setInt(2, level);
+            prepStatement.setInt(3, semester);
+            ResultSet resultSet = prepStatement.executeQuery();
+            while (resultSet.next()){
+                String course_id = resultSet.getString("course_id");
+                MedicalCourseCode.addItem(course_id);
+
+            }
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    private void MedicalTableMethod(){
+        LECMedicalTable.setModel(new DefaultTableModel(
+                null,
+                new String[]{"Medical_No","Student_tgno","Week_No","Course_Status","Medical_Reason"}
+        ));
+    }
+
+    private void LoadMedicalTable(String lecno,int level,int semester){
+        try {
+            MedicalTableMethod();
+            DefaultTableModel tableModel = (DefaultTableModel) LECMedicalTable.getModel();
+
+            String LoadMediQuery="SELECT att.med_id, att.tgno, att.week_no,att.course_status, med.med_reason FROM attendance att JOIN medical med ON att.med_id = med.medical_no JOIN lecture_course lc ON att.course_id = lc.course_id JOIN courses c ON att.course_id = c.course_id WHERE lc.lecno = ? AND c.level_no = ? AND c.semester_no = ?;";
+            prepStatement=conn.prepareStatement(LoadMediQuery);
+            prepStatement.setString(1, lecno);
+            prepStatement.setInt(2, level);
+            prepStatement.setInt(3, semester);
+            ResultSet resultSet = prepStatement.executeQuery();
+            while (resultSet.next()){
+                String med_id = resultSet.getString("med_id");
+                String tgno = resultSet.getString("tgno");
+                String week_no = resultSet.getString("week_no");
+                String course_status = resultSet.getString("course_status");
+                String med_reason = resultSet.getString("med_reason");
+
+                Object[]medical=new Object[5];
+                medical[0]=med_id;
+                medical[1]=tgno;
+                medical[2]=week_no;
+                medical[3]=course_status;
+                medical[4]=med_reason;
+                tableModel.addRow(medical);
+
+            }
+
+        } catch (Exception e) {
+           e.printStackTrace();
+        }
+
+
+
+
+    }
+
+
+
+    public static void main(String[] args) {
+        new LecturerHomePage("lec5678");
+    }
 }
