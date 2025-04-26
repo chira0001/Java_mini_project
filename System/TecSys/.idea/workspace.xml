@@ -25,24 +25,24 @@
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/../.." />
   </component>
   <component name="GitHubPullRequestSearchHistory">{
-  &quot;lastFilter&quot;: {
-    &quot;state&quot;: &quot;OPEN&quot;,
-    &quot;assignee&quot;: &quot;Dilshan0721&quot;
-  }
-}</component>
+    &quot;lastFilter&quot;: {
+      &quot;state&quot;: &quot;OPEN&quot;,
+      &quot;assignee&quot;: &quot;Dilshan0721&quot;
+    }
+  }</component>
   <component name="GithubPullRequestsUISettings">{
-  &quot;selectedUrlAndAccountId&quot;: {
-    &quot;url&quot;: &quot;https://github.com/chira0001/Java_mini_project.git&quot;,
-    &quot;accountId&quot;: &quot;eb2ad9a5-4e54-4bf1-857a-58ad15d482f7&quot;
-  }
-}</component>
+    &quot;selectedUrlAndAccountId&quot;: {
+      &quot;url&quot;: &quot;https://github.com/chira0001/Java_mini_project.git&quot;,
+      &quot;accountId&quot;: &quot;eb2ad9a5-4e54-4bf1-857a-58ad15d482f7&quot;
+    }
+  }</component>
   <component name="ProblemsViewState">
     <option name="selectedTabId" value="CurrentFile" />
   </component>
   <component name="ProjectColorInfo">{
-  &quot;customColor&quot;: &quot;&quot;,
-  &quot;associatedIndex&quot;: 3
-}</component>
+    &quot;customColor&quot;: &quot;&quot;,
+    &quot;associatedIndex&quot;: 3
+  }</component>
   <component name="ProjectId" id="2vg3cqPlHG4UqD4mUpqFY4Qiy1o" />
   <component name="ProjectLevelVcsManager">
     <ConfirmationsSetting value="2" id="Add" />
@@ -62,7 +62,7 @@
     "RunOnceActivity.git.unshallow": "true",
     "UI_DESIGNER_EDITOR_MODE.PaletteManager.SHOW": "true",
     "UI_DESIGNER_EDITOR_MODE.UIDesignerToolWindowManager.SHOW": "true",
-    "UI_DESIGNER_EDITOR_MODE.UIDesignerToolWindowManager.WIDTH": "190",
+    "UI_DESIGNER_EDITOR_MODE.UIDesignerToolWindowManager.WIDTH": "276",
     "git-widget-placeholder": "<unknown>",
     "kotlin-language-version-configured": "true",
     "last_opened_file_path": "C:/Users/DELL/Desktop/Java Project/Java_mini_project/System/TecSys",
@@ -77,6 +77,11 @@
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="E:\E Drive\University Project\Java_mini_project\System\TecSys\Resources\ProfileImages" />
+    </key>
+  </component>
   <component name="RunManager" selected="Application.Lecturer">
     <configuration name="Lecturer" type="Application" factoryName="Application">
       <option name="MAIN_CLASS_NAME" value="HomePage.LecturerHomePage" />
@@ -92,7 +97,15 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
+    <configuration name="Unnamed" type="Application" factoryName="Application" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="Main.Main" />
+      <module name="TecSys" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <list>
+      <item itemvalue="Application.Unnamed" />
       <item itemvalue="Application.Login" />
       <item itemvalue="Application.Lecturer" />
     </list>
@@ -129,10 +142,14 @@
       <workItem from="1745498225547" duration="1323000" />
       <workItem from="1745501913996" duration="27297000" />
       <workItem from="1745559419416" duration="38259000" />
+      <workItem from="1745628654630" duration="78000" />
     </task>
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <option name="LAST_COMMIT_MESSAGE" value="" />
   </component>
 </project>

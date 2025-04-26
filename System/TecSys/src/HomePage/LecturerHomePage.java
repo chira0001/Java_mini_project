@@ -74,7 +74,7 @@ public class LecturerHomePage extends JFrame {
     private JComboBox AttendanceSubjectCode;
     private JComboBox AttendanceSubjectStatus;
     private JLabel Percentage;
-    private JLabel AttendancePercWithMed;
+    private JLabel AttendancePercWithMedi;
     private JComboBox StuTGnoAttendance;
     private JTable AttendanceTable;
     private JComboBox SemesterNoforMedical;
@@ -89,6 +89,18 @@ public class LecturerHomePage extends JFrame {
     private JLabel UGClass;
     private JTable UGGradeTable;
     private JButton GradesButton;
+    private JComboBox comboBox1;
+    private JTextField textField3;
+    private JTextField textField4;
+    private JTextField textField5;
+    private JTextField textField6;
+    private JTextField textField10;
+    private JTextField textField11;
+    private JTextField textField12;
+    private JTextField textField13;
+    private JTextField textField14;
+    private JTextField textField15;
+    private JButton uploadMarksButton;
     private JComboBox comboBox2;
 
     private CardLayout cardLayout;
@@ -299,7 +311,8 @@ public class LecturerHomePage extends JFrame {
                 AllAttendanceTableMethod();
                 String subjectstatus = (String) AttendanceSubjectStatus.getSelectedItem();
                 String subjectcode = (String) AttendanceSubjectCode.getSelectedItem();
-                attendanncepercentage(subjectcode,subjectstatus);
+
+                attendancepercentagemedi(subjectcode,subjectstatus);
             }
         });
         StuTGnoAttendance.addActionListener(new ActionListener() {
@@ -309,6 +322,7 @@ public class LecturerHomePage extends JFrame {
                 String tgno = (String) StuTGnoAttendance.getSelectedItem();
                 loadattendance(tgno);
                 attendancePersentage(tgno);
+                AttendancePerengeMediLabel(tgno);
 
             }
         });
@@ -792,8 +806,42 @@ public class LecturerHomePage extends JFrame {
                 attendanceData[3] = attendance_percentage;
                 tablemodel.addRow(attendanceData);
             }
+
+
         }
         catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    private void attendancepercentagemedi(String subject_code,String subject_status){
+        try{
+            AllAttendanceTableMethod();
+            DefaultTableModel tablemodel = (DefaultTableModel) AttendanceTable.getModel();
+
+            String AttendancepercentageMedicalQuery="select tgno,COUNT(*) AS total_sessions,SUM(CASE WHEN atten_status IN('present','medical') THEN 1 ELSE 0 END)AS present_sessions,ROUND(SUM(CASE WHEN atten_status in('present','medical') THEN 1 ELSE 0 END)*100.0/COUNT(*),2)AS attendance_percentage FROM attendance WHERE course_id=? AND course_status=? GROUP BY tgno;";
+            prepStatement=conn.prepareStatement(AttendancepercentageMedicalQuery);
+            prepStatement.setString(1,subject_code);
+            prepStatement.setString(2,subject_status);
+//            prepStatement.setString(1,subject_code);
+//            prepStatement.setString(2,subject_status);
+            ResultSet resultSetMedi = prepStatement.executeQuery();
+
+            while (resultSetMedi.next()){
+                String tgno = resultSetMedi.getString("tgno");
+                int total_sessions = resultSetMedi.getInt("total_sessions");
+                int present_sessions = resultSetMedi.getInt("present_sessions");
+                int attendance_percentage = resultSetMedi.getInt("attendance_percentage");
+                Object[] attendanceData = new Object[4];
+                attendanceData[0] = tgno;
+                attendanceData[1] = total_sessions;
+                attendanceData[2] = present_sessions;
+                attendanceData[3] = attendance_percentage;
+                tablemodel.addRow(attendanceData);
+            }
+
+
+        }catch (Exception e){
             e.printStackTrace();
         }
     }
@@ -836,6 +884,27 @@ public class LecturerHomePage extends JFrame {
         catch (Exception e){
             e.printStackTrace();
         }
+    }
+
+    private void AttendancePerengeMediLabel(String tgno){
+        try{
+            String percentageQuery="select ROUND(SUM(CASE WHEN atten_status in('present','medical') THEN 1 ELSE 0 END)*100.0/COUNT(*),2)AS attendance_percentage FROM attendance WHERE tgno=?;";
+            prepStatement=conn.prepareStatement(percentageQuery);
+            prepStatement.setString(1,tgno);
+            ResultSet resultSet = prepStatement.executeQuery();
+
+            if(resultSet.next()){
+                int attendance_percentage = resultSet.getInt("attendance_percentage");
+                AttendancePercWithMedi.setText(attendance_percentage+"%");
+            }
+
+
+
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+
     }
 
     private void AttendencetableMethod(){
