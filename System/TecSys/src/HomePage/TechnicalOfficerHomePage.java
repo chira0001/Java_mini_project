@@ -137,7 +137,7 @@ public class TechnicalOfficerHomePage extends JFrame {
         setContentPane(TechnicalOfficerHomePage);
         setTitle("Technical Officer User Profile");
         setDefaultCloseOperation(EXIT_ON_CLOSE);
-        setSize(1200, 570);
+        setSize(1150, 570);
         setLocationRelativeTo(this);
         setVisible(true);
 
@@ -222,21 +222,19 @@ public class TechnicalOfficerHomePage extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 TimeTableSetModelMethod();
 
-                String level_no = (String) LevelNoDropDown.getSelectedItem();
-                assert level_no != null;
-                if (level_no.isEmpty()) {
-                    level_no = "0";
+                String levelSelected = (String) LevelNoDropDown.getSelectedItem();
+                if (levelSelected == null || levelSelected.isEmpty()) {
+                    levelSelected = "0";
                 }
-                int LevelNo = Integer.parseInt(level_no);
+                int level_no = Integer.parseInt(levelSelected);
 
-                String semester_no = (String) SemesterNoDropDown.getSelectedItem();
-                assert semester_no != null;
-                if (semester_no.isEmpty()) {
-                    semester_no = "0";
+                String semesterSelected = (String) SemesterNoDropDown.getSelectedItem();
+                if (semesterSelected == null || semesterSelected.isEmpty()) {
+                    semesterSelected = "0";
                 }
-                int SemesterNo = Integer.parseInt(semester_no);
+                int semester_no = Integer.parseInt(semesterSelected);
 
-                valuesForTimeTable(LevelNo, SemesterNo);
+                valuesForTimeTable(level_no, semester_no);
             }
         });
 
@@ -384,6 +382,7 @@ public class TechnicalOfficerHomePage extends JFrame {
         ToupdateMedicalBtn.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+
                 ToUpdatemedical();
             }
         });
@@ -392,28 +391,29 @@ public class TechnicalOfficerHomePage extends JFrame {
         ToaddmedBtn.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+
                 Toaddmedical(userIdentity);
             }
         });
+
         addButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+
                 TOAddAttendance();
             }
         });
     }
 
     private void TOAddAttendance() {
-        try{
+        try {
             String AtUpdateTG = AttenUpdateTgNo.getText();
             String AtUpdateCid = AttenUpdateCid.getText();
             String AtUpdateweekno = AttenUpdateWno.getText();
             String AtUpdateCstatus = AttenUpdateCstatus.getText();
             String AtUpdateAttstatus = AttenUpdateAttSt.getText();
 
-            String extension = (String) filePathValues[3];
-
-            String TOAddattendanceQuery = "INSERT INTO attendance(course_status,atten_status) VALUES " +
+            String TOAddattendanceQuery = "INSERT INTO attendance(course_status,atten_status) VALUES ( " +
                     "course_status = '" + AtUpdateCstatus + "', " +
                     "atten_status = '" + AtUpdateAttstatus + "' " +
                     "WHERE tgno = '" + AtUpdateTG + "' AND " +
@@ -421,21 +421,31 @@ public class TechnicalOfficerHomePage extends JFrame {
                     "week_no = " + AtUpdateweekno + ");";
 
             Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/javatest", "root", "1234");
-            Statement statement = connection.createStatement();
-            int resultSet = statement.executeUpdate(TOAddattendanceQuery);
+            PreparedStatement preparedStatement = connection.prepareStatement(TOAddattendanceQuery);
 
+            preparedStatement.setString(1, AtUpdateTG);
+            preparedStatement.setString(2, AtUpdateCid);
+            preparedStatement.setInt(3, Integer.parseInt(AtUpdateweekno));
+            preparedStatement.setString(4, AtUpdateCstatus);
+            preparedStatement.setString(5, AtUpdateAttstatus);
+
+            int resultSet = preparedStatement.executeUpdate();
 
             if (resultSet > 0) {
-                //  TOsaveupdatedmedical();
-                JOptionPane.showMessageDialog(null, "Attendance record Add successfully");
+                JOptionPane.showMessageDialog(null, "Attendance record added successfully");
             } else {
                 JOptionPane.showMessageDialog(null, "Error in adding Attendance record");
             }
 
-        } catch (Exception e) {
+            preparedStatement.close();
+            connection.close();
+
+        } catch (SQLException e) {
             e.printStackTrace();
+            System.out.println(e.getMessage());
         }
     }
+
 
     private void TOUpdateAttendance() {
         try{
@@ -656,9 +666,8 @@ private void LoadNotices() {
     }
 
 
-    private void valuesForTimeTable(int levelNo, int semesterNo) {
-        String semester_no = (String) SemesterNoDropDown.getSelectedItem();
-        String level_no = (String) LevelNoDropDown.getSelectedItem();
+    private void valuesForTimeTable(int level_no, int semester_no) {
+
 
         System.out.println("Level " + level_no + " Semester " + semester_no);
 
@@ -666,9 +675,10 @@ private void LoadNotices() {
         DefaultTableModel tblmodel = (DefaultTableModel) tableTimeTable.getModel();
         try{
             prepStatement = conn.prepareStatement(TimeTableValues);
-            prepStatement.setInt(1, Integer.parseInt(level_no));
-            prepStatement.setInt(2, Integer.parseInt(semester_no));
+            prepStatement.setInt(1, Integer.parseInt(String.valueOf(level_no)));
+            prepStatement.setInt(2, Integer.parseInt(String.valueOf(semester_no)));
             ResultSet result = prepStatement.executeQuery();
+
             while (result.next()){
                 String courseID = result.getString("course_id");
                 String moduleDay = result.getString("module_day");
@@ -686,6 +696,7 @@ private void LoadNotices() {
             }
         }catch (Exception e){
             e.printStackTrace();
+            System.out.println(e.getMessage());
         }
     }
 
