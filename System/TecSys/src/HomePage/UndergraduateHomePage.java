@@ -1627,4 +1627,8 @@ private String selectCourseMaterial(int level_no, int semester_no, String course
             e.printStackTrace();
         }
     }
+
+    public static void main(String[] args) {
+        new UndergraduateHomePage("tg0001");
+    }
 }

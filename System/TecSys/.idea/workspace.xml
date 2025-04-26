@@ -5,12 +5,15 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="eae00a62-4dab-4b09-9e2b-255c640ec556" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/.name" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/TecSys/Login/Login$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/TecSys/Login/Login$2.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/TecSys/Login/Login.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/HomePage/AdminHomePage.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/HomePage/AdminHomePage.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/TecSys/HomePage/LecturerHomePage$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/TecSys/HomePage/LecturerHomePage$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/TecSys/HomePage/LecturerHomePage$2.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/TecSys/HomePage/LecturerHomePage$2.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/TecSys/HomePage/LecturerHomePage$3.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/TecSys/HomePage/LecturerHomePage$3.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/TecSys/HomePage/LecturerHomePage.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/TecSys/HomePage/LecturerHomePage.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/TecSys/HomePage/UndergraduateHomePage.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/TecSys/HomePage/UndergraduateHomePage.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/HomePage/UndergraduateHomePage.form" beforeDir="false" afterPath="$PROJECT_DIR$/src/HomePage/UndergraduateHomePage.form" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/HomePage/UndergraduateHomePage.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/HomePage/UndergraduateHomePage.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -28,24 +31,24 @@
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/../.." />
   </component>
   <component name="GitHubPullRequestSearchHistory">{
-    &quot;lastFilter&quot;: {
-      &quot;state&quot;: &quot;OPEN&quot;,
-      &quot;assignee&quot;: &quot;Dilshan0721&quot;
-    }
-  }</component>
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;,
+    &quot;assignee&quot;: &quot;Dilshan0721&quot;
+  }
+}</component>
   <component name="GithubPullRequestsUISettings">{
-    &quot;selectedUrlAndAccountId&quot;: {
-      &quot;url&quot;: &quot;https://github.com/chira0001/Java_mini_project.git&quot;,
-      &quot;accountId&quot;: &quot;eb2ad9a5-4e54-4bf1-857a-58ad15d482f7&quot;
-    }
-  }</component>
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;https://github.com/chira0001/Java_mini_project.git&quot;,
+    &quot;accountId&quot;: &quot;eb2ad9a5-4e54-4bf1-857a-58ad15d482f7&quot;
+  }
+}</component>
   <component name="ProblemsViewState">
-    <option name="selectedTabId" value="CurrentFile" />
+    <option name="selectedTabId" value="DEPENDENCY_CHECKER_PROBLEMS_TAB" />
   </component>
   <component name="ProjectColorInfo">{
-    &quot;customColor&quot;: &quot;&quot;,
-    &quot;associatedIndex&quot;: 3
-  }</component>
+  &quot;customColor&quot;: &quot;&quot;,
+  &quot;associatedIndex&quot;: 3
+}</component>
   <component name="ProjectId" id="2vg3cqPlHG4UqD4mUpqFY4Qiy1o" />
   <component name="ProjectLevelVcsManager">
     <ConfirmationsSetting value="2" id="Add" />
@@ -56,28 +59,21 @@
   </component>
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
-    "Application.Lecturer.executor": "Run",
-    "Application.Login.executor": "Run",
     "Application.Main.executor": "Run",
+    "Application.UG.executor": "Run",
     "Application.Unnamed.executor": "Run",
     "Application.admin.executor": "Run",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.git.unshallow": "true",
     "UI_DESIGNER_EDITOR_MODE.PaletteManager.SHOW": "true",
     "UI_DESIGNER_EDITOR_MODE.UIDesignerToolWindowManager.SHOW": "true",
-    "UI_DESIGNER_EDITOR_MODE.UIDesignerToolWindowManager.WIDTH": "276",
-    "git-widget-placeholder": "<unknown>",
+    "UI_DESIGNER_EDITOR_MODE.UIDesignerToolWindowManager.WIDTH": "263",
+    "git-widget-placeholder": "kavinduDemo",
     "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "C:/Users/DELL/Desktop/Java Project/Java_mini_project/System/TecSys",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
+    "last_opened_file_path": "E:/E Drive/University Project/Java_mini_project/System/TecSys/Resources/ProfileImages",
     "project.structure.last.edited": "Modules",
     "project.structure.proportion": "0.0",
-    "project.structure.side.proportion": "0.0",
-    "vue.rearranger.settings.migration": "true"
+    "project.structure.side.proportion": "0.0"
   }
 }]]></component>
   <component name="RecentsManager">
@@ -85,16 +81,9 @@
       <recent name="E:\E Drive\University Project\Java_mini_project\System\TecSys\Resources\ProfileImages" />
     </key>
   </component>
-  <component name="RunManager" selected="Application.Lecturer">
-    <configuration name="Lecturer" type="Application" factoryName="Application">
-      <option name="MAIN_CLASS_NAME" value="HomePage.LecturerHomePage" />
-      <module name="TecSys" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="Login" type="Application" factoryName="Application">
-      <option name="MAIN_CLASS_NAME" value="Main.Main" />
+  <component name="RunManager" selected="Application.UG">
+    <configuration name="UG" type="Application" factoryName="Application">
+      <option name="MAIN_CLASS_NAME" value="HomePage.UndergraduateHomePage" />
       <module name="TecSys" />
       <method v="2">
         <option name="Make" enabled="true" />
@@ -107,19 +96,18 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
+    <configuration name="admin" type="Application" factoryName="Application">
+      <option name="MAIN_CLASS_NAME" value="HomePage.AdminHomePage" />
+      <module name="TecSys" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <list>
       <item itemvalue="Application.Unnamed" />
-      <item itemvalue="Application.Login" />
-      <item itemvalue="Application.Lecturer" />
+      <item itemvalue="Application.UG" />
+      <item itemvalue="Application.admin" />
     </list>
-  </component>
-  <component name="SharedIndexes">
-    <attachedChunks>
-      <set>
-        <option value="bundled-jdk-9823dce3aa75-a94e463ab2e7-intellij.indexing.shared.core-IU-243.25659.59" />
-        <option value="bundled-js-predefined-d6986cc7102b-1632447f56bf-JavaScript-IU-243.25659.59" />
-      </set>
-    </attachedChunks>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
@@ -136,23 +124,7 @@
       <workItem from="1743938829301" duration="90000" />
       <workItem from="1744185581865" duration="355000" />
       <workItem from="1744192380189" duration="5008000" />
-      <workItem from="1745344819617" duration="737000" />
-      <workItem from="1745345579143" duration="21000" />
-      <workItem from="1745345654475" duration="29000" />
-      <workItem from="1745345998789" duration="166000" />
-      <workItem from="1745401667974" duration="15778000" />
-      <workItem from="1745423544977" duration="6756000" />
-      <workItem from="1745498225547" duration="1323000" />
-      <workItem from="1745501913996" duration="27297000" />
-      <workItem from="1745559419416" duration="38259000" />
-      <workItem from="1745628654630" duration="78000" />
     </task>
     <servers />
-  </component>
-  <component name="TypeScriptGeneratedFilesManager">
-    <option name="version" value="3" />
-  </component>
-  <component name="VcsManagerConfiguration">
-    <option name="LAST_COMMIT_MESSAGE" value="" />
   </component>
 </project>

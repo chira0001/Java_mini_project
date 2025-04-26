@@ -944,8 +944,6 @@
                       </grid>
                     </children>
                   </grid>
-<<<<<<< HEAD
-=======
                   <grid id="e341c" binding="UGTimeTable" layout-manager="GridLayoutManager" row-count="2" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
                     <margin top="25" left="25" bottom="25" right="50"/>
                     <constraints>
@@ -1072,7 +1070,6 @@
                       </grid>
                     </children>
                   </grid>
->>>>>>> origin/Kavindu
                   <grid id="fa84f" binding="UGCourses" layout-manager="GridLayoutManager" row-count="1" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
                     <margin top="25" left="25" bottom="25" right="50"/>
                     <constraints>
@@ -1939,7 +1936,6 @@
                       </grid>
                     </children>
                   </grid>
-<<<<<<< HEAD
                   <grid id="11cb3" binding="UGMedicals" layout-manager="GridLayoutManager" row-count="1" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
                     <margin top="25" left="25" bottom="25" right="50"/>
                     <constraints>
@@ -1967,12 +1963,6 @@
                     <margin top="25" left="25" bottom="25" right="50"/>
                     <constraints>
                       <card name="Card2"/>
-=======
-                  <grid id="fa84f" binding="UGCourses" layout-manager="GridLayoutManager" row-count="1" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
-                    <margin top="25" left="25" bottom="25" right="50"/>
-                    <constraints>
-                      <card name="Card1"/>
->>>>>>> origin/Kavindu
                     </constraints>
                     <properties>
                       <enabled value="true"/>
@@ -1992,40 +1982,25 @@
                       </grid>
                     </children>
                   </grid>
-<<<<<<< HEAD
                   <grid id="e341c" binding="UGTimeTable" layout-manager="GridLayoutManager" row-count="2" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
                     <margin top="25" left="25" bottom="25" right="50"/>
                     <constraints>
                       <card name="UGTimeTableCard"/>
-=======
-                  <grid id="11cb3" binding="UGMedicals" layout-manager="GridLayoutManager" row-count="1" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
-                    <margin top="25" left="25" bottom="25" right="50"/>
-                    <constraints>
-                      <card name="Card2"/>
->>>>>>> origin/Kavindu
                     </constraints>
                     <properties>
                       <enabled value="true"/>
                     </properties>
                     <border type="none"/>
                     <children>
-<<<<<<< HEAD
                       <grid id="3df73" layout-manager="GridLayoutManager" row-count="1" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
                         <margin top="0" left="0" bottom="0" right="0"/>
                         <constraints>
                           <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
-=======
-                      <grid id="7e5f6" layout-manager="GridLayoutManager" row-count="1" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
-                        <margin top="0" left="0" bottom="0" right="0"/>
-                        <constraints>
-                          <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
->>>>>>> origin/Kavindu
                         </constraints>
                         <properties>
                           <background color="-1"/>
                         </properties>
                         <border type="none"/>
-<<<<<<< HEAD
                         <children>
                           <scrollpane id="21000">
                             <constraints>
@@ -2120,9 +2095,6 @@
                             </properties>
                           </component>
                         </children>
-=======
-                        <children/>
->>>>>>> origin/Kavindu
                       </grid>
                     </children>
                   </grid>
