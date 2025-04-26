@@ -4645,7 +4645,7 @@
                                         <properties/>
                                         <border type="none"/>
                                         <children>
-                                          <component id="703d1" class="javax.swing.JTextArea" binding="textArea1" default-binding="true">
+                                          <component id="703d1" class="javax.swing.JTextArea" binding="noticeGetArea">
                                             <constraints/>
                                             <properties>
                                               <font size="12"/>
