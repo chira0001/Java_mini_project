@@ -89,7 +89,7 @@ public class LecturerHomePage extends JFrame {
     private JLabel UGClass;
     private JTable UGGradeTable;
     private JButton GradesButton;
-    private JComboBox comboBox1;
+    private JComboBox MarkSubCodeCombo;
     private JTextField textField3;
     private JTextField textField4;
     private JTextField textField5;
@@ -98,9 +98,12 @@ public class LecturerHomePage extends JFrame {
     private JTextField textField11;
     private JTextField textField12;
     private JTextField textField13;
-    private JTextField textField14;
-    private JTextField textField15;
+    private JTextField theory_field;
+    private JTextField practical_field;
     private JButton uploadMarksButton;
+    private JComboBox MarkLevelCombo;
+    private JComboBox MarkSemesterCombo;
+    private JComboBox MarkSubStatusCombo;
     private JComboBox comboBox2;
 
     private CardLayout cardLayout;
@@ -368,6 +371,53 @@ public class LecturerHomePage extends JFrame {
 
                 SelectMediLevelCourse(userIdentity,medicalLevelInt,medicalSemesterInt);
                 LoadMedicalTable(userIdentity,medicalLevelInt,medicalSemesterInt);
+            }
+        });
+        MarkLevelCombo.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String marklevel=(String)MarkLevelCombo.getSelectedItem();
+                String marksemester=(String)MarkSemesterCombo.getSelectedItem();
+
+
+
+            }
+        });
+        MarkSemesterCombo.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String marksemester=(String)MarkSemesterCombo.getSelectedItem();
+                String marklevel=(String)MarkLevelCombo.getSelectedItem();
+                int marksemesterInt= Integer.parseInt(marksemester);
+                int marklevelInt= Integer.parseInt(marklevel);
+                markgetcourseid(userIdentity,marklevelInt,marksemesterInt);
+            }
+        });
+        MarkSubStatusCombo.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String status = (String) MarkSubStatusCombo.getSelectedItem();
+                if (status != null) {
+                    if (status.equals("theory")) {
+                        practical_field.setEnabled(false);
+                        theory_field.setEnabled(true);
+                    } else if (status.equals("practical")) {
+                        theory_field.setEnabled(false);
+                        practical_field.setEnabled(true);
+                    } else {
+                        theory_field.setEnabled(true);
+                        practical_field.setEnabled(true);
+                    }
+                }
+            }
+        });
+
+        MarkSubCodeCombo.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String subcode=(String)MarkSubCodeCombo.getSelectedItem();
+                getMarkStatus(subcode);
+
             }
         });
     }
@@ -979,12 +1029,42 @@ public class LecturerHomePage extends JFrame {
            e.printStackTrace();
         }
 
-
-
-
     }
+    private void markgetcourseid(String lecno,int level,int semester){
+            try{
+                MarkSubCodeCombo.removeAllItems();
+                String Query="SELECT c.course_id FROM courses c INNER JOIN lecture_course lc ON c.course_id = lc.course_id WHERE lc.lecno = ? AND c.level_no = ? AND c.semester_no = ?;";
+                prepStatement=conn.prepareStatement(Query);
+                prepStatement.setString(1, lecno);
+                prepStatement.setInt(2, level);
+                prepStatement.setInt(3, semester);
+                ResultSet resultSet = prepStatement.executeQuery();
+                while (resultSet.next()){
+                    String course_id = resultSet.getString("course_id");
+                    MarkSubCodeCombo.addItem(course_id);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+    }
+        private void getMarkStatus(String course_code){
+                try{
+                    MarkSubStatusCombo.removeAllItems();
+                    String CourseStatusQuery="select status from courses where course_id=?;";
+                    prepStatement=conn.prepareStatement(CourseStatusQuery);
+                    prepStatement.setString(1, course_code);
 
+                    ResultSet resultSet1 = prepStatement.executeQuery();
+                    while (resultSet1.next()){
+                        String status = resultSet1.getString("status");
+                        MarkSubStatusCombo.addItem(status);
 
+                    }
+
+                }catch(Exception e){
+                    e.printStackTrace();
+                }
+        }
 
     public static void main(String[] args) {
         new LecturerHomePage("lec5678");

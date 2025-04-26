@@ -1551,7 +1551,7 @@
                             <properties/>
                             <border type="none"/>
                             <children>
-                              <component id="8cf7e" class="javax.swing.JComboBox">
+                              <component id="8cf7e" class="javax.swing.JComboBox" binding="MarkSemesterCombo">
                                 <constraints>
                                   <grid row="0" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="2" anchor="8" fill="1" indent="0" use-parent-layout="false">
                                     <minimum-size width="50" height="-1"/>
@@ -1584,7 +1584,7 @@
                                   <text value="Semester No"/>
                                 </properties>
                               </component>
-                              <component id="23e33" class="javax.swing.JComboBox">
+                              <component id="23e33" class="javax.swing.JComboBox" binding="MarkLevelCombo">
                                 <constraints>
                                   <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="2" anchor="8" fill="1" indent="0" use-parent-layout="false">
                                     <minimum-size width="50" height="-1"/>
@@ -1619,7 +1619,7 @@
                                   <text value="Subject Status"/>
                                 </properties>
                               </component>
-                              <component id="3d56a" class="javax.swing.JComboBox">
+                              <component id="3d56a" class="javax.swing.JComboBox" binding="MarkSubStatusCombo">
                                 <constraints>
                                   <grid row="0" column="7" row-span="1" col-span="1" vsize-policy="0" hsize-policy="2" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
                                 </constraints>
@@ -1628,7 +1628,7 @@
                                   <model/>
                                 </properties>
                               </component>
-                              <component id="8580f" class="javax.swing.JComboBox" binding="comboBox1" default-binding="true">
+                              <component id="8580f" class="javax.swing.JComboBox" binding="MarkSubCodeCombo">
                                 <constraints>
                                   <grid row="0" column="5" row-span="1" col-span="1" vsize-policy="0" hsize-policy="2" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
                                 </constraints>
@@ -2008,7 +2008,7 @@
                                         <properties/>
                                         <border type="none"/>
                                         <children>
-                                          <component id="63032" class="javax.swing.JTextField" binding="textField14" default-binding="true">
+                                          <component id="63032" class="javax.swing.JTextField" binding="theory_field">
                                             <constraints>
                                               <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
                                                 <preferred-size width="150" height="-1"/>
@@ -2026,7 +2026,7 @@
                                         <properties/>
                                         <border type="none"/>
                                         <children>
-                                          <component id="9dca6" class="javax.swing.JTextField" binding="textField15" default-binding="true">
+                                          <component id="9dca6" class="javax.swing.JTextField" binding="practical_field">
                                             <constraints>
                                               <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
                                                 <preferred-size width="150" height="-1"/>
