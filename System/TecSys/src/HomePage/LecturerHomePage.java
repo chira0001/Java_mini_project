@@ -113,7 +113,13 @@ public class LecturerHomePage extends JFrame {
     private JButton removeButton;
     private JButton saveButton;
     private JTextField Course_MaterialField;
-    private JComboBox comboBox2;
+    private JButton StudentDetailsButtons;
+    private JPanel LECStudnetDetails;
+    private JComboBox STLevel;
+    private JComboBox STSem;
+    private JComboBox STCource;
+    private JTable StudentTable;
+//    private JComboBox STCource;
 
     private CardLayout cardLayout;
 
@@ -125,10 +131,10 @@ public class LecturerHomePage extends JFrame {
     private String LecPhno;
     private String LecProfImg;
 
-    private String[] cardButtons = {"Profile", "Attendance", "Time Table", "Courses", "Medical", "Notices", "Grades" ,"Marks", "Settings"};
-    private String[] cardNames = {"LECProfileCard", "LECAttendanceCard", "LECTimeTableCard", "LECCoursesCard", "LECMedicalsCard", "LECNoticesCard","LECGradesCards", "LECMarksCard", "LECSettingsCard"};
-    JButton[] btnFieldNames = {profileButton,attendanceButton,timeTableButton,coursesButton,medicalButton,noticesButton,GradesButton,marksButton,settingsButton};
-    private String[] cardTitles = {"Welcome Lecturer..!", "Student Attendance Details", "Lecturer Time Table","Your Courses","Student Medical Information", "Notices", "Student Grades","Students Marks","Your Settings Configuration"};;
+    private String[] cardButtons = {"Profile","Student Details","Attendance", "Time Table", "Courses", "Medical", "Notices", "Grades" ,"Marks", "Settings"};
+    private String[] cardNames = {"LECProfileCard","LECStudentCard", "LECAttendanceCard", "LECTimeTableCard", "LECCoursesCard", "LECMedicalsCard", "LECNoticesCard","LECGradesCards", "LECMarksCard", "LECSettingsCard"};
+    JButton[] btnFieldNames = {profileButton,StudentDetailsButtons,attendanceButton,timeTableButton,coursesButton,medicalButton,noticesButton,GradesButton,marksButton,settingsButton};
+    private String[] cardTitles = {"Welcome Lecturer..!","Students Details","Student Attendance Details", "Lecturer Time Table","Your Courses","Student Medical Information", "Notices", "Student Grades","Students Marks","Your Settings Configuration"};;
 
 
     private Object[] filePathValues = new Object[4];
@@ -171,6 +177,7 @@ public class LecturerHomePage extends JFrame {
         timeTableButton.addActionListener(listener);
         attendanceButton.addActionListener(listener);
         GradesButton.addActionListener(listener);
+        StudentDetailsButtons.addActionListener(listener);
 
 
         logoutButton.addActionListener(new ActionListener() {
@@ -202,19 +209,6 @@ public class LecturerHomePage extends JFrame {
             }
         });
 
-        LECLevelComboBox.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                updateCoursesIfReady(userIdentity);
-            }
-        });
-
-        LECSemesterCombobox.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                updateCoursesIfReady(userIdentity);
-            }
-        });
 
         LevelNoDropDown.addActionListener(new ActionListener() {
             @Override
@@ -396,6 +390,8 @@ public class LecturerHomePage extends JFrame {
                 if(marksemester.isEmpty()){
                     marksemester = "0";
                 }
+                int marksemesterInt= Integer.parseInt(marksemester);
+                int marklevelInt= Integer.parseInt(marklevel);
 
 
 
@@ -451,18 +447,21 @@ public class LecturerHomePage extends JFrame {
         LevelNoGrade.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                String level=(String) LevelNoGrade.getSelectedItem();
-                assert level != null;
-                if(level.isEmpty()){
-                    level = "0";
-                }
-                int levelInt= Integer.parseInt(level);
-                String semester=(String)MarkSemesterCombo.getSelectedItem();
-                assert semester != null;
-                if(semester.isEmpty()){
-                    semester = "0";
-                }
-                int semesterInt= Integer.parseInt(semester);
+
+//                String level=(String) LevelNoGrade.getSelectedItem();
+//                assert level != null;
+//                if(level.isEmpty()){
+//                    level = "0";
+//                }
+//                int levelInt= Integer.parseInt(level);
+//                String semester=(String)MarkSemesterCombo.getSelectedItem();
+//                assert semester != null;
+//                if(semester.isEmpty()){
+//                    semester = "0";
+//                }
+//                int semesterInt= Integer.parseInt(semester);
+//
+//                getstudentdetailcourseid(userIdentity,levelInt,semesterInt);
 
 
             }
@@ -485,6 +484,63 @@ public class LecturerHomePage extends JFrame {
                 loadCourseIDforGrade(userIdentity,levelInt,semesterInt);
             }
 
+        });
+        STLevel.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String level = (String) STLevel.getSelectedItem();
+                assert level != null;
+                if(level.isEmpty()){
+                    level = "0";
+
+                }
+                int levelInt= Integer.parseInt(level);
+                String semester=(String)STSem.getSelectedItem();
+                assert semester != null;
+                if(semester.isEmpty()){
+                    semester = "0";
+                }
+                int semesterInt= Integer.parseInt(semester);
+
+                getstudentdetailcourseid(userIdentity,levelInt,semesterInt);
+
+
+//                String level=(String) LevelNoGrade.getSelectedItem();
+//                assert level != null;
+//                if(level.isEmpty()){
+//                    level = "0";
+//                }
+//                int levelInt= Integer.parseInt(level);
+//                String semester=(String)MarkSemesterCombo.getSelectedItem();
+//                assert semester != null;
+//                if(semester.isEmpty()){
+//                    semester = "0";
+//                }
+//                int semesterInt= Integer.parseInt(semester);
+
+
+            }
+        });
+        STSem.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+                String semester = (String) STSem.getSelectedItem();
+                assert semester != null;
+                if(semester.isEmpty()){
+                    semester = "0";
+                }
+                int semesterInt= Integer.parseInt(semester);
+
+                String level=(String)STLevel.getSelectedItem();
+                assert level != null;
+                if(level.isEmpty()){
+                    level = "0";
+                }
+                int levelInt= Integer.parseInt(level);
+                getstudentdetailcourseid(userIdentity,levelInt,semesterInt);
+
+            }
         });
     }
 
@@ -1153,7 +1209,55 @@ public class LecturerHomePage extends JFrame {
             }
         }
 
+    private void getstudentdetailcourseid(String lecno,int level,int semester){
+        System.out.println(lecno+ " " + level + " " + semester );
+
+        try{
+            MarkSubCodeCombo.removeAllItems();
+            String Query="SELECT c.course_id FROM courses c INNER JOIN lecture_course lc ON c.course_id = lc.course_id WHERE lc.lecno = ? AND c.level_no = ? AND c.semester_no = ?;";
+            prepStatement=conn.prepareStatement(Query);
+            prepStatement.setString(1, lecno);
+            prepStatement.setInt(2, level);
+            prepStatement.setInt(3, semester);
+            ResultSet resultSet = prepStatement.executeQuery();
+            while (resultSet.next()){
+                String course_id = resultSet.getString("course_id");
+                System.out.println(course_id);
+                STCource.addItem(course_id);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+//    private void StudentTableMethod(){
+//        StudentTable.setModel(new DefaultTableModel(
+//                null,
+//                new String[]{"Student TG Number","Student FName","StudentLName","Student Address","Student Email","Phone Number"}
+//        ));
+//    }
+//
+//    private void GetStudentDetailsMethod(){
+//
+//        try{
+//            StudentTableMethod();
+//            DefaultTableModel model=(DefaultTableModel)StudentTable.getModel();
+//
+//            String STDetailsQuery="select "
+//
+//        }catch (Exception e){
+//            e.printStackTrace();
+//        }
+//    }
+
+
+
+
     public static void main(String[] args) {
         new LecturerHomePage("lec5678");
+    }
+
+    private void createUIComponents() {
+        // TODO: place custom component creation code here
     }
 }
