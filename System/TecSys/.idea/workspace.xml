@@ -4,14 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="eae00a62-4dab-4b09-9e2b-255c640ec556" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/TecSys/Login/Login$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/TecSys/Login/Login$2.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/TecSys/Login/Login.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/HomePage/AdminHomePage.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/HomePage/AdminHomePage.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/HomePage/UndergraduateHomePage.form" beforeDir="false" afterPath="$PROJECT_DIR$/src/HomePage/UndergraduateHomePage.form" afterDir="false" />
-    </list>
+    <list default="true" id="eae00a62-4dab-4b09-9e2b-255c640ec556" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -57,6 +50,7 @@
   <component name="PropertiesComponent">{
   &quot;keyToString&quot;: {
     &quot;Application.Main.executor&quot;: &quot;Run&quot;,
+    &quot;Application.UG.executor&quot;: &quot;Run&quot;,
     &quot;Application.Unnamed.executor&quot;: &quot;Run&quot;,
     &quot;Application.admin.executor&quot;: &quot;Run&quot;,
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
@@ -64,7 +58,7 @@
     &quot;UI_DESIGNER_EDITOR_MODE.PaletteManager.SHOW&quot;: &quot;true&quot;,
     &quot;UI_DESIGNER_EDITOR_MODE.UIDesignerToolWindowManager.SHOW&quot;: &quot;true&quot;,
     &quot;UI_DESIGNER_EDITOR_MODE.UIDesignerToolWindowManager.WIDTH&quot;: &quot;263&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;Gihan&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;kavinduDemo&quot;,
     &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
     &quot;last_opened_file_path&quot;: &quot;E:/E Drive/University Project/Java_mini_project/System/TecSys/Resources/ProfileImages&quot;,
     &quot;project.structure.last.edited&quot;: &quot;Modules&quot;,
@@ -78,6 +72,13 @@
     </key>
   </component>
   <component name="RunManager" selected="Application.Unnamed">
+    <configuration name="UG" type="Application" factoryName="Application">
+      <option name="MAIN_CLASS_NAME" value="HomePage.UndergraduateHomePage" />
+      <module name="TecSys" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <configuration name="Unnamed" type="Application" factoryName="Application" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="Main.Main" />
       <module name="TecSys" />
@@ -94,6 +95,7 @@
     </configuration>
     <list>
       <item itemvalue="Application.Unnamed" />
+      <item itemvalue="Application.UG" />
       <item itemvalue="Application.admin" />
     </list>
   </component>
