@@ -858,9 +858,11 @@ private String selectCourseMaterial(int level_no, int semester_no, String course
             AttendanceTableSetMethod();
 
             DefaultTableModel tblmodel = (DefaultTableModel) AttendanceTable.getModel();
+
             String LoadAttendanceQuery = "select attendance.week_no,courses.course_id,courses.course_name,atten_status,attendance.med_id,medical.med_reason from attendance join courses on attendance.course_id = courses.course_id left join medical on attendance.med_id = medical.medical_no where attendance.tgno = ? and level_no = ? and semester_no = ? and attendance.course_id = ? and attendance.course_status = ?";
 
             prepStatement = conn.prepareStatement(LoadAttendanceQuery);
+
             prepStatement.setString(1,tgno);
             prepStatement.setInt(2,level_no);
             prepStatement.setInt(3,semester_no);

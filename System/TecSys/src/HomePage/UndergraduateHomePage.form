@@ -944,6 +944,135 @@
                       </grid>
                     </children>
                   </grid>
+<<<<<<< HEAD
+=======
+                  <grid id="e341c" binding="UGTimeTable" layout-manager="GridLayoutManager" row-count="2" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+                    <margin top="25" left="25" bottom="25" right="50"/>
+                    <constraints>
+                      <card name="UGTimeTableCard"/>
+                    </constraints>
+                    <properties>
+                      <enabled value="true"/>
+                    </properties>
+                    <border type="none"/>
+                    <children>
+                      <grid id="556e7" layout-manager="GridLayoutManager" row-count="2" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+                        <margin top="0" left="0" bottom="0" right="0"/>
+                        <constraints>
+                          <grid row="0" column="0" row-span="2" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+                        </constraints>
+                        <properties/>
+                        <border type="none"/>
+                        <children>
+                          <grid id="3df73" layout-manager="GridLayoutManager" row-count="1" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+                            <margin top="0" left="0" bottom="0" right="0"/>
+                            <constraints>
+                              <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+                            </constraints>
+                            <properties>
+                              <background color="-1"/>
+                            </properties>
+                            <border type="none"/>
+                            <children>
+                              <scrollpane id="21000">
+                                <constraints>
+                                  <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="7" hsize-policy="7" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+                                </constraints>
+                                <properties>
+                                  <font size="15"/>
+                                </properties>
+                                <border type="none"/>
+                                <children>
+                                  <component id="14932" class="javax.swing.JTable" binding="tableTimeTable">
+                                    <constraints/>
+                                    <properties>
+                                      <autoCreateColumnsFromModel value="true"/>
+                                      <autoResizeMode value="3"/>
+                                      <cellSelectionEnabled value="false"/>
+                                      <columnSelectionAllowed value="false"/>
+                                      <dropMode value="USE_SELECTION"/>
+                                      <editingColumn value="0"/>
+                                      <editingRow value="0"/>
+                                      <enabled value="false"/>
+                                      <fillsViewportHeight value="true"/>
+                                      <font size="15"/>
+                                      <rowHeight value="40"/>
+                                    </properties>
+                                  </component>
+                                </children>
+                              </scrollpane>
+                            </children>
+                          </grid>
+                          <grid id="84cb3" layout-manager="GridLayoutManager" row-count="1" column-count="5" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+                            <margin top="0" left="0" bottom="0" right="0"/>
+                            <constraints>
+                              <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+                            </constraints>
+                            <properties/>
+                            <border type="none"/>
+                            <children>
+                              <component id="40aa7" class="javax.swing.JComboBox" binding="SemesterNoDropDown">
+                                <constraints>
+                                  <grid row="0" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="2" anchor="8" fill="1" indent="0" use-parent-layout="false">
+                                    <minimum-size width="50" height="-1"/>
+                                  </grid>
+                                </constraints>
+                                <properties>
+                                  <font size="16"/>
+                                  <model>
+                                    <item value=""/>
+                                    <item value="1"/>
+                                    <item value="2"/>
+                                  </model>
+                                </properties>
+                              </component>
+                              <hspacer id="87f45">
+                                <constraints>
+                                  <grid row="0" column="4" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                                </constraints>
+                              </hspacer>
+                              <component id="51b7b" class="javax.swing.JLabel">
+                                <constraints>
+                                  <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                                </constraints>
+                                <properties>
+                                  <font size="16"/>
+                                  <text value="Level No"/>
+                                </properties>
+                              </component>
+                              <component id="63296" class="javax.swing.JLabel">
+                                <constraints>
+                                  <grid row="0" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                                </constraints>
+                                <properties>
+                                  <font size="16"/>
+                                  <text value="Semester No"/>
+                                </properties>
+                              </component>
+                              <component id="24f7" class="javax.swing.JComboBox" binding="LevelNoDropDown">
+                                <constraints>
+                                  <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="2" anchor="8" fill="1" indent="0" use-parent-layout="false">
+                                    <minimum-size width="50" height="-1"/>
+                                  </grid>
+                                </constraints>
+                                <properties>
+                                  <font size="16"/>
+                                  <model>
+                                    <item value=""/>
+                                    <item value="1"/>
+                                    <item value="2"/>
+                                    <item value="3"/>
+                                    <item value="4"/>
+                                  </model>
+                                </properties>
+                              </component>
+                            </children>
+                          </grid>
+                        </children>
+                      </grid>
+                    </children>
+                  </grid>
+>>>>>>> origin/Kavindu
                   <grid id="fa84f" binding="UGCourses" layout-manager="GridLayoutManager" row-count="1" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
                     <margin top="25" left="25" bottom="25" right="50"/>
                     <constraints>
@@ -1810,6 +1939,7 @@
                       </grid>
                     </children>
                   </grid>
+<<<<<<< HEAD
                   <grid id="11cb3" binding="UGMedicals" layout-manager="GridLayoutManager" row-count="1" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
                     <margin top="25" left="25" bottom="25" right="50"/>
                     <constraints>
@@ -1837,6 +1967,12 @@
                     <margin top="25" left="25" bottom="25" right="50"/>
                     <constraints>
                       <card name="Card2"/>
+=======
+                  <grid id="fa84f" binding="UGCourses" layout-manager="GridLayoutManager" row-count="1" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+                    <margin top="25" left="25" bottom="25" right="50"/>
+                    <constraints>
+                      <card name="Card1"/>
+>>>>>>> origin/Kavindu
                     </constraints>
                     <properties>
                       <enabled value="true"/>
@@ -1856,25 +1992,40 @@
                       </grid>
                     </children>
                   </grid>
+<<<<<<< HEAD
                   <grid id="e341c" binding="UGTimeTable" layout-manager="GridLayoutManager" row-count="2" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
                     <margin top="25" left="25" bottom="25" right="50"/>
                     <constraints>
                       <card name="UGTimeTableCard"/>
+=======
+                  <grid id="11cb3" binding="UGMedicals" layout-manager="GridLayoutManager" row-count="1" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+                    <margin top="25" left="25" bottom="25" right="50"/>
+                    <constraints>
+                      <card name="Card2"/>
+>>>>>>> origin/Kavindu
                     </constraints>
                     <properties>
                       <enabled value="true"/>
                     </properties>
                     <border type="none"/>
                     <children>
+<<<<<<< HEAD
                       <grid id="3df73" layout-manager="GridLayoutManager" row-count="1" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
                         <margin top="0" left="0" bottom="0" right="0"/>
                         <constraints>
                           <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+=======
+                      <grid id="7e5f6" layout-manager="GridLayoutManager" row-count="1" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+                        <margin top="0" left="0" bottom="0" right="0"/>
+                        <constraints>
+                          <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+>>>>>>> origin/Kavindu
                         </constraints>
                         <properties>
                           <background color="-1"/>
                         </properties>
                         <border type="none"/>
+<<<<<<< HEAD
                         <children>
                           <scrollpane id="21000">
                             <constraints>
@@ -1969,6 +2120,9 @@
                             </properties>
                           </component>
                         </children>
+=======
+                        <children/>
+>>>>>>> origin/Kavindu
                       </grid>
                     </children>
                   </grid>
