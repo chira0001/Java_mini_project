@@ -1,0 +1,3 @@
+Labsheet 01 – Introduction to Object Oriented Programming Concepts
+
+This labsheet provides a foundational overview of Object Oriented Programming (OOP), focusing on the core principles that distinguish it from procedural programming. Students will explore key concepts such as classes, objects, attributes, and methods. Through guided exercises, learners will write simple class definitions and create objects to model real-world entities. The session emphasizes understanding encapsulation and the importance of organizing code using the object-oriented paradigm. By the end of the labsheet, students will be able to define basic classes and demonstrate how to instantiate and interact with objects in an OOP-supported programming language.

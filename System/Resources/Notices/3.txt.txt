@@ -1,0 +1,27 @@
+3. Workshop on AI
+
+We are excited to announce a one-day workshop on Artificial Intelligence (AI) hosted by the Computer Science Department. AI has transformed multiple industries, and this workshop aims to provide students with a comprehensive understanding of machine learning, deep learning, and AI applications.
+
+Workshop Details
+📅 Date: September 15th, 2025
+📍 Venue: Main Auditorium
+⏰ Time: 9:00 AM - 5:00 PM
+
+Topics Covered
+Introduction to Artificial Intelligence
+
+Machine Learning Algorithms & Applications
+
+Deep Learning & Neural Networks
+
+Ethical Considerations in AI
+
+Hands-on Coding Sessions with Python
+
+Who Should Attend?
+This workshop is ideal for students interested in AI, software development, and data science. No prior AI knowledge is required, but a basic understanding of programming will be beneficial.
+
+Registration Details
+Interested participants must register online via the university portal before September 10th. Seats are limited, so early registration is recommended.
+
+Join us in exploring the future of AI and its impact on industries worldwide!
