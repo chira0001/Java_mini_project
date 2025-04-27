@@ -2729,7 +2729,9 @@
                             <children>
                               <component id="89e40" class="javax.swing.JTable" binding="UGGradeTable">
                                 <constraints/>
-                                <properties/>
+                                <properties>
+                                  <enabled value="false"/>
+                                </properties>
                               </component>
                             </children>
                           </scrollpane>
@@ -2851,7 +2853,11 @@
                                 <children>
                                   <component id="e1660" class="javax.swing.JTable" binding="StudentTable">
                                     <constraints/>
-                                    <properties/>
+                                    <properties>
+                                      <enabled value="false"/>
+                                      <font size="12" style="1"/>
+                                      <updateSelectionOnSort value="false"/>
+                                    </properties>
                                   </component>
                                 </children>
                               </scrollpane>

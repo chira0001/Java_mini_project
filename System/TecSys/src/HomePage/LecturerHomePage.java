@@ -16,7 +16,11 @@ import java.io.FileWriter;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.sql.*;
+import java.text.DecimalFormat;
+import java.util.Arrays;
 import java.util.Scanner;
+
+import static java.util.Arrays.sort;
 
 public class LecturerHomePage extends JFrame {
     private String cardCommand;
@@ -583,7 +587,404 @@ public class LecturerHomePage extends JFrame {
                 LoaStudentDetails(levelInt,semesterInt);
             }
         });
+        GradesTableSetModelMethod();
+        enterButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                GradesTableSetModelMethod();
+                calCGPA();
+//                calCGPA1();
+            }
+        });
     }
+
+//    private void calCGPA() {
+//
+//        DefaultTableModel defaultTableModel = (DefaultTableModel) UGGradeTable.getModel();
+//        DecimalFormat df = new DecimalFormat("0.00");
+//
+//        int quiz_percentage, assessment_percentage, mid_term_percentage, final_theory_percentage, final_practical_percentage,
+//                quiz1, quiz2, quiz3, quiz4, assessment1, assessment2, mid_term, finalTheory, finalPractical, ca_perc_max, final_mark_perc_max;
+//
+//        double quizPercentage, assessmentPercentage, midPercentage, FinalTheoryPercentage, FinalPracticalPercentage, ca_mark_perc, final_mark_perc;
+//
+//        String c_id, c_name, c_grade = "";
+//        float atten_perc_float = 0;
+//
+//        double c_sum = 0;
+//        double SGPA = 0;
+//
+//        int credit_sum;
+//        double credit_point_mul = 0, credit_point_mul_sum = 0;
+//        String _TGNo;
+//
+//        String TG_Number = studentTGno.getText();
+//
+//        String levelNO = (String) LevelNoGrade.getSelectedItem();
+//        int levelNOInt = Integer.parseInt(levelNO);
+//
+//        String semesterNO = (String) SemesterNoGrade.getSelectedItem();
+//        int semesterNOInt = Integer.parseInt(semesterNO);
+//
+//        String course_ID = (String) GradeSubCodeCombo.getSelectedItem();
+//
+//        try {
+//            String selectMarksDetails = "select tgno,courses.course_id,courses.course_name,quiz_one,quiz_second,quiz_third,quiz_fourth,assessment_one,assessment_second,mid_term,final_theory,final_practical,quizzes_perc,assessment_perc,mid_term_perc,final_theory_perc,final_practical_perc from marks join courses on marks.course_id = courses.course_id where courses.course_id = ? and level_no = ? and semester_no = ?";
+//
+//            prepStatement = conn.prepareStatement(selectMarksDetails);
+//            prepStatement.setString(1, course_ID);
+//            prepStatement.setInt(2, levelNOInt);
+//            prepStatement.setInt(3, semesterNOInt);
+//
+//            ResultSet resultSet = prepStatement.executeQuery();
+//
+//            while (resultSet.next()) {
+//                _TGNo = resultSet.getString("tgno");
+//                c_id = resultSet.getString("course_id");
+//                c_name = resultSet.getString("course_name");
+//
+//                quiz1 = resultSet.getInt("quiz_one");
+//                quiz2 = resultSet.getInt("quiz_second");
+//                quiz3 = resultSet.getInt("quiz_third");
+//                quiz4 = resultSet.getInt("quiz_fourth");
+//                assessment1 = resultSet.getInt("assessment_one");
+//                assessment2 = resultSet.getInt("assessment_second");
+//                mid_term = resultSet.getInt("mid_term");
+//                finalTheory = resultSet.getInt("final_theory");
+//                finalPractical = resultSet.getInt("final_practical");
+//
+//                quiz_percentage = resultSet.getInt("quizzes_perc");
+//                assessment_percentage = resultSet.getInt("assessment_perc");
+//                mid_term_percentage = resultSet.getInt("mid_term_perc");
+//                final_theory_percentage = resultSet.getInt("final_theory_perc");
+//                final_practical_percentage = resultSet.getInt("final_practical_perc");
+//
+//                String atten_eligibility_query = "SELECT((SELECT COUNT(*) FROM attendance WHERE tgno = ? AND course_id = ? AND course_status IN ('practical', 'theory') AND atten_status IN ('present','medical'))/(SELECT COUNT(*) FROM attendance WHERE tgno = ? AND course_id = ? AND course_status IN ('practical', 'theory')) * 100) AS percentage";
+//                prepStatement = conn.prepareStatement(atten_eligibility_query);
+//                prepStatement.setString(1, TG_Number);
+//                prepStatement.setString(2, course_ID);
+//                prepStatement.setString(3, TG_Number);
+//                prepStatement.setString(4, course_ID);
+//
+//                ResultSet resultSet1 = prepStatement.executeQuery();
+//
+//                while (resultSet1.next()) {
+//                    String atten_perc_Str = resultSet1.getString("percentage");
+//                    atten_perc_float = Float.parseFloat(atten_perc_Str);
+//                }
+//
+//                ca_perc_max = ((quiz_percentage + assessment_percentage + mid_term_percentage) * 50) / 100;
+//
+//                int[] quizzes = {quiz1, quiz2, quiz3, quiz4};
+//                sort(quizzes);
+//                int arrLen = quizzes.length;
+//
+//                if (quizzes[0] == 0) {
+//                    quizPercentage = ((quizzes[arrLen - 1] * (quiz_percentage / 2.0)) / 100) + ((quizzes[arrLen - 2] * (10 / 2.0)) / 100);
+//                } else {
+//                    quizPercentage = ((quizzes[arrLen - 1] * (quiz_percentage / 3.0)) / 100) + ((quizzes[arrLen - 2] * (10 / 3.0)) / 100) + ((quizzes[arrLen - 3] * (10 / 3.0)) / 100);
+//                }
+//
+//                if (assessment1 == 0 || assessment2 == 0) {
+//                    assessmentPercentage = (((assessment1 + assessment2) * assessment_percentage) / 100.0);
+//                } else {
+//                    assessmentPercentage = (((assessment1 + assessment2) * (assessment_percentage / 2.0)) / 100.0);
+//                }
+//
+//                midPercentage = ((mid_term * mid_term_percentage) / 100.0);
+//
+//                FinalTheoryPercentage = ((finalTheory * final_theory_percentage) / 100.0);
+//                FinalPracticalPercentage = ((finalPractical * final_practical_percentage) / 100.0);
+//
+//                ca_mark_perc = quizPercentage + assessmentPercentage + midPercentage;
+//                final_mark_perc = FinalTheoryPercentage + FinalPracticalPercentage;
+//
+//                String ca_eligibility;
+//                if (ca_mark_perc > ca_perc_max) {
+//                    ca_eligibility = "Eligible";
+//                    if (atten_perc_float >= 80) {
+//                        if ((ca_mark_perc + final_mark_perc) >= 90) {
+//                            c_grade = "A+";
+//                        } else if ((ca_mark_perc + final_mark_perc) >= 85) {
+//                            c_grade = "A";
+//                        } else if ((ca_mark_perc + final_mark_perc) >= 80) {
+//                            c_grade = "A-";
+//                        } else if ((ca_mark_perc + final_mark_perc) >= 75) {
+//                            c_grade = "B+";
+//                        } else if ((ca_mark_perc + final_mark_perc) >= 70) {
+//                            c_grade = "B";
+//                        } else if ((ca_mark_perc + final_mark_perc) >= 65) {
+//                            c_grade = "B-";
+//                        } else if ((ca_mark_perc + final_mark_perc) >= 60) {
+//                            c_grade = "C+";
+//                        } else if ((ca_mark_perc + final_mark_perc) >= 40) {
+//                            c_grade = "C";
+//                        } else if ((ca_mark_perc + final_mark_perc) >= 35) {
+//                            c_grade = "C-";
+//                        } else if ((ca_mark_perc + final_mark_perc) >= 30) {
+//                            c_grade = "D+";
+//                        } else if ((ca_mark_perc + final_mark_perc) >= 25) {
+//                            c_grade = "D";
+//                        } else if ((ca_mark_perc + final_mark_perc) >= 20) {
+//                            c_grade = "E";
+//                        } else if ((ca_mark_perc + final_mark_perc) >= 0) {
+//                            c_grade = "F";
+//                        }
+//                    } else {
+//                        c_grade = "Not Released";
+//                    }
+//                } else {
+//                    ca_eligibility = "Not Eligible";
+//                    c_grade = "Not Released";
+//                }
+//
+//                Object[] GradeTableData = new Object[7];
+//
+//                GradeTableData[0] = c_id;
+//                GradeTableData[1] = c_name;
+//                GradeTableData[2] = ca_mark_perc;
+//                GradeTableData[3] = ca_eligibility;
+//                GradeTableData[4] = final_mark_perc;
+//                GradeTableData[5] = atten_perc_float;
+//                GradeTableData[6] = c_grade;
+//
+//                defaultTableModel.addRow(GradeTableData);
+//
+//                char[] C_id_arr = c_id.toCharArray();
+//                int c_id_arr_len = C_id_arr.length;
+//                int c_credit;
+//
+//                c_credit = Integer.parseInt(String.valueOf(C_id_arr[c_id_arr_len - 1]));
+//
+//                if (c_grade.equals("Not Released")) {
+//                    c_grade = "0";
+//                }
+//
+//                double credit_points = 0.00;
+//
+//                c_sum = final_mark_perc + ca_mark_perc;
+//                if (c_grade.equals("A+") || c_grade.equals("A")) {
+//                    credit_points = 4.00;
+//                } else if (c_grade.equals("A-")) {
+//                    credit_points = 3.70;
+//                } else if (c_grade.equals("B+")) {
+//                    credit_points = 3.30;
+//                } else if (c_grade.equals("B")) {
+//                    credit_points = 3.00;
+//                } else if (c_grade.equals("B-")) {
+//                    credit_points = 2.70;
+//                } else if (c_grade.equals("C+")) {
+//                    credit_points = 2.30;
+//                } else if (c_grade.equals("C")) {
+//                    credit_points = 2.00;
+//                } else if (c_grade.equals("C-")) {
+//                    credit_points = 1.70;
+//                } else if (c_grade.equals("D+")) {
+//                    credit_points = 1.30;
+//                } else if (c_grade.equals("D")) {
+//                    credit_points = 1.00;
+//                } else if (c_grade.equals("E") || c_grade.equals("Not Released") || c_grade.equals("F")) {
+//                    credit_points = 0.00;
+//                }
+//
+//                c_sum = c_sum + c_credit;
+//                credit_point_mul = c_credit * credit_points;
+//                credit_point_mul_sum = credit_point_mul_sum + credit_point_mul;
+//
+//                SGPA = Double.parseDouble(df.format(credit_point_mul_sum / c_sum));
+//
+//                lblSGPA.setText(String.valueOf(SGPA));
+//            }
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//    }
+
+    public void GradesTableSetModelMethod(){
+        UGGradeTable.setModel(new DefaultTableModel(
+                null,
+                new String[]{"TGNO","Grade","GPA"}
+        ));
+    }
+
+    private void calCGPA() {
+        String courseID = GradeSubCodeCombo.getSelectedItem().toString();
+        DefaultTableModel defaultTableModel = (DefaultTableModel) UGGradeTable.getModel();
+
+        try {
+            // Clear the existing table first
+            defaultTableModel.setRowCount(0);
+
+            Connection con = new DBCONNECTION().Conn();
+
+            // Select all students who have marks for this course
+            String sql = "SELECT tgno, quiz_one, quiz_second, quiz_third, quiz_fourth, " +
+                    "assessment_one, assessment_second, mid_term, final_theory, final_practical " +
+                    "FROM marks WHERE course_id = ?";
+            PreparedStatement pst = con.prepareStatement(sql);
+            pst.setString(1, courseID);
+
+            ResultSet rs = pst.executeQuery();
+
+            while (rs.next()) {
+                String tgno = rs.getString("tgno");
+
+                double totalMarks = 0;
+                totalMarks += rs.getDouble("quiz_one");
+                totalMarks += rs.getDouble("quiz_second");
+                totalMarks += rs.getDouble("quiz_third");
+                totalMarks += rs.getDouble("quiz_fourth");
+                totalMarks += rs.getDouble("assessment_one");
+                totalMarks += rs.getDouble("assessment_second");
+                totalMarks += rs.getDouble("mid_term");
+                totalMarks += rs.getDouble("final_theory");
+                totalMarks += rs.getDouble("final_practical");
+
+                double percentage = (totalMarks / 700.0) * 100.0;  // adjust if needed
+
+                double gpa = 0.0;
+                String grade = "";
+
+                if (percentage >= 85) {
+                    gpa = 4.00;
+                    grade = "A+";
+                } else if (percentage >= 75) {
+                    gpa = 3.70;
+                    grade = "A";
+                } else if (percentage >= 65) {
+                    gpa = 3.30;
+                    grade = "B+";
+                } else if (percentage >= 55) {
+                    gpa = 3.00;
+                    grade = "B";
+                } else if (percentage >= 45) {
+                    gpa = 2.70;
+                    grade = "C+";
+                } else if (percentage >= 35) {
+                    gpa = 2.30;
+                    grade = "C";
+                } else {
+                    gpa = 0.00;
+                    grade = "F";
+                }
+
+                // Add the student info into the table
+                String[] GradeTableData = {tgno, grade, String.format("%.2f", gpa)};
+                defaultTableModel.addRow(GradeTableData);
+            }
+
+            rs.close();
+            pst.close();
+            con.close();
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, e);
+        }
+    }
+
+
+    private void calCGPA1() {
+
+        DefaultTableModel defaultTableModel = (DefaultTableModel) UGGradeTable.getModel();
+
+        String tgno = studentTGno.getText();
+        String courseID = GradeSubCodeCombo.getSelectedItem().toString();
+
+        try {
+            // Clear the table first
+            defaultTableModel.setRowCount(0);
+
+            // Database connection (adjust your db name, user, pass)
+            Connection con = new DBCONNECTION().Conn();
+
+            // Prepare to select marks for the student
+            String sql = "SELECT quiz_one, quiz_second, quiz_third, quiz_fourth, " +
+                    "assessment_one, assessment_second, mid_term, final_theory, final_practical " +
+                    "FROM marks WHERE tgno = ? AND course_id = ?";
+            PreparedStatement pst = con.prepareStatement(sql);
+            pst.setString(1, tgno);
+            pst.setString(2, courseID);
+
+            ResultSet rs = pst.executeQuery();
+
+            if (rs.next()) {
+                double totalMarks = 0;
+                totalMarks += rs.getDouble("quiz_one");
+                totalMarks += rs.getDouble("quiz_second");
+                totalMarks += rs.getDouble("quiz_third");
+                totalMarks += rs.getDouble("quiz_fourth");
+                totalMarks += rs.getDouble("assessment_one");
+                totalMarks += rs.getDouble("assessment_second");
+                totalMarks += rs.getDouble("mid_term");
+                totalMarks += rs.getDouble("final_theory");
+                totalMarks += rs.getDouble("final_practical");
+
+                // Example: Let's say the full mark is 700
+                double percentage = (totalMarks / 700.0) * 100.0;
+
+                // Calculate GPA and Grade
+                double gpa = 0.0;
+                String grade = "";
+
+                if (percentage >= 85) {
+                    gpa = 4.00;
+                    grade = "A+";
+                } else if (percentage >= 75) {
+                    gpa = 3.70;
+                    grade = "A";
+                } else if (percentage >= 65) {
+                    gpa = 3.30;
+                    grade = "B+";
+                } else if (percentage >= 55) {
+                    gpa = 3.00;
+                    grade = "B";
+                } else if (percentage >= 45) {
+                    gpa = 2.70;
+                    grade = "C+";
+                } else if (percentage >= 35) {
+                    gpa = 2.30;
+                    grade = "C";
+                } else {
+                    gpa = 0.00;
+                    grade = "F";
+                }
+
+                // Set the labels
+                lblCGPA.setText(String.format("%.2f", gpa));
+                lblSGPA.setText(grade);
+//                lblSGPA.setText(lblGPA.getText());  // if you have SGPA as same here
+//                lblCGPA.setText(lblGPA.getText());  // CGPA logic might be different, depends
+                UGClass.setText(calculateClass(gpa)); // optional: if you have class ranking
+
+                // Now add into table
+                String[] GradeTableData = {tgno, grade, String.format("%.2f", gpa)};
+                defaultTableModel.addRow(GradeTableData);
+
+                // Optionally you can also insert the GPA/Grade back into another database table here!
+            } else {
+                JOptionPane.showMessageDialog(this, "No marks found for this student and subject!");
+            }
+
+            rs.close();
+            pst.close();
+            con.close();
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, e);
+        }
+    }
+
+
+    private String calculateClass(double gpa) {
+        if (gpa >= 3.70) {
+            return "First Class";
+        } else if (gpa >= 3.00) {
+            return "Second Upper";
+        } else if (gpa >= 2.00) {
+            return "Second Lower";
+        } else {
+            return "Fail";
+        }
+    }
+
 
     private void LoaStudentDetails(int level, int semester){
         try{
@@ -604,7 +1005,7 @@ public class LecturerHomePage extends JFrame {
                 String ugemail = resultSet.getString("ugemail");
                 String ugphno = resultSet.getString("ugphno");
 
-                System.out.println(tgno + " " +ugfname + " " +uglname + " " +ugaddress + " " +ugemail + " " +ugphno);
+//                System.out.println(tgno + " " +ugfname + " " +uglname + " " +ugaddress + " " +ugemail + " " +ugphno);
 
                 Object[] ob = new Object[6];
                 ob[0] = tgno;
@@ -1528,8 +1929,14 @@ public class LecturerHomePage extends JFrame {
     private void addMark(){
         try{
             String tg_no ="";
+
             String course_id = (String) MarkSubCodeCombo.getSelectedItem();
+
             String LECmarkTGno =  LECMarkTGno.getText();
+            if(LECmarkTGno.isEmpty() || LECmarkTGno.equals("")){
+                JOptionPane.showMessageDialog(null, "Please select a tg number");
+                return;
+            }
 
             JTextField[] markfields = {LECMarkQuiz1,LECMarkQuiz2,LECMarkQuiz3,LECMarkQuiz4,LECMarkAssess1,LECMarkAssess2,LECMarkMid,LECMarkFTheory,LECMarkFPractical};
             for (JTextField field : markfields){
@@ -1539,6 +1946,9 @@ public class LecturerHomePage extends JFrame {
             }
 
             int LECmarkQuiz1 = Integer.parseInt(LECMarkQuiz1.getText());
+
+
+
             int LECmarkQuiz2 = Integer.parseInt(LECMarkQuiz2.getText());
             int LECmarkQuiz3 = Integer.parseInt(LECMarkQuiz3.getText());
             int LECmarkQuiz4 = Integer.parseInt(LECMarkQuiz4.getText());
