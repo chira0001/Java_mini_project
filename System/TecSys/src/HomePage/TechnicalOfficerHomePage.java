@@ -970,27 +970,27 @@ private void LoadNotices() {
 
                 String filename = TOFileChooser.getSelectedFile().getAbsolutePath();
 
-                String UGSaveImagePath = "Resources/ProfileImages/";
-                File UGSaveImageDirectory = new File(UGSaveImagePath);
-                if (!UGSaveImageDirectory.exists()) {
-                    UGSaveImageDirectory.mkdirs();
+                String TOSaveImagePath = "Resources/ProfileImages/";
+                File TOSaveImageDirectory = new File(TOSaveImagePath);
+                if (!TOSaveImageDirectory.exists()) {
+                    TOSaveImageDirectory.mkdirs();
                 }
 
-                File UGSourceFile = null;
+                File TOSourceFile = null;
 
                 String extension = filename.substring(filename.lastIndexOf('.') + 1);
-                UGSourceFile = new File(tono + "." + extension);
+                TOSourceFile = new File(tono + "." + extension);
 
-                File UGDestinationFile = new File(UGSaveImagePath + UGSourceFile);
+                File TODestinationFile = new File(TOSaveImagePath + TOSourceFile);
 
-                System.out.println(UGDestinationFile);
+                System.out.println(TODestinationFile);
 
                 Path fromFile = TOFileChooser.getSelectedFile().toPath();
-                Path toFile = UGDestinationFile.toPath();
+                Path toFile = TODestinationFile.toPath();
 
                 filePathValues[0] = fromFile;
                 filePathValues[1] = toFile;
-                filePathValues[2] = UGDestinationFile;
+                filePathValues[2] = TODestinationFile;
                 filePathValues[3] = extension;
             }
 
@@ -1003,10 +1003,10 @@ private void LoadNotices() {
         try{
             Path fromFile = (Path) filePathValues[0];
             Path toFile = (Path) filePathValues[1];
-            File UGDestinationFile = (File) filePathValues[2];
+            File TODestinationFile = (File) filePathValues[2];
 
-            if (UGDestinationFile.exists()){
-                UGDestinationFile.delete();
+            if (TODestinationFile.exists()){
+                TODestinationFile.delete();
                 Files.copy(fromFile,toFile);
             }else{
                 Files.copy(fromFile,toFile);
