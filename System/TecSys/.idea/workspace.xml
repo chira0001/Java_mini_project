@@ -5,25 +5,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="eae00a62-4dab-4b09-9e2b-255c640ec556" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/src/HomePage/UG/TIMETABLE.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/HomePage/UG/TableSetMeth.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/HomePage/UG/UGATTENDANCE.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/HomePage/UG/UGCOURSE.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/HomePage/UG/UGDATABASEQUERY.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/HomePage/UG/UGGRADES.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/HomePage/UG/UGMEDICAL.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/HomePage/UG/UGNOTICE.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/HomePage/UG/UGPROFILE.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/HomePage/UG/UGSETTING.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Resources/ProfileImages/tg0001.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/Resources/ProfileImages/tg0001.jpg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/TecSys/HomePage/UndergraduateHomePage$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/TecSys/HomePage/UndergraduateHomePage$1.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/TecSys/HomePage/UndergraduateHomePage$2.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/TecSys/HomePage/UndergraduateHomePage$2.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/TecSys/HomePage/UndergraduateHomePage$3.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/TecSys/HomePage/UndergraduateHomePage$3.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/TecSys/HomePage/UndergraduateHomePage$4.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/TecSys/HomePage/UndergraduateHomePage$4.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/out/production/TecSys/HomePage/UndergraduateHomePage.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/TecSys/HomePage/UndergraduateHomePage.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/HomePage/UndergraduateHomePage.form" beforeDir="false" afterPath="$PROJECT_DIR$/src/HomePage/UndergraduateHomePage.form" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/HomePage/UndergraduateHomePage.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/HomePage/UndergraduateHomePage.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -67,25 +50,25 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "Application.Main.executor": "Run",
-    "Application.UG.executor": "Run",
-    "Application.Unnamed.executor": "Run",
-    "Application.admin.executor": "Run",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "UI_DESIGNER_EDITOR_MODE.PaletteManager.SHOW": "true",
-    "UI_DESIGNER_EDITOR_MODE.UIDesignerToolWindowManager.SHOW": "true",
-    "UI_DESIGNER_EDITOR_MODE.UIDesignerToolWindowManager.WIDTH": "348",
-    "git-widget-placeholder": "ClassChirath",
-    "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "E:/E Drive/University Project/Java_mini_project/System/TecSys/Resources/ProfileImages",
-    "project.structure.last.edited": "Modules",
-    "project.structure.proportion": "0.0",
-    "project.structure.side.proportion": "0.0"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Application.Main.executor&quot;: &quot;Run&quot;,
+    &quot;Application.UG.executor&quot;: &quot;Run&quot;,
+    &quot;Application.Unnamed.executor&quot;: &quot;Run&quot;,
+    &quot;Application.admin.executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;UI_DESIGNER_EDITOR_MODE.PaletteManager.SHOW&quot;: &quot;true&quot;,
+    &quot;UI_DESIGNER_EDITOR_MODE.UIDesignerToolWindowManager.SHOW&quot;: &quot;true&quot;,
+    &quot;UI_DESIGNER_EDITOR_MODE.UIDesignerToolWindowManager.WIDTH&quot;: &quot;348&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;Gihan&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;E:/E Drive/University Project/Java_mini_project/System/TecSys/Resources/ProfileImages&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;Modules&quot;,
+    &quot;project.structure.proportion&quot;: &quot;0.0&quot;,
+    &quot;project.structure.side.proportion&quot;: &quot;0.0&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="E:\E Drive\University Project\Java_mini_project\System\TecSys\Resources\ProfileImages" />
