@@ -45,7 +45,7 @@ adlname VARCHAR(20),
 adaddress VARCHAR(100),
 ademail VARCHAR(50),
 adphno INT(10),
-adpassword VARCHAR(50),
+adpassword VARCHAR(50) default "123",
 adProfImg VARCHAR(200)
 );
 
@@ -69,7 +69,7 @@ END;
 DELIMITER ;
 
 INSERT INTO admin (adfname,adlname,adaddress,ademail,adphno,adpassword,adProfImg) VALUES
-('Nimal','Fernando','789 Galle Road, Galle','nimal.fernando@example.com',712345678,'123','nimal.jpg');
+('Nimal','Fernando','789 Galle Road, Galle','nimal.fernando@example.com',712345678,'123','Resources/ProfileImages/DefaultUser.png');
 
 CREATE TABLE lecturer (
 id INT AUTO_INCREMENT PRIMARY KEY,
@@ -79,13 +79,15 @@ leclname VARCHAR(20),
 lecaddress VARCHAR(100),
 lecemail VARCHAR(50),
 lecphno INT(10),
-lecpassword VARCHAR(50),
+lecpassword VARCHAR(50) default "123",
 lecProfImg VARCHAR(200)
 );
 
 create table lecture_course(
 lecno varchar(7),
 course_id varchar(7));
+
+alter table lecture_course add primary key(lecno,course_id);
 
 DELIMITER //
 
@@ -117,7 +119,7 @@ tolname VARCHAR(20),
 toaddress VARCHAR(100),
 toemail VARCHAR(50),
 tophno INT(10),
-topassword VARCHAR(50),
+topassword VARCHAR(50) default "123",
 toProfImg VARCHAR(200)
 );
 

@@ -9,13 +9,16 @@ import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileWriter;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.util.Scanner;
 
 public class AdminHomePage extends JFrame {
 
@@ -48,10 +51,7 @@ public class AdminHomePage extends JFrame {
     private JPanel AdminCourses;
     private JComboBox LevelNoforCourses;
     private JComboBox SemesterNoforCourses;
-    private JComboBox CourseforCourses;
-    private JTextArea DescriptionforCourseMaterial;
-    private JComboBox CourseMaterialforCourses;
-    private JButton SaveCourseMaterial;
+    private JButton AddCourse;
     private JPanel AdminNotices;
     private JComboBox noticeTitleDropDown;
     private JTextArea noticeDisplayArea;
@@ -114,17 +114,70 @@ public class AdminHomePage extends JFrame {
     private JTextField UserTechnicalOfficerAddress;
     private JTextField UserTechnicalOfficerEmail;
     private JTextField UserTechnicalOfficerPhNo;
-    private JButton UserLecturerProfImgBtn;
     private JButton UserTechnicalOfficerProfImgBtn;
     private JLabel TONumberLabel;
     private JLabel LECNumberLabel;
     private JLabel TGNumberLabel;
     private JLabel ADNumberLabel;
+    private JButton ADaddLecCourseButton;
+    private JComboBox CourseIDforADLecturer;
+    private JList SelectedCourseList;
+    private JButton removeCourseButton;
+    private JComboBox comboBox4;
+    private JComboBox comboBox5;
+    private JComboBox comboBox6;
+    private JButton deleteUserButton;
+    private JTextField adminfname;
+    private JTextField adminlname;
+    private JTextField adminaddress;
+    private JTextField adminemail;
+    private JTextField adminphno;
+    private JTextField undergradfname;
+    private JTextField undergradlname;
+    private JTextField undergradaddress;
+    private JTextField undergrademail;
+    private JTextField undergradphno;
+    private JComboBox uglevel;
+    private JComboBox ugsem;
+    private JTextField lfname;
+    private JTextField llname;
+    private JTextField laddress;
+    private JTextField lemail;
+    private JTextField lphno;
+    private JList lcourses;
+    private JComboBox l_Acourses;
+    private JButton upLecCourses;
+    private JButton removeupdatecoursesbtn;
+    private JTextField tfname;
+    private JTextField tlname;
+    private JTextField taddress;
+    private JTextField temail;
+    private JTextField tphno;
+    private JButton aUpdateBtn;
+    private JButton uUpdateBtn;
+    private JButton lUpdateBtn;
+    private JButton tUpdateBtn;
+    private JTable ADDeleteTable;
+    private JComboBox ADDeleteUserType;
+    private JComboBox ADDeleteUserID;
+    private JComboBox comboBox7;
+    private JComboBox comboBox8;
+    private JTextField textField3;
+    private JButton addButton;
+    private JTextField ADaddCourseID;
+    private JTextField ADaddCourseName;
+    private JComboBox ADaddCourseStatus;
+    private JTextField ADaddCourseQuizPerc;
+    private JTextField ADaddCourseAssessmentPerc;
+    private JTextField ADaddCourseMidPerc;
+    private JTextField ADaddCourseFTheoryPerc;
+    private JTextField ADaddCourseFPracticalPerc;
+    private JTextField textField14;
+    private JButton addNoticeButton;
+    private JTextArea noticeGetArea;
     private JLabel AdminProfImgSelectedLabel;
     private JPanel UndergraduateProfImgSelectedPanel;
     private JLabel UndergraduateProfImgSelectedLabel;
-    private JPanel TechnicalOfficerProfImgSelectedPanel;
-    private JLabel TechnicalOfficerProfImgSelectedLabel;
     private JPanel Admin;
 
 
@@ -144,10 +197,18 @@ public class AdminHomePage extends JFrame {
     DBCONNECTION _dbconn = new DBCONNECTION();
     Connection conn = _dbconn.Conn();
     private PreparedStatement prepStatement;
+    BufferedWriter writer;
+    private Scanner input;
 
     private CardLayout cardLayout;
 
     private Object[] filePathValues = new Object[4];
+
+    DefaultListModel<String> courseList = new DefaultListModel<>();
+    DefaultListModel<String> courseList1 = new DefaultListModel<>();
+//    DefaultListModel<String> courseList3 = new DefaultListModel<>();
+
+    private String DefualtImage = "Resources/ProfileImages/DefaultUser.png";
 
     public AdminHomePage(String userIdentity){
 
@@ -166,6 +227,18 @@ public class AdminHomePage extends JFrame {
         profileButton.setEnabled(false);
         CardTittleLabel.setText(cardTitles[0]);
         loadUGProfImage(userIdentity);
+
+        loadCoursesForAddLecturer();
+        loadADnoForUpdateAdmin();
+        loadTGnoForUpdateUndergraduate();
+        loadLECnoForUpdateLecturer();
+        loadTOnoForUpdateTechOfficer();
+        loadCredentialsTO();
+        ADDeleteUserTableSetModelMethod();
+        loadCredentialsLecturer();
+        loadCredentialsUndergraduate();
+        loadCredentialsAdmin();
+        ADViewUserTableSetModelMethod();
 
         logoutButton.addActionListener(new ActionListener() {
             @Override
@@ -211,13 +284,6 @@ public class AdminHomePage extends JFrame {
                 ADMINUploadToPreviewProfileImage(userIdentity);
             }
         });
-//        uploadImageButton.addActionListener(new ActionListener() {
-//            @Override
-//            public void actionPerformed(ActionEvent e) {
-//                ADMINUploadToPreviewProfileImage(userIdentity);
-//            }
-//        });
-        ADViewUserTableSetModelMethod();
 
         comboBox1.addActionListener(new ActionListener() {
             @Override
@@ -233,65 +299,707 @@ public class AdminHomePage extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 String userType = (String) comboBox1.getSelectedItem();
-
                 String user_id = (String) comboBox2.getSelectedItem();
-
-                System.out.println(user_id);
-
                 FillAdViewUser(user_id,userType);
+//                FillAdViewUser();
+
             }
         });
 
         AdminAddUserBtn.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                AddAdminUser(userIdentity);
-            }
-        });
-        UserAdminProfImgBtn.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                AdminAddAdminUploadToPreviewProfileImage(userIdentity);
-            }
-        });
-        UserUndergraduateProfImgBtn.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                AdminAddUndergraduateUploadToPreviewProfileImage(userIdentity);
+                AddAdminUser();
             }
         });
         UndergraduateAddUserBtn.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                AddUndergraduateUser(userIdentity);
+                AddUndergraduateUser();
             }
         });
-        UserTechnicalOfficerProfImgBtn.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                AdminAddTechnicalOfficerUploadToPreviewProfileImage(userIdentity);
-            }
-        });
+
         TechnicalOfficerAddUserBtn.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                AddTechnicalOfficerUser(userIdentity);
+                AddTechnicalOfficerUser();
+
+                UserTechnicalOfficerFname.setText("");
+                UserTechnicalOfficerLname.setText("");
+                UserTechnicalOfficerAddress.setText("");
+                UserTechnicalOfficerEmail.setText("");
+                UserTechnicalOfficerPhNo.setText("");
+            }
+        });
+
+
+        ADaddLecCourseButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String selectedCourse = (String) CourseIDforADLecturer.getSelectedItem();
+                courseList.addElement(selectedCourse);
+
+                SelectedCourseList.setModel(courseList);
+            }
+        });
+        LecturerAddUserBtn.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                AddLecturerUser();
+
+                UserLecturerFname.setText("");
+                UserLecturerLname.setText("");
+                UserLecturerAddress.setText("");
+                UserLecturerEmail.setText("");
+                UserLecturerPhNo.setText("");
+            }
+        });
+        removeCourseButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                int courseListLength = courseList.getSize();
+                if(courseListLength != 0){
+                    courseList.removeElementAt(courseListLength - 1);
+                    courseListLength--;
+                }
+            }
+        });
+
+        comboBox3.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                loadCredentialsAdmin();
+            }
+        });
+
+        comboBox4.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                loadCredentialsUndergraduate();
+            }
+        });
+
+        comboBox5.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                int courseListLength = courseList1.getSize();
+                while (courseListLength > 0){
+                    courseList1.removeElementAt(courseListLength - 1);
+                    courseListLength--;
+                }
+
+                loadCredentialsLecturer();
+            }
+        });
+        upLecCourses.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String selectedCourse = (String) l_Acourses.getSelectedItem();
+                courseList1.addElement(selectedCourse);
+
+                lcourses.setModel(courseList1);
+            }
+        });
+        removeupdatecoursesbtn.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                int courseListLength = courseList1.getSize();
+                if(courseListLength != 0){
+                    courseList1.removeElementAt(courseListLength - 1);
+                    courseListLength--;
+                }
+            }
+        });
+
+        comboBox6.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                loadCredentialsTO();
+            }
+        });
+        aUpdateBtn.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                updateCredentialsAdmin();
+            }
+        });
+        uUpdateBtn.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                updateCredentialsundergraduate();
+            }
+        });
+        tUpdateBtn.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                updateCredentialsTO();
+            }
+        });
+        lUpdateBtn.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                updateCredentialsLEC();
+            }
+        });
+
+
+        ADDeleteUserType.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                ADDeleteUserTableSetModelMethod();
+                String deleteUserType = (String) ADDeleteUserType.getSelectedItem();
+
+                ADDeleteUserFilter(deleteUserType);
+                FillDeleteViewUserTable(deleteUserType);
+            }
+        });
+        deleteUserButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+               String deleteUserType = (String) ADDeleteUserType.getSelectedItem();
+               String deleteUserId = (String) ADDeleteUserID.getSelectedItem();
+
+                deleteUser(deleteUserType,deleteUserId);
+
+                loadCredentialsAdmin();
+                loadCredentialsTO();
+                loadCredentialsUndergraduate();
+                loadCredentialsLecturer();
+            }
+        });
+        AddCourse.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                AddCourses();
+
+                ADaddCourseID.getText();
+                ADaddCourseName.getText();
+                ADaddCourseStatus.getSelectedItem();
+                ADaddCourseQuizPerc.getText();
+                ADaddCourseAssessmentPerc.getText();
+                ADaddCourseMidPerc.getText();
+                ADaddCourseFTheoryPerc.getText();
+                ADaddCourseFPracticalPerc.getText();
+            }
+        });
+        LevelNoDropDown.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                getDropDownDataForADTimetable();
+                ADViewTimeTable();
+            }
+        });
+        SemesterNoDropDown.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                getDropDownDataForADTimetable();
+                ADViewTimeTable();
+            }
+        });
+        ADViewTimeTableSetModelMethod();
+        ADViewTimeTable();
+        addButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                ADViewTimeTableSetModelMethod();
+                addTimeTableData();
+                ADViewTimeTable();
+            }
+        });
+        addNoticeButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                LoadNotices();
+                addNotices();
+            }
+        });
+        noticeTitleDropDown.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String notice = (String) noticeTitleDropDown.getSelectedItem();
+                viewNotice(notice);
             }
         });
     }
 
-    private void AddTechnicalOfficerUser(String tono){
+    private void viewNotice(String selected_notice_title){
+        String view_notice_Query_details = "Select * from notice where noticeTitle = ?";
         try{
-            String Fname = UserTechnicalOfficerFname.getText();
-            String Lname = UserTechnicalOfficerLname.getText();
-            String Address = UserTechnicalOfficerAddress.getText();
-            String Email = UserTechnicalOfficerEmail.getText();
-            String Phno = UserTechnicalOfficerPhNo.getText();
+            prepStatement = conn.prepareStatement(view_notice_Query_details);
+            prepStatement.setString(1,selected_notice_title);
 
-            String extension = (String) filePathValues[3];
-            String UGProfileImagePath = "Resources/ProfileImages/" + tono + "." + extension;
+            ResultSet resultSet = prepStatement.executeQuery();
+            while (resultSet.next()){
+                String notice_FilePath = resultSet.getString("noticeFilePath");
 
-            String addQuery = "INSERT INTO technical_officer (tofname,tolname,toaddress,toemail,tophno) VALUES(?,?,?,?,?)";
+                System.out.println(notice_FilePath);
+
+                File notice = new File(notice_FilePath);
+                input = new Scanner(notice);
+
+                StringBuilder noticeContent = new StringBuilder();
+
+                while (input.hasNextLine()){
+                    noticeContent.append(input.nextLine()).append("\n");
+                }
+                noticeDisplayArea.setText(noticeContent.toString());
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    private void addNotices(){
+        try{
+            String noticeTitle = textField14.getText();
+            String text = noticeGetArea.getText();
+
+            String filePath = "Resources/Notices/"+noticeTitle+".txt";
+
+            String addNoticeQuery = "Insert into notice(noticeTitle,noticeFilePath) values(?,?)";
+
+            prepStatement = conn.prepareStatement(addNoticeQuery);
+            prepStatement.setString(1,noticeTitle);
+            prepStatement.setString(2,filePath);
+
+            int resultAddNotice = prepStatement.executeUpdate();
+            if(resultAddNotice > 0){
+                writer = new BufferedWriter(new FileWriter(filePath));
+                writer.write(text);
+                writer.close();
+                JOptionPane.showMessageDialog(null,"Notice Successfully added");
+            }else{
+                JOptionPane.showMessageDialog(null,"Notice addeing failed");
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    private void ADViewTimeTableSetModelMethod(){
+        tableTimeTable.setModel(new DefaultTableModel(
+                null,
+                new String[]{"Course ID", "Moduele Day", "Course Time"}
+        ));
+    }
+
+    private void ADViewTimeTable(){
+        ADViewTimeTableSetModelMethod();
+        DefaultTableModel tblmodel = (DefaultTableModel) tableTimeTable.getModel();
+
+        int l_noInt;
+        String l_no = (String) LevelNoDropDown.getSelectedItem();
+        if(l_no.isEmpty() || l_no.equals("")){
+            l_no = "0";
+        }
+        l_noInt = Integer.parseInt(l_no);
+
+        int s_noInt;
+        String s_no = (String) SemesterNoDropDown.getSelectedItem();
+        if(s_no.isEmpty() || s_no.equals("")){
+            s_no = "0";
+        }
+        s_noInt = Integer.parseInt(s_no);
+
+        try{
+            String TimeTableFillQuery = "select courses.course_id,module_day,time from timetable join courses on timetable.course_id = courses.course_id where level_no = ? and semester_no = ?";
+
+            prepStatement = conn.prepareStatement(TimeTableFillQuery);
+            prepStatement.setInt(1,l_noInt);
+            prepStatement.setInt(2,s_noInt);
+            ResultSet resultSet = prepStatement.executeQuery();
+
+            while (resultSet.next()){
+                String c_id = resultSet.getString("course_id");
+                String c_day = resultSet.getString("module_day");
+                String c_time = resultSet.getString("time");
+
+
+                Object[] timeTable_det = new Object[3];
+
+                timeTable_det[0] = c_id;
+                timeTable_det[1] = c_day;
+                timeTable_det[2] = c_time;
+
+                tblmodel.addRow(timeTable_det);
+            }
+
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    private void addTimeTableData(){
+        try{
+            String courseId = (String) comboBox7.getSelectedItem();
+            String Day = (String) comboBox8.getSelectedItem();
+            String timeTxt = textField3.getText();
+
+            String insertTimetableDataQuery = "insert into timetable(course_id,module_day,time) Values (?,?,?);";
+
+            prepStatement = conn.prepareStatement(insertTimetableDataQuery);
+            prepStatement.setString(1,courseId);
+            prepStatement.setString(2,Day);
+            prepStatement.setString(3,timeTxt);
+
+            int resultSet = prepStatement.executeUpdate();
+            if(resultSet > 0){
+                JOptionPane.showMessageDialog(null,"Time Table added Successfully");
+            }else{
+                JOptionPane.showMessageDialog(null,"Time Table adding Failed");
+            }
+
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    private void getDropDownDataForADTimetable(){
+        int l_noInt;
+        String l_no = (String) LevelNoDropDown.getSelectedItem();
+        if(l_no.isEmpty() || l_no.equals("")){
+            l_no = "0";
+        }
+        l_noInt = Integer.parseInt(l_no);
+
+        int s_noInt;
+        String s_no = (String) SemesterNoDropDown.getSelectedItem();
+        if(s_no.isEmpty() || s_no.equals("")){
+            s_no = "0";
+        }
+        s_noInt = Integer.parseInt(s_no);
+
+        LoadCourseIDForADTimeTable(l_noInt,s_noInt);
+    }
+    private void LoadCourseIDForADTimeTable(int level_no, int semester_no){
+        System.out.println(level_no + " " +semester_no);
+        try{
+            String loadCourseQuery = "select distinct(course_id) from courses where level_no = ? and semester_no = ?";
+            prepStatement = conn.prepareStatement(loadCourseQuery);
+            prepStatement.setInt(1,level_no);
+            prepStatement.setInt(2,semester_no);
+
+            comboBox7.removeAllItems();
+            ResultSet resultSet = prepStatement.executeQuery();
+            while (resultSet.next()){
+                String courses = resultSet.getString("course_id");
+                comboBox7.addItem(courses);
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    private void AddCourses(){
+        try{
+            String courseLevelNo = (String) LevelNoforCourses.getSelectedItem();
+            String courseSemesterNo = (String) SemesterNoforCourses.getSelectedItem();
+            String courseIDtxt = ADaddCourseID.getText();
+            String CourseName = ADaddCourseName.getText();
+            String course_Status = (String) ADaddCourseStatus.getSelectedItem();
+            String QuizPerc = ADaddCourseQuizPerc.getText();
+            String Asses_Perc = ADaddCourseAssessmentPerc.getText();
+            String MidPerc = ADaddCourseMidPerc.getText();
+            String FTheoryPerc = ADaddCourseFTheoryPerc.getText();
+            String FPracticalPerc = ADaddCourseFPracticalPerc.getText();
+
+            String AddCourseQuery = "INSERT INTO courses(course_id,course_name,level_no,semester_no,status,quizzes_perc,assessment_perc,mid_term_perc,final_theory_perc,final_practical_perc) VALUES (?,?,?,?,?,?,?,?,?,?)";
+
+            prepStatement = conn.prepareStatement(AddCourseQuery);
+            prepStatement.setString(1,courseIDtxt);
+            prepStatement.setString(2,CourseName);
+            prepStatement.setString(3,courseLevelNo);
+            prepStatement.setString(4,courseSemesterNo);
+            prepStatement.setString(5,course_Status);
+            prepStatement.setString(6,QuizPerc);
+            prepStatement.setString(7,Asses_Perc);
+            prepStatement.setString(8,MidPerc);
+            prepStatement.setString(9,FTheoryPerc);
+            prepStatement.setString(10,FPracticalPerc);
+
+            int ResultAdd = prepStatement.executeUpdate();
+            if(ResultAdd > 0){
+                JOptionPane.showMessageDialog(null,"Course Added Successfully");
+            }else {
+                JOptionPane.showMessageDialog(null,"Course Adding Failed");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void deleteUser(String DeleteuserType, String DeleteuserId){
+
+        System.out.println("Type = " + DeleteuserType + " ID = " + DeleteuserId);
+
+        String deleteQuery = "";
+        try{
+            if(DeleteuserType.equals("Admin")){
+                deleteQuery = "delete from admin where adno = ?";
+            } else if (DeleteuserType.equals("Undergraduate")) {
+                deleteQuery = "delete from undergraduate where tgno = ?";
+            } else if (DeleteuserType.equals("Lecturer")) {
+                deleteQuery = "delete from lecturer where lecno = ?";
+            } else if (DeleteuserType.equals("Technical Officer")) {
+                deleteQuery = "delete from technical_officer where tono = ?";
+            }
+
+            prepStatement = conn.prepareStatement(deleteQuery);
+            prepStatement.setString(1,DeleteuserId);
+
+            int resultDelete = prepStatement.executeUpdate();
+            if(resultDelete > 0){
+                JOptionPane.showMessageDialog(null,"User Deleted Successfully");
+            }else {
+                JOptionPane.showMessageDialog(null,"User Delete failed");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void updateCredentialsLEC(){
+        String l_num = (String) comboBox5.getSelectedItem();
+        try{
+            String updateQuery = "update lecturer set lecfname = ?, leclname = ?, lecaddress = ?, lecemail = ?, lecphno = ? where lecno = ?";
+            prepStatement = conn.prepareStatement(updateQuery);
+
+            prepStatement.setString(1,lfname.getText());
+            prepStatement.setString(2,llname.getText());
+            prepStatement.setString(3,laddress.getText());
+            prepStatement.setString(4,lemail.getText());
+            prepStatement.setString(5,lphno.getText());
+            prepStatement.setString(6,l_num);
+
+            int result = prepStatement.executeUpdate();
+            if(result > 0){
+                String deleteQuery = "delete from lecture_course where lecno = ?";
+                prepStatement = conn.prepareStatement(deleteQuery);
+                prepStatement.setString(1,l_num);
+                int deleteResult = prepStatement.executeUpdate();
+                if(deleteResult > 0){
+                    int i;
+                    int courseListLength = courseList1.getSize();
+
+                    String addQueryLectureCourse = "INSERT INTO lecture_course (lecno,course_id) values(?,?)";
+                    prepStatement = conn.prepareStatement(addQueryLectureCourse);
+
+                    for (i = 0; i < courseListLength; i++){
+                        prepStatement.setString(1,l_num);
+                        prepStatement.setString(2,courseList1.getElementAt(i));
+
+                        prepStatement.executeUpdate();
+                    }
+                    JOptionPane.showMessageDialog(null,"Technical Officer user updated successfully");
+                }
+            }else {
+                JOptionPane.showMessageDialog(null,"Technical Officer user update failed");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void updateCredentialsTO(){
+        String t_num = (String) comboBox6.getSelectedItem();
+        try{
+            String updateQuery = "update technical_officer set tofname = ?, tolname = ?, toaddress = ?, toemail = ?, tophno = ? where tono = ?";
+            prepStatement = conn.prepareStatement(updateQuery);
+
+            prepStatement.setString(1,tfname.getText());
+            prepStatement.setString(2,tlname.getText());
+            prepStatement.setString(3,taddress.getText());
+            prepStatement.setString(4,temail.getText());
+            prepStatement.setString(5,tphno.getText());
+            prepStatement.setString(6,t_num);
+
+            int result = prepStatement.executeUpdate();
+            if(result > 0){
+                JOptionPane.showMessageDialog(null,"Technical Officer user updated successfully");
+            }else {
+                JOptionPane.showMessageDialog(null,"Technical Officer user update failed");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    private void updateCredentialsundergraduate(){
+        String tg_num = (String) comboBox4.getSelectedItem();
+        try{
+            String updateQuery = "update undergraduate set ugfname = ?, uglname = ?, ugaddress = ?, ugemail = ?, ugphno = ?, study_year = ?, study_semester = ? where tgno = ?";
+            prepStatement = conn.prepareStatement(updateQuery);
+
+            prepStatement.setString(1,undergradfname.getText());
+            prepStatement.setString(2,undergradlname.getText());
+            prepStatement.setString(3,undergradaddress.getText());
+            prepStatement.setString(4,undergrademail.getText());
+            prepStatement.setString(5,undergradphno.getText());
+
+            String lNumstr = (String) uglevel.getSelectedItem();
+            String sNumstr = (String) ugsem.getSelectedItem();
+
+            assert lNumstr != null;
+            prepStatement.setInt(6,Integer.parseInt(lNumstr));
+            assert sNumstr != null;
+            prepStatement.setInt(7,Integer.parseInt(sNumstr));
+
+            prepStatement.setString(8,tg_num);
+
+            int result = prepStatement.executeUpdate();
+            if(result > 0){
+                JOptionPane.showMessageDialog(null,"Undergraduate user updated successfully");
+            }else {
+                JOptionPane.showMessageDialog(null,"Undergraduate user update failed");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    private void updateCredentialsAdmin(){
+        String a_num = (String) comboBox3.getSelectedItem();
+        try{
+            String updateQuery = "update admin set adfname = ?, adlname = ?, adaddress = ?, ademail = ?, adphno = ? where adno = ?";
+            prepStatement = conn.prepareStatement(updateQuery);
+
+            prepStatement.setString(1,adminfname.getText());
+            prepStatement.setString(2,adminlname.getText());
+            prepStatement.setString(3,adminaddress.getText());
+            prepStatement.setString(4,adminemail.getText());
+            prepStatement.setString(5,adminphno.getText());
+            prepStatement.setString(6,a_num);
+
+            int result = prepStatement.executeUpdate();
+            if(result > 0){
+                JOptionPane.showMessageDialog(null,"Admin user updated successfully");
+            }else {
+                JOptionPane.showMessageDialog(null,"Admin user update failed");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void loadCredentialsAdmin(){
+        try{
+            String admin_id = (String) comboBox3.getSelectedItem();
+
+            String getInfo = "select * from admin where adno = ?";
+            prepStatement = conn.prepareStatement(getInfo);
+            prepStatement.setString(1,admin_id);
+
+            ResultSet resultSet = prepStatement.executeQuery();
+            while (resultSet.next()){
+                adminfname.setText(resultSet.getString("adfname"));
+                adminlname.setText(resultSet.getString("adlname"));
+                adminaddress.setText(resultSet.getString("adaddress"));
+                adminemail.setText(resultSet.getString("ademail"));
+                adminphno.setText(resultSet.getString("adphno"));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    private void loadCredentialsUndergraduate(){
+        try{
+            String underg_id = (String) comboBox4.getSelectedItem();
+
+            String getInfo = "select * from undergraduate where tgno = ?";
+            prepStatement = conn.prepareStatement(getInfo);
+            prepStatement.setString(1,underg_id);
+
+            ResultSet resultSet = prepStatement.executeQuery();
+            while (resultSet.next()){
+                undergradfname.setText(resultSet.getString("ugfname"));
+                undergradlname.setText(resultSet.getString("uglname"));
+                undergradaddress.setText(resultSet.getString("ugaddress"));
+                undergrademail.setText(resultSet.getString("ugemail"));
+                undergradphno.setText(resultSet.getString("ugphno"));
+                uglevel.setSelectedItem(resultSet.getString("study_year"));
+                ugsem.setSelectedItem(resultSet.getString("study_semester"));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void loadCredentialsLecturer(){
+        try{
+            String l_id = (String) comboBox5.getSelectedItem();
+
+            String getInfo = "select * from lecturer where lecno = ?";
+            prepStatement = conn.prepareStatement(getInfo);
+            prepStatement.setString(1,l_id);
+
+            ResultSet resultSet = prepStatement.executeQuery();
+            while (resultSet.next()){
+                lfname.setText(resultSet.getString("lecfname"));
+                llname.setText(resultSet.getString("leclname"));
+                laddress.setText(resultSet.getString("lecaddress"));
+                lemail.setText(resultSet.getString("lecemail"));
+                lphno.setText(resultSet.getString("lecphno"));
+            }
+
+            String getCourses = "select course_id from courses";
+
+            l_Acourses.removeAllItems();
+            prepStatement = conn.prepareStatement(getCourses);
+
+            ResultSet resultSet1 = prepStatement.executeQuery();
+            while (resultSet1.next()){
+                String Cu = resultSet1.getString("course_id");
+                l_Acourses.addItem(Cu);
+            }
+            SelectedCourseList.setModel(courseList);
+
+
+            String getInfoCourse = "select * from lecture_course where lecno = ?";
+
+            prepStatement = conn.prepareStatement(getInfoCourse);
+            prepStatement.setString(1,l_id);
+
+            ResultSet resultSet2 = prepStatement.executeQuery();
+            while (resultSet2.next()){
+                String selectedCourse = resultSet2.getString("course_id");
+                courseList1.addElement(selectedCourse);
+            }
+            lcourses.setModel(courseList1);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+   private void loadCredentialsTO(){
+       try{
+            String t_id = (String) comboBox6.getSelectedItem();
+
+            String getInfo = "select * from technical_officer where tono = ?";
+            prepStatement = conn.prepareStatement(getInfo);
+            prepStatement.setString(1,t_id);
+
+            ResultSet resultSet = prepStatement.executeQuery();
+            while (resultSet.next()){
+                tfname.setText(resultSet.getString("tofname"));
+                tlname.setText(resultSet.getString("tolname"));
+                taddress.setText(resultSet.getString("toaddress"));
+                temail.setText(resultSet.getString("toemail"));
+                tphno.setText(resultSet.getString("tophno"));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+   }
+
+    private void AddLecturerUser(){
+        String lec_no = "";
+        try{
+            String Fname = UserLecturerFname.getText();
+            String Lname = UserLecturerLname.getText();
+            String Address = UserLecturerAddress.getText();
+            String Email = UserLecturerEmail.getText();
+            String Phno = UserLecturerPhNo.getText();
+
+            String addQuery = "INSERT INTO lecturer (lecfname,leclname,lecaddress,lecemail,lecphno,lecProfImg) VALUES (?,?,?,?,?,?)";
 
             prepStatement = conn.prepareStatement(addQuery);
             prepStatement.setString(1,Fname);
@@ -299,10 +1007,148 @@ public class AdminHomePage extends JFrame {
             prepStatement.setString(3,Address);
             prepStatement.setString(4,Email);
             prepStatement.setString(5,Phno);
+            prepStatement.setString(6,DefualtImage);
 
             int Result = prepStatement.executeUpdate();
             if(Result > 0){
-                JOptionPane.showMessageDialog(null,"Technical Officer User Successfully added");
+
+                String getLecId = "select lecno from lecturer where lecfname = ? and leclname = ? and lecemail = ?";
+
+                prepStatement = conn.prepareStatement(getLecId);
+                prepStatement.setString(1,Fname);
+                prepStatement.setString(2,Lname);
+                prepStatement.setString(3,Email);
+
+                ResultSet resultSet = prepStatement.executeQuery();
+                while (resultSet.next()){
+                    int i;
+                    int courseListLength = courseList.getSize();
+                    lec_no = resultSet.getString("lecno");
+                    LECNumberLabel.setText(lec_no);
+
+                    String addQueryLectureCourse = "INSERT INTO lecture_course (lecno,course_id) values(?,?)";
+                    prepStatement = conn.prepareStatement(addQueryLectureCourse);
+
+                    for (i = 0; i < courseListLength; i++){
+                        prepStatement.setString(1,lec_no);
+                        prepStatement.setString(2,courseList.getElementAt(i));
+
+                        prepStatement.executeUpdate();
+                    }
+                }
+                JOptionPane.showMessageDialog(null,"Lecturer User Successfully added");
+            }else {
+                JOptionPane.showMessageDialog(null,"Lecturer User Entry Failed");
+            }
+        }catch (Exception exp){
+            exp.printStackTrace();
+        }
+    }
+
+    private void loadCoursesForAddLecturer(){
+        try{
+            String getQuery = "select distinct(course_id) from courses";
+            prepStatement = conn.prepareStatement(getQuery);
+            ResultSet resultSet = prepStatement.executeQuery();
+            while (resultSet.next()){
+                String course_id = resultSet.getString("course_id");
+                CourseIDforADLecturer.addItem(course_id);
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void loadADnoForUpdateAdmin(){
+        try{
+            String getQuery = "select distinct(adno) from admin";
+            prepStatement = conn.prepareStatement(getQuery);
+            ResultSet resultSet = prepStatement.executeQuery();
+            while (resultSet.next()){
+                String ad_id = resultSet.getString("adno");
+                comboBox3.addItem(ad_id);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    private void loadTGnoForUpdateUndergraduate(){
+        try{
+            String getQuery = "select distinct(tgno) from undergraduate";
+            prepStatement = conn.prepareStatement(getQuery);
+            ResultSet resultSet = prepStatement.executeQuery();
+            while (resultSet.next()){
+                String tg_id = resultSet.getString("tgno");
+                comboBox4.addItem(tg_id);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    private void loadLECnoForUpdateLecturer(){
+        try{
+            String getQuery = "select distinct(lecno) from lecturer";
+            prepStatement = conn.prepareStatement(getQuery);
+            ResultSet resultSet = prepStatement.executeQuery();
+            while (resultSet.next()){
+                String l_id = resultSet.getString("lecno");
+                comboBox5.addItem(l_id);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    private void loadTOnoForUpdateTechOfficer(){
+        try{
+            String getQuery = "select distinct(tono) from technical_officer";
+            prepStatement = conn.prepareStatement(getQuery);
+            ResultSet resultSet = prepStatement.executeQuery();
+            while (resultSet.next()){
+                String t_id = resultSet.getString("tono");
+                comboBox6.addItem(t_id);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void AddTechnicalOfficerUser(){
+        String to_no;
+        try{
+            String Fname = UserTechnicalOfficerFname.getText();
+            String Lname = UserTechnicalOfficerLname.getText();
+            String Address = UserTechnicalOfficerAddress.getText();
+            String Email = UserTechnicalOfficerEmail.getText();
+            String Phno = UserTechnicalOfficerPhNo.getText();
+
+            String addQuery = "INSERT INTO technical_officer (tofname,tolname,toaddress,toemail,tophno,toProfImg) VALUES (?,?,?,?,?,?)";
+
+            prepStatement = conn.prepareStatement(addQuery);
+            prepStatement.setString(1,Fname);
+            prepStatement.setString(2,Lname);
+            prepStatement.setString(3,Address);
+            prepStatement.setString(4,Email);
+            prepStatement.setString(5,Phno);
+            prepStatement.setString(6,DefualtImage);
+
+            int Result = prepStatement.executeUpdate();
+            if(Result > 0){
+
+                String getToId = "select tono from technical_officer where tofname = ? and tolname = ? and toemail = ?";
+
+                prepStatement = conn.prepareStatement(getToId);
+                prepStatement.setString(1,Fname);
+                prepStatement.setString(2,Lname);
+                prepStatement.setString(3,Email);
+
+                ResultSet resultSet = prepStatement.executeQuery();
+                while (resultSet.next()){
+                    to_no = resultSet.getString("tono");
+
+                    JOptionPane.showMessageDialog(null,"Technical Officer User Successfully added");
+                    TONumberLabel.setText(to_no);
+                }
             }else {
                 JOptionPane.showMessageDialog(null,"Technical Officer User Entry Failed");
             }
@@ -312,59 +1158,8 @@ public class AdminHomePage extends JFrame {
         }
     }
 
-    private void AdminAddTechnicalOfficerUploadToPreviewProfileImage(String tono) {
-        try {
-            JFileChooser UGFileChooser = new JFileChooser();
-            UGFileChooser.setDialogTitle("Select Profile Picture");
-            UGFileChooser.setAcceptAllFileFilterUsed(false);
-            UGFileChooser.addChoosableFileFilter(new FileNameExtensionFilter("Images", "jpg", "jpeg"));
-
-            if (UGFileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
-
-                ImageIcon icon = new ImageIcon(UGFileChooser.getSelectedFile().getPath());
-                Image scaled = icon.getImage().getScaledInstance(
-                        TechnicalOfficerProfImgSelectedPanel.getWidth() - 50,
-                        TechnicalOfficerProfImgSelectedPanel.getHeight() - 50,
-                        Image.SCALE_SMOOTH
-                );
-                TechnicalOfficerProfImgSelectedLabel.setIcon(new ImageIcon(scaled));
-                TechnicalOfficerProfImgSelectedLabel.setText("");
-
-                String filename = UGFileChooser.getSelectedFile().getAbsolutePath();
-
-                String TECHOFFICERSaveImagePath = "Resources/ProfileImages/";
-                File UGSaveImageDirectory = new File(TECHOFFICERSaveImagePath);
-                if (!UGSaveImageDirectory.exists()) {
-                    UGSaveImageDirectory.mkdirs();
-                }
-
-                File UGSourceFile = null;
-
-                String extension = filename.substring(filename.lastIndexOf('.') + 1);
-
-                UGSourceFile = new File(tono + "." + extension);
-
-                File TECHOFFICERDestinationFile = new File(TECHOFFICERSaveImagePath + UGSourceFile);
-
-                System.out.println(TECHOFFICERDestinationFile);
-
-                Path fromFile = UGFileChooser.getSelectedFile().toPath();
-                Path toFile = TECHOFFICERDestinationFile.toPath();
-
-                filePathValues[0] = fromFile;
-                filePathValues[1] = toFile;
-                filePathValues[2] = TECHOFFICERDestinationFile;
-                filePathValues[3] = extension;
-            }
-
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
-    }
-
-    //    #####################################################################################################
-
-    private void AddUndergraduateUser(String tgno){
+    private void AddUndergraduateUser(){
+        String tg_no;
         try{
             String Fname = UserUndergraduateFname.getText();
             String Lname = UserUndergraduateLname.getText();
@@ -372,18 +1167,10 @@ public class AdminHomePage extends JFrame {
             String Email = UserUndergraduateEmail.getText();
             String Phno = UserUndergraduatePhNo.getText();
 
-            String UGLevelStr = (String) UserUndergraduateLevelNumber.getSelectedItem();
-            assert UGLevelStr != null;
-            int UGLevelInt = Integer.parseInt(UGLevelStr);
+            int Undergraduate_LevelNo = Integer.parseInt((String) UserUndergraduateLevelNumber.getSelectedItem());
+            int Undergraduate_SemesterNo = Integer.parseInt((String) UserUndergraduateSemesterNumber.getSelectedItem());
 
-            String UGSemesterStr = (String) UserUndergraduateSemesterNumber.getSelectedItem();
-            assert UGSemesterStr != null;
-            int UGSemesterInt = Integer.parseInt(UGSemesterStr);
-
-            String extension = (String) filePathValues[3];
-            String UGProfileImagePath = "Resources/ProfileImages/" + tgno + "." + extension;
-
-            String addQuery = "INSERT INTO undergraduate (ugfname,uglname,ugaddress,ugemail,ugphno,study_year,study_semester) VALUES(?,?,?,?,?,?,?)";
+            String addQuery = "INSERT INTO undergraduate (ugfname,uglname,ugaddress,ugemail,ugphno,ugProfImg,study_year,study_semester) VALUES (?,?,?,?,?,?,?,?)";
 
             prepStatement = conn.prepareStatement(addQuery);
             prepStatement.setString(1,Fname);
@@ -391,75 +1178,37 @@ public class AdminHomePage extends JFrame {
             prepStatement.setString(3,Address);
             prepStatement.setString(4,Email);
             prepStatement.setString(5,Phno);
-            prepStatement.setInt(6,UGLevelInt);
-            prepStatement.setInt(7,UGSemesterInt);
+            prepStatement.setString(6,DefualtImage);
+            prepStatement.setInt(7,Undergraduate_LevelNo);
+            prepStatement.setInt(8,Undergraduate_SemesterNo);
 
             int Result = prepStatement.executeUpdate();
             if(Result > 0){
-                JOptionPane.showMessageDialog(null,"Undergraduate User Successfully added");
+
+                String getAdminId = "select tgno from undergraduate where ugfname = ? and uglname = ? and ugemail = ?";
+
+                prepStatement = conn.prepareStatement(getAdminId);
+                prepStatement.setString(1,Fname);
+                prepStatement.setString(2,Lname);
+                prepStatement.setString(3,Email);
+
+                ResultSet resultSet = prepStatement.executeQuery();
+                while (resultSet.next()){
+                    tg_no = resultSet.getString("tgno");
+
+                    JOptionPane.showMessageDialog(null,"Undergraduate User Successfully added");
+                    TGNumberLabel.setText(tg_no);
+                }
             }else {
                 JOptionPane.showMessageDialog(null,"Undergraduate User Entry Failed");
             }
-
         }catch (Exception e){
             e.printStackTrace();
         }
     }
 
-    private void AdminAddUndergraduateUploadToPreviewProfileImage(String tgno) {
-        try {
-            JFileChooser UGFileChooser = new JFileChooser();
-            UGFileChooser.setDialogTitle("Select Profile Picture");
-            UGFileChooser.setAcceptAllFileFilterUsed(false);
-            UGFileChooser.addChoosableFileFilter(new FileNameExtensionFilter("Images", "jpg", "jpeg"));
-
-            if (UGFileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
-
-                ImageIcon icon = new ImageIcon(UGFileChooser.getSelectedFile().getPath());
-                Image scaled = icon.getImage().getScaledInstance(
-                        UndergraduateProfImgSelectedPanel.getWidth() - 50,
-                        UndergraduateProfImgSelectedPanel.getHeight() - 50,
-                        Image.SCALE_SMOOTH
-                );
-                UndergraduateProfImgSelectedLabel.setIcon(new ImageIcon(scaled));
-                UndergraduateProfImgSelectedLabel.setText("");
-
-                String filename = UGFileChooser.getSelectedFile().getAbsolutePath();
-
-                String ADMINSaveImagePath = "Resources/ProfileImages/";
-                File UGSaveImageDirectory = new File(ADMINSaveImagePath);
-                if (!UGSaveImageDirectory.exists()) {
-                    UGSaveImageDirectory.mkdirs();
-                }
-
-                File UGSourceFile = null;
-
-                String extension = filename.substring(filename.lastIndexOf('.') + 1);
-
-                UGSourceFile = new File(tgno + "." + extension);
-
-                File ADMINDestinationFile = new File(ADMINSaveImagePath + UGSourceFile);
-
-                System.out.println(ADMINDestinationFile);
-
-                Path fromFile = UGFileChooser.getSelectedFile().toPath();
-                Path toFile = ADMINDestinationFile.toPath();
-
-                filePathValues[0] = fromFile;
-                filePathValues[1] = toFile;
-                filePathValues[2] = ADMINDestinationFile;
-                filePathValues[3] = extension;
-            }
-
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
-    }
-
-
-//    #####################################################################################################
-
-    private void AddAdminUser(String adno){
+    private void AddAdminUser(){
+        String admin_no;
         try{
             String Fname = UserAdminFname.getText();
             String Lname = UserAdminLname.getText();
@@ -467,10 +1216,7 @@ public class AdminHomePage extends JFrame {
             String Email = UserAdminEmail.getText();
             String Phno = UserAdminPhNo.getText();
 
-            String extension = (String) filePathValues[3];
-            String UGProfileImagePath = "Resources/ProfileImages/" + adno + "." + extension;
-
-            String addQuery = "INSERT INTO admin (adfname,adlname,adaddress,ademail,adphno) VALUES (?,?,?,?,?)";
+            String addQuery = "INSERT INTO admin (adfname,adlname,adaddress,ademail,adphno,adProfImg) VALUES (?,?,?,?,?,?)";
 
             prepStatement = conn.prepareStatement(addQuery);
             prepStatement.setString(1,Fname);
@@ -478,72 +1224,35 @@ public class AdminHomePage extends JFrame {
             prepStatement.setString(3,Address);
             prepStatement.setString(4,Email);
             prepStatement.setString(5,Phno);
-//            prepStatement.setString(6,UGProfileImagePath);
+            prepStatement.setString(6,DefualtImage);
 
             int Result = prepStatement.executeUpdate();
             if(Result > 0){
-                JOptionPane.showMessageDialog(null,"Admin User Successfully added");
+
+                String getAdminId = "select adno from admin where adfname = ? and adlname = ? and ademail = ?";
+
+                prepStatement = conn.prepareStatement(getAdminId);
+                prepStatement.setString(1,Fname);
+                prepStatement.setString(2,Lname);
+                prepStatement.setString(3,Email);
+
+                ResultSet resultSet = prepStatement.executeQuery();
+                while (resultSet.next()){
+                    admin_no = resultSet.getString("adno");
+
+                    JOptionPane.showMessageDialog(null,"Admin User Successfully added");
+                    ADNumberLabel.setText(admin_no);
+                }
             }else {
                 JOptionPane.showMessageDialog(null,"Admin User Entry Failed");
             }
-
         }catch (Exception e){
             e.printStackTrace();
         }
     }
 
-    private void AdminAddAdminUploadToPreviewProfileImage(String adno) {
-        try {
-            JFileChooser UGFileChooser = new JFileChooser();
-            UGFileChooser.setDialogTitle("Select Profile Picture");
-            UGFileChooser.setAcceptAllFileFilterUsed(false);
-            UGFileChooser.addChoosableFileFilter(new FileNameExtensionFilter("Images", "jpg", "jpeg"));
-
-            if (UGFileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
-
-                ImageIcon icon = new ImageIcon(UGFileChooser.getSelectedFile().getPath());
-                Image scaled = icon.getImage().getScaledInstance(
-                        AdminProfImgSelectedPanel.getWidth() - 50,
-                        AdminProfImgSelectedPanel.getHeight() - 50,
-                        Image.SCALE_SMOOTH
-                );
-                AdminProfImgSelectedLabel.setIcon(new ImageIcon(scaled));
-                AdminProfImgSelectedLabel.setText("");
-
-                String filename = UGFileChooser.getSelectedFile().getAbsolutePath();
-
-                String UGSaveImagePath = "Resources/ProfileImages/";
-                File UGSaveImageDirectory = new File(UGSaveImagePath);
-                if (!UGSaveImageDirectory.exists()) {
-                    UGSaveImageDirectory.mkdirs();
-                }
-
-                File UGSourceFile = null;
-
-                String extension = filename.substring(filename.lastIndexOf('.') + 1);
-
-                UGSourceFile = new File(adno + "." + extension);
-
-                File UGDestinationFile = new File(UGSaveImagePath + UGSourceFile);
-
-                System.out.println(UGDestinationFile);
-
-                Path fromFile = UGFileChooser.getSelectedFile().toPath();
-                Path toFile = UGDestinationFile.toPath();
-
-                filePathValues[0] = fromFile;
-                filePathValues[1] = toFile;
-                filePathValues[2] = UGDestinationFile;
-                filePathValues[3] = extension;
-            }
-
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
-    }
-
-    private void FillViewUserTable(String userType){
-        DefaultTableModel tblmodel = (DefaultTableModel) AdminViewUserTable.getModel();
+    private void FillDeleteViewUserTable(String userType){
+        DefaultTableModel tblmodel = (DefaultTableModel) ADDeleteTable.getModel();
 
         try{
             String userTableFillQuery = "";
@@ -555,6 +1264,9 @@ public class AdminHomePage extends JFrame {
             }
             else if(userType.equals("Technical Officer")){
                 userTableFillQuery = "select tono as user_id, tofname as fname, tolname as lname, tophno as phno from technical_officer";
+            }
+            else if(userType.equals("Admin")){
+                userTableFillQuery = "select adno as user_id, adfname as fname, adlname as lname, adphno as phno from admin";
             }
 
             prepStatement = conn.prepareStatement(userTableFillQuery);
@@ -582,6 +1294,57 @@ public class AdminHomePage extends JFrame {
         }
     }
 
+    private void FillViewUserTable(String userType){
+
+        DefaultTableModel tblmodel = (DefaultTableModel) AdminViewUserTable.getModel();
+
+        try{
+            String userTableFillQuery = "";
+            if(userType.equals("Undergraduate")){
+                userTableFillQuery = "select tgno as user_id, ugfname as fname, uglname as lname, ugphno as phno from undergraduate";
+            }
+            else if(userType.equals("Lecturer")){
+                userTableFillQuery = "select lecno as user_id, lecfname as fname, leclname as lname, lecphno as phno from lecturer";
+            }
+            else if(userType.equals("Technical Officer")){
+                userTableFillQuery = "select tono as user_id, tofname as fname, tolname as lname, tophno as phno from technical_officer";
+            }
+            else if(userType.equals("Admin")){
+                userTableFillQuery = "select adno as user_id, adfname as fname, adlname as lname, adphno as phno from admin";
+            }
+
+            prepStatement = conn.prepareStatement(userTableFillQuery);
+
+            ResultSet resultSet = prepStatement.executeQuery();
+
+            while (resultSet.next()){
+                String user_id = resultSet.getString("user_id");
+                String fname = resultSet.getString("fname");
+                String lname = resultSet.getString("lname");
+                String phno = resultSet.getString("phno");
+
+                Object[] user_det = new Object[4];
+
+                user_det[0] = user_id;
+                user_det[1] = fname;
+                user_det[2] = lname;
+                user_det[3] = phno;
+
+                tblmodel.addRow(user_det);
+            }
+
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    private void ADDeleteUserTableSetModelMethod(){
+        ADDeleteTable.setModel(new DefaultTableModel(
+                null,
+                new String[]{"User ID", "First Name", "Last Name", "Phone Number"}
+        ));
+    }
+
     private void ADViewUserTableSetModelMethod(){
         AdminViewUserTable.setModel(new DefaultTableModel(
                 null,
@@ -590,6 +1353,7 @@ public class AdminHomePage extends JFrame {
     }
 
     private void FillAdViewUser(String userNo, String userType){
+//        System.out.println("User No - " + userNo + ", userType - " + userType);
         try{
             String userFillQuery = "";
             if(userType.equals("Undergraduate")){
@@ -600,6 +1364,9 @@ public class AdminHomePage extends JFrame {
             }
             else if(userType.equals("Technical Officer")){
                 userFillQuery = "select tofname as fname, tolname as lname, toaddress as address, toemail as email, tophno as phno, toprofimg as profimg from technical_officer where tono = ?";
+            }
+            else if(userType.equals("Admin")){
+                userFillQuery = "select adfname as fname, adlname as lname, adaddress as address, ademail as email, adphno as phno, adProfImg as profimg from admin where adno = ?";
             }
 
             prepStatement = conn.prepareStatement(userFillQuery);
@@ -636,7 +1403,7 @@ public class AdminHomePage extends JFrame {
         }
     }
 
-    private void ADUserFilter(String userType){
+    private void ADDeleteUserFilter(String userType){
         try{
             String usersQuery = "";
 
@@ -649,9 +1416,45 @@ public class AdminHomePage extends JFrame {
             else if(userType.equals("Technical Officer")){
                 usersQuery = "select tono as userNo from technical_officer";
             }
+            else if(userType.equals("Admin")){
+                usersQuery = "select adno as userNo from admin";
+            }
+
+            ADDeleteUserID.removeAllItems();
+            ADDeleteUserID.addItem("");
+
+            prepStatement = conn.prepareStatement(usersQuery);
+            ResultSet resultSet = prepStatement.executeQuery();
+
+            while (resultSet.next()){
+                String user = resultSet.getString("userNo");
+                ADDeleteUserID.addItem(user);
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    private void ADUserFilter(String userType){
+
+        try{
+            String usersQuery = "";
+
+            if(userType.equals("Undergraduate")){
+                usersQuery = "select tgno as userNo from undergraduate";
+            }
+            else if(userType.equals("Lecturer")){
+                usersQuery = "select lecno as userNo from Lecturer";
+            }
+            else if(userType.equals("Technical Officer")){
+                usersQuery = "select tono as userNo from technical_officer";
+            }
+            else if(userType.equals("Admin")){
+                usersQuery = "select adno as userNo from admin";
+            }
 
             comboBox2.removeAllItems();
-            comboBox2.addItem("");
+//            comboBox2.addItem("");
 
             prepStatement = conn.prepareStatement(usersQuery);
             ResultSet resultSet = prepStatement.executeQuery();
@@ -703,8 +1506,6 @@ public class AdminHomePage extends JFrame {
                 UGSourceFile = new File(adno + "." + extension);
 
                 File ADMINDestinationFile = new File(UGSaveImagePath + UGSourceFile);
-
-                System.out.println(ADMINDestinationFile);
 
                 Path fromFile = UGFileChooser.getSelectedFile().toPath();
                 Path toFile = ADMINDestinationFile.toPath();
@@ -767,21 +1568,18 @@ public class AdminHomePage extends JFrame {
 
                 loadUGProfImage(adno);
             }else{
-                JOptionPane.showMessageDialog(null,"Internal Error");
+                JOptionPane.showMessageDialog(null,"No Records found - Internal Error");
             }
         }catch (Exception e){
             e.printStackTrace();
         }
     }
-
     private void loadUGProfImage(String adno){
         try{
             String UGProfImageSearchQuery = "select * from admin where adno = ?";
-
             prepStatement = conn.prepareStatement(UGProfImageSearchQuery);
             prepStatement.setString(1,adno);
             ResultSet result = prepStatement.executeQuery();
-
             while (result.next()){
                 Path UGSaveImagePath = Path.of(result.getString("adProfImg"));
                 ImageIcon icon = new ImageIcon(UGSaveImagePath.toString());
@@ -797,17 +1595,12 @@ public class AdminHomePage extends JFrame {
             ex.printStackTrace();
         }
     }
-
     private void LoadNotices(){
-
         String notice_Title;
-
         try{
             String noticeLoadQuery = "select * from notice";
-
             Statement statement = conn.createStatement();
             ResultSet result = statement.executeQuery(noticeLoadQuery);
-
             while(result.next()){
                 notice_Title = result.getString("noticeTitle");
 
@@ -820,9 +1613,6 @@ public class AdminHomePage extends JFrame {
 
     private void ADMINUpdateCredentials(String adno){
         try{
-//            String ADaddress = textField7.getText();
-//            String UGemail = textField8.getText();
-//            String UGphno = textField9.getText();
 
             String AdFname = textField7.getText();
             String AdLname = textField8.getText();
@@ -833,7 +1623,6 @@ public class AdminHomePage extends JFrame {
             String extension = (String) filePathValues[3];
 
             String ADMINProfileImagePath = "Resources/ProfileImages/" + adno + "." + extension;
-            System.out.println(ADMINProfileImagePath);
             String UGCredentialupdateQuery;
 
             if (extension == null){
@@ -876,6 +1665,6 @@ public class AdminHomePage extends JFrame {
     }
 
     public static void main(String[] args) {
-        new AdminHomePage("admin");
+        new AdminHomePage("ad0002");
     }
 }
