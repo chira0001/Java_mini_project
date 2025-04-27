@@ -26,6 +26,15 @@ public class UGSETTING {
             String UGemail = homePage.textField8.getText();
             String UGphno = homePage.textField9.getText();
 
+            if(UGaddress.isEmpty() || UGemail.isEmpty() || UGphno.isEmpty()){
+                JOptionPane.showMessageDialog(null,"Please fill all the fields");
+                return;
+            }
+            if(!UGphno.matches("[0-9]+")){
+                JOptionPane.showMessageDialog(null,"Please enter numbers only for Phone Number");
+                return;
+            }
+
             String extension = (String) homePage.filePathValues[3];
 
             String UGProfileImagePath = "Resources/ProfileImages/" + tgno + "." + extension;
