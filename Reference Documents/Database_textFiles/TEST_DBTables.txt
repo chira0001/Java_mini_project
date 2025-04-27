@@ -138,6 +138,7 @@ END;
 //
 
 DELIMITER ;
+se
 
 INSERT INTO technical_officer (tofname,tolname,toaddress,toemail,tophno,topassword,toProfImg) VALUES
 ('Kamal','Wickramasinghe','42 Temple Road, Matara','kamal.w@example.com',714567890,'toSecure789','kamal.jpg');
@@ -242,12 +243,16 @@ create table medical(
 medical_no int primary key auto_increment,
 tono varchar(6),
 tgno varchar(6),
+level_no INT(1),
+semester_no INT(1),
 course_id varchar(7), 
 week_no int(2),
+course_name varchar(30),
+course_status varchar(10),
 med_reason varchar(100)
 );
 
-insert into medical(tono,tgno,level_no,semester_no,course_id,week_no,course_name,course_status,med_reason) values
+insert into medical(tono,tgno,course_id,level_no,semester_no,week_no,course_name,course_status,med_reason) values
 ("to2222","tg1344","ICT1222", 2, 1, 2, "Data Structures and Algorithms", "theory", "Influenza"),
 ("to2222","tg1344","ICT1222", 2, 1, 3, "Data Structures and Algorithms", "practical", "Influenza"),
 ("to2222","tg1344","ICT1222", 2, 1, 4, "Data Structures and Algorithms", "theory", "Influenza"),
