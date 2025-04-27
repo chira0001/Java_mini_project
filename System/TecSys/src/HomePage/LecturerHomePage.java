@@ -570,6 +570,29 @@ public class LecturerHomePage extends JFrame {
                 CourseMaterialUpdate();
             }
         });
+        showStudentGradeButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String levelnum= (String) STLevel.getSelectedItem();
+                assert levelnum != null;
+                if(levelnum.isEmpty()){
+                    levelnum = "0";
+
+                }
+                int levelInt= Integer.parseInt(levelnum);
+
+                String semester = (String) STSem.getSelectedItem();
+                assert semester != null;
+                if(semester.isEmpty()){
+                    semester = "0";
+                }
+
+                int semesterInt= Integer.parseInt(semester);
+
+                String subcode=(String)MarkSubCodeCombo.getSelectedItem();
+
+            }
+        });
     }
 
 //    private void addMaterial(){
@@ -1414,6 +1437,7 @@ public class LecturerHomePage extends JFrame {
 
         private void loadCourseIDforGrade(String lecno,int level,int semester){
             try{
+                
                 GradeSubCodeCombo.removeAllItems();
                 String loadCourceID="SELECT c.course_id FROM courses c INNER JOIN lecture_course lc ON c.course_id = lc.course_id WHERE lc.lecno = ? AND c.level_no = ? AND c.semester_no = ?;";
                 prepStatement=conn.prepareStatement(loadCourceID);
