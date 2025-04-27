@@ -4,7 +4,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 
 public class DBCONNECTION {
-    private String connUrl = "jdbc:mysql://localhost:3306/javatest";
+    private String connUrl = "jdbc:mysql://localhost:3306/tecsys";
     private String connUsername = "root";
     private String connPassword = "1234";
 
