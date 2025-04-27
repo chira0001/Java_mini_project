@@ -16,8 +16,6 @@ import java.io.FileWriter;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.sql.*;
-import java.text.DecimalFormat;
-import java.util.Arrays;
 import java.util.Scanner;
 
 import static java.util.Arrays.sort;
@@ -108,9 +106,9 @@ public class LecturerHomePage extends JFrame {
     private JComboBox MarkSemesterCombo;
     private JComboBox MarkSubStatusCombo;
     private JComboBox GradeSubCodeCombo;
-    private JButton showStudentGradeButton;
-    private JTextField studentTGno;
     private JButton enterButton;
+    private JTextField studentTGno;
+    private JButton a;
     private JComboBox LevelNoforCourses;
     private JComboBox SemesterNoforCourses;
     private JComboBox CourseforCourses;
@@ -170,7 +168,6 @@ public class LecturerHomePage extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 cardCommand = e.getActionCommand();
-//                System.out.println(cardCommand);
                 changeBtnState(cardCommand,userIdentity);
             }
         };
@@ -444,6 +441,9 @@ public class LecturerHomePage extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 String subcode=(String)MarkSubCodeCombo.getSelectedItem();
+                if(subcode.isEmpty()&& subcode.equals("")){
+                    JOptionPane.showMessageDialog(null,"Please select a subcode");
+                }
                 getMarkStatus(subcode);
 
             }
@@ -453,21 +453,6 @@ public class LecturerHomePage extends JFrame {
         LevelNoGrade.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-
-//                String level=(String) LevelNoGrade.getSelectedItem();
-//                assert level != null;
-//                if(level.isEmpty()){
-//                    level = "0";
-//                }
-//                int levelInt= Integer.parseInt(level);
-//                String semester=(String)MarkSemesterCombo.getSelectedItem();
-//                assert semester != null;
-//                if(semester.isEmpty()){
-//                    semester = "0";
-//                }
-//                int semesterInt= Integer.parseInt(semester);
-//
-//                getstudentdetailcourseid(userIdentity,levelInt,semesterInt);
 
 
             }
@@ -518,26 +503,12 @@ public class LecturerHomePage extends JFrame {
                 CourseMaterialUpdate();
             }
         });
-        showStudentGradeButton.addActionListener(new ActionListener() {
+        enterButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                String levelnum= (String) STLevel.getSelectedItem();
-                assert levelnum != null;
-                if(levelnum.isEmpty()){
-                    levelnum = "0";
 
-                }
-                int levelInt= Integer.parseInt(levelnum);
-
-                String semester = (String) STSem.getSelectedItem();
-                assert semester != null;
-                if(semester.isEmpty()){
-                    semester = "0";
-                }
-
-                int semesterInt= Integer.parseInt(semester);
-
-                String subcode=(String)MarkSubCodeCombo.getSelectedItem();
+                GradesTableSetModelMethod();
+                calCGPA();
 
             }
         });
@@ -588,217 +559,16 @@ public class LecturerHomePage extends JFrame {
             }
         });
         GradesTableSetModelMethod();
-        enterButton.addActionListener(new ActionListener() {
+        a.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 GradesTableSetModelMethod();
                 calCGPA();
-//                calCGPA1();
+
             }
         });
     }
 
-//    private void calCGPA() {
-//
-//        DefaultTableModel defaultTableModel = (DefaultTableModel) UGGradeTable.getModel();
-//        DecimalFormat df = new DecimalFormat("0.00");
-//
-//        int quiz_percentage, assessment_percentage, mid_term_percentage, final_theory_percentage, final_practical_percentage,
-//                quiz1, quiz2, quiz3, quiz4, assessment1, assessment2, mid_term, finalTheory, finalPractical, ca_perc_max, final_mark_perc_max;
-//
-//        double quizPercentage, assessmentPercentage, midPercentage, FinalTheoryPercentage, FinalPracticalPercentage, ca_mark_perc, final_mark_perc;
-//
-//        String c_id, c_name, c_grade = "";
-//        float atten_perc_float = 0;
-//
-//        double c_sum = 0;
-//        double SGPA = 0;
-//
-//        int credit_sum;
-//        double credit_point_mul = 0, credit_point_mul_sum = 0;
-//        String _TGNo;
-//
-//        String TG_Number = studentTGno.getText();
-//
-//        String levelNO = (String) LevelNoGrade.getSelectedItem();
-//        int levelNOInt = Integer.parseInt(levelNO);
-//
-//        String semesterNO = (String) SemesterNoGrade.getSelectedItem();
-//        int semesterNOInt = Integer.parseInt(semesterNO);
-//
-//        String course_ID = (String) GradeSubCodeCombo.getSelectedItem();
-//
-//        try {
-//            String selectMarksDetails = "select tgno,courses.course_id,courses.course_name,quiz_one,quiz_second,quiz_third,quiz_fourth,assessment_one,assessment_second,mid_term,final_theory,final_practical,quizzes_perc,assessment_perc,mid_term_perc,final_theory_perc,final_practical_perc from marks join courses on marks.course_id = courses.course_id where courses.course_id = ? and level_no = ? and semester_no = ?";
-//
-//            prepStatement = conn.prepareStatement(selectMarksDetails);
-//            prepStatement.setString(1, course_ID);
-//            prepStatement.setInt(2, levelNOInt);
-//            prepStatement.setInt(3, semesterNOInt);
-//
-//            ResultSet resultSet = prepStatement.executeQuery();
-//
-//            while (resultSet.next()) {
-//                _TGNo = resultSet.getString("tgno");
-//                c_id = resultSet.getString("course_id");
-//                c_name = resultSet.getString("course_name");
-//
-//                quiz1 = resultSet.getInt("quiz_one");
-//                quiz2 = resultSet.getInt("quiz_second");
-//                quiz3 = resultSet.getInt("quiz_third");
-//                quiz4 = resultSet.getInt("quiz_fourth");
-//                assessment1 = resultSet.getInt("assessment_one");
-//                assessment2 = resultSet.getInt("assessment_second");
-//                mid_term = resultSet.getInt("mid_term");
-//                finalTheory = resultSet.getInt("final_theory");
-//                finalPractical = resultSet.getInt("final_practical");
-//
-//                quiz_percentage = resultSet.getInt("quizzes_perc");
-//                assessment_percentage = resultSet.getInt("assessment_perc");
-//                mid_term_percentage = resultSet.getInt("mid_term_perc");
-//                final_theory_percentage = resultSet.getInt("final_theory_perc");
-//                final_practical_percentage = resultSet.getInt("final_practical_perc");
-//
-//                String atten_eligibility_query = "SELECT((SELECT COUNT(*) FROM attendance WHERE tgno = ? AND course_id = ? AND course_status IN ('practical', 'theory') AND atten_status IN ('present','medical'))/(SELECT COUNT(*) FROM attendance WHERE tgno = ? AND course_id = ? AND course_status IN ('practical', 'theory')) * 100) AS percentage";
-//                prepStatement = conn.prepareStatement(atten_eligibility_query);
-//                prepStatement.setString(1, TG_Number);
-//                prepStatement.setString(2, course_ID);
-//                prepStatement.setString(3, TG_Number);
-//                prepStatement.setString(4, course_ID);
-//
-//                ResultSet resultSet1 = prepStatement.executeQuery();
-//
-//                while (resultSet1.next()) {
-//                    String atten_perc_Str = resultSet1.getString("percentage");
-//                    atten_perc_float = Float.parseFloat(atten_perc_Str);
-//                }
-//
-//                ca_perc_max = ((quiz_percentage + assessment_percentage + mid_term_percentage) * 50) / 100;
-//
-//                int[] quizzes = {quiz1, quiz2, quiz3, quiz4};
-//                sort(quizzes);
-//                int arrLen = quizzes.length;
-//
-//                if (quizzes[0] == 0) {
-//                    quizPercentage = ((quizzes[arrLen - 1] * (quiz_percentage / 2.0)) / 100) + ((quizzes[arrLen - 2] * (10 / 2.0)) / 100);
-//                } else {
-//                    quizPercentage = ((quizzes[arrLen - 1] * (quiz_percentage / 3.0)) / 100) + ((quizzes[arrLen - 2] * (10 / 3.0)) / 100) + ((quizzes[arrLen - 3] * (10 / 3.0)) / 100);
-//                }
-//
-//                if (assessment1 == 0 || assessment2 == 0) {
-//                    assessmentPercentage = (((assessment1 + assessment2) * assessment_percentage) / 100.0);
-//                } else {
-//                    assessmentPercentage = (((assessment1 + assessment2) * (assessment_percentage / 2.0)) / 100.0);
-//                }
-//
-//                midPercentage = ((mid_term * mid_term_percentage) / 100.0);
-//
-//                FinalTheoryPercentage = ((finalTheory * final_theory_percentage) / 100.0);
-//                FinalPracticalPercentage = ((finalPractical * final_practical_percentage) / 100.0);
-//
-//                ca_mark_perc = quizPercentage + assessmentPercentage + midPercentage;
-//                final_mark_perc = FinalTheoryPercentage + FinalPracticalPercentage;
-//
-//                String ca_eligibility;
-//                if (ca_mark_perc > ca_perc_max) {
-//                    ca_eligibility = "Eligible";
-//                    if (atten_perc_float >= 80) {
-//                        if ((ca_mark_perc + final_mark_perc) >= 90) {
-//                            c_grade = "A+";
-//                        } else if ((ca_mark_perc + final_mark_perc) >= 85) {
-//                            c_grade = "A";
-//                        } else if ((ca_mark_perc + final_mark_perc) >= 80) {
-//                            c_grade = "A-";
-//                        } else if ((ca_mark_perc + final_mark_perc) >= 75) {
-//                            c_grade = "B+";
-//                        } else if ((ca_mark_perc + final_mark_perc) >= 70) {
-//                            c_grade = "B";
-//                        } else if ((ca_mark_perc + final_mark_perc) >= 65) {
-//                            c_grade = "B-";
-//                        } else if ((ca_mark_perc + final_mark_perc) >= 60) {
-//                            c_grade = "C+";
-//                        } else if ((ca_mark_perc + final_mark_perc) >= 40) {
-//                            c_grade = "C";
-//                        } else if ((ca_mark_perc + final_mark_perc) >= 35) {
-//                            c_grade = "C-";
-//                        } else if ((ca_mark_perc + final_mark_perc) >= 30) {
-//                            c_grade = "D+";
-//                        } else if ((ca_mark_perc + final_mark_perc) >= 25) {
-//                            c_grade = "D";
-//                        } else if ((ca_mark_perc + final_mark_perc) >= 20) {
-//                            c_grade = "E";
-//                        } else if ((ca_mark_perc + final_mark_perc) >= 0) {
-//                            c_grade = "F";
-//                        }
-//                    } else {
-//                        c_grade = "Not Released";
-//                    }
-//                } else {
-//                    ca_eligibility = "Not Eligible";
-//                    c_grade = "Not Released";
-//                }
-//
-//                Object[] GradeTableData = new Object[7];
-//
-//                GradeTableData[0] = c_id;
-//                GradeTableData[1] = c_name;
-//                GradeTableData[2] = ca_mark_perc;
-//                GradeTableData[3] = ca_eligibility;
-//                GradeTableData[4] = final_mark_perc;
-//                GradeTableData[5] = atten_perc_float;
-//                GradeTableData[6] = c_grade;
-//
-//                defaultTableModel.addRow(GradeTableData);
-//
-//                char[] C_id_arr = c_id.toCharArray();
-//                int c_id_arr_len = C_id_arr.length;
-//                int c_credit;
-//
-//                c_credit = Integer.parseInt(String.valueOf(C_id_arr[c_id_arr_len - 1]));
-//
-//                if (c_grade.equals("Not Released")) {
-//                    c_grade = "0";
-//                }
-//
-//                double credit_points = 0.00;
-//
-//                c_sum = final_mark_perc + ca_mark_perc;
-//                if (c_grade.equals("A+") || c_grade.equals("A")) {
-//                    credit_points = 4.00;
-//                } else if (c_grade.equals("A-")) {
-//                    credit_points = 3.70;
-//                } else if (c_grade.equals("B+")) {
-//                    credit_points = 3.30;
-//                } else if (c_grade.equals("B")) {
-//                    credit_points = 3.00;
-//                } else if (c_grade.equals("B-")) {
-//                    credit_points = 2.70;
-//                } else if (c_grade.equals("C+")) {
-//                    credit_points = 2.30;
-//                } else if (c_grade.equals("C")) {
-//                    credit_points = 2.00;
-//                } else if (c_grade.equals("C-")) {
-//                    credit_points = 1.70;
-//                } else if (c_grade.equals("D+")) {
-//                    credit_points = 1.30;
-//                } else if (c_grade.equals("D")) {
-//                    credit_points = 1.00;
-//                } else if (c_grade.equals("E") || c_grade.equals("Not Released") || c_grade.equals("F")) {
-//                    credit_points = 0.00;
-//                }
-//
-//                c_sum = c_sum + c_credit;
-//                credit_point_mul = c_credit * credit_points;
-//                credit_point_mul_sum = credit_point_mul_sum + credit_point_mul;
-//
-//                SGPA = Double.parseDouble(df.format(credit_point_mul_sum / c_sum));
-//
-//                lblSGPA.setText(String.valueOf(SGPA));
-//            }
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//    }
 
     public void GradesTableSetModelMethod(){
         UGGradeTable.setModel(new DefaultTableModel(
@@ -812,12 +582,11 @@ public class LecturerHomePage extends JFrame {
         DefaultTableModel defaultTableModel = (DefaultTableModel) UGGradeTable.getModel();
 
         try {
-            // Clear the existing table first
+
             defaultTableModel.setRowCount(0);
 
             Connection con = new DBCONNECTION().Conn();
 
-            // Select all students who have marks for this course
             String sql = "SELECT tgno, quiz_one, quiz_second, quiz_third, quiz_fourth, " +
                     "assessment_one, assessment_second, mid_term, final_theory, final_practical " +
                     "FROM marks WHERE course_id = ?";
@@ -868,7 +637,6 @@ public class LecturerHomePage extends JFrame {
                     grade = "F";
                 }
 
-                // Add the student info into the table
                 String[] GradeTableData = {tgno, grade, String.format("%.2f", gpa)};
                 defaultTableModel.addRow(GradeTableData);
             }
@@ -890,13 +658,11 @@ public class LecturerHomePage extends JFrame {
         String courseID = GradeSubCodeCombo.getSelectedItem().toString();
 
         try {
-            // Clear the table first
+
             defaultTableModel.setRowCount(0);
 
-            // Database connection (adjust your db name, user, pass)
             Connection con = new DBCONNECTION().Conn();
 
-            // Prepare to select marks for the student
             String sql = "SELECT quiz_one, quiz_second, quiz_third, quiz_fourth, " +
                     "assessment_one, assessment_second, mid_term, final_theory, final_practical " +
                     "FROM marks WHERE tgno = ? AND course_id = ?";
@@ -918,10 +684,8 @@ public class LecturerHomePage extends JFrame {
                 totalMarks += rs.getDouble("final_theory");
                 totalMarks += rs.getDouble("final_practical");
 
-                // Example: Let's say the full mark is 700
                 double percentage = (totalMarks / 700.0) * 100.0;
 
-                // Calculate GPA and Grade
                 double gpa = 0.0;
                 String grade = "";
 
@@ -948,18 +712,13 @@ public class LecturerHomePage extends JFrame {
                     grade = "F";
                 }
 
-                // Set the labels
                 lblCGPA.setText(String.format("%.2f", gpa));
                 lblSGPA.setText(grade);
-//                lblSGPA.setText(lblGPA.getText());  // if you have SGPA as same here
-//                lblCGPA.setText(lblGPA.getText());  // CGPA logic might be different, depends
                 UGClass.setText(calculateClass(gpa)); // optional: if you have class ranking
 
-                // Now add into table
                 String[] GradeTableData = {tgno, grade, String.format("%.2f", gpa)};
                 defaultTableModel.addRow(GradeTableData);
 
-                // Optionally you can also insert the GPA/Grade back into another database table here!
             } else {
                 JOptionPane.showMessageDialog(this, "No marks found for this student and subject!");
             }
@@ -1005,7 +764,6 @@ public class LecturerHomePage extends JFrame {
                 String ugemail = resultSet.getString("ugemail");
                 String ugphno = resultSet.getString("ugphno");
 
-//                System.out.println(tgno + " " +ugfname + " " +uglname + " " +ugaddress + " " +ugemail + " " +ugphno);
 
                 Object[] ob = new Object[6];
                 ob[0] = tgno;
@@ -1023,49 +781,10 @@ public class LecturerHomePage extends JFrame {
         }
     }
 
-//    private void addMaterial(){
-//        try{
-//            String course_id = (String) CourseforCourses.getSelectedItem();
-//            String material_name = Course_MaterialField.getText();
-//            String course_material_description = DescriptionforCourseMaterial.getText();
-//
-//            String courseMaterialDescFilePath = "Resources/CourseMaterialDesc/"+course_id+"_"+material_name+".txt";
-//
-//
-//            JFileChooser chooser = new JFileChooser();
-//            chooser.setDialogTitle("Choose a Material");
-//            if (chooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
-//                String material = chooser.getSelectedFile().getAbsolutePath();
-//                System.out.println(material);
-//                Files.copy(Path.of(material), Path.of(courseMaterialDescFilePath));
-//            }
-
-
-//            String courseMaterialDescFilePath = "Resources/CourseMaterialDesc/"+course_id+"_"+material_name+".txt";
-//            BufferedWriter writer = new BufferedWriter(new FileWriter(courseMaterialDescFilePath));
-//            writer.write(course_material_description);
-//            writer.close();
-//
-//            String addMaterialQry = "insert into course_materials(c_id,c_material,c_material_desc,c_material_location) values(?,?,?,?)";
-//            prepStatement.setString(1, course_id);
-//            prepStatement.setString(2, material_name);
-//            prepStatement.setString(3, courseMaterialDescFilePath);
-//            prepStatement.setString(4, );
-
-//        }catch (Exception e){
-//            e.printStackTrace();
-//        }
-//
-//    }
-
-
 
 
     public void CourseMaterialUpdate(){
         try{
-//            String UGaddress = textField7.getText();
-//            String UGemail = textField8.getText();
-//            String UGphno = textField9.getText();
 
             String course_id = (String) CourseforCourses.getSelectedItem();
             String material_name = Course_MaterialField.getText();
@@ -1130,7 +849,6 @@ public class LecturerHomePage extends JFrame {
 
                 String filename = UGFileChooser.getSelectedFile().getAbsolutePath();
 
-//                String MaterialSavePath = "Resources/ProfileImages/";
                 String MaterialSavePath = "Resources/CourseMaterial/";
 
                 File LecSaveMaterialDirectory = new File(MaterialSavePath);
@@ -1140,10 +858,6 @@ public class LecturerHomePage extends JFrame {
 
             String course_id = (String) CourseforCourses.getSelectedItem();
             String material_name = Course_MaterialField.getText();
-
-//            String course_material_description = DescriptionforCourseMaterial.getText();
-//
-//            String courseMaterialDescFilePath = "Resources/CourseMaterialDesc/"+course_id+"_"+material_name+".txt";
 
                 File LecSourceFile = null;
 
@@ -1167,23 +881,6 @@ public class LecturerHomePage extends JFrame {
             ex.printStackTrace();
         }
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
     private void CoursesforLecCourse(String lecno){
        try{
@@ -1637,8 +1334,6 @@ public class LecturerHomePage extends JFrame {
             prepStatement=conn.prepareStatement(AttendancepercentageQuery);
             prepStatement.setString(1,subject_code);
             prepStatement.setString(2,subject_status);
-//            prepStatement.setString(1,subject_code);
-//            prepStatement.setString(2,subject_status);
             ResultSet resultSet = prepStatement.executeQuery();
 
             while (resultSet.next()){
@@ -1670,8 +1365,7 @@ public class LecturerHomePage extends JFrame {
             prepStatement=conn.prepareStatement(AttendancepercentageMedicalQuery);
             prepStatement.setString(1,subject_code);
             prepStatement.setString(2,subject_status);
-//            prepStatement.setString(1,subject_code);
-//            prepStatement.setString(2,subject_status);
+
             ResultSet resultSetMedi = prepStatement.executeQuery();
 
             while (resultSetMedi.next()){
@@ -1884,26 +1578,6 @@ public class LecturerHomePage extends JFrame {
             }
         }
 
-//    private void getstudentdetailcourseid(String lecno,int level,int semester){
-//        System.out.println(lecno+ " " + level + " " + semester );
-//
-//        try{
-//            MarkSubCodeCombo.removeAllItems();
-//            String Query="SELECT c.course_id FROM courses c INNER JOIN lecture_course lc ON c.course_id = lc.course_id WHERE lc.lecno = ? AND c.level_no = ? AND c.semester_no = ?;";
-//            prepStatement=conn.prepareStatement(Query);
-//            prepStatement.setString(1, lecno);
-//            prepStatement.setInt(2, level);
-//            prepStatement.setInt(3, semester);
-//            ResultSet resultSet = prepStatement.executeQuery();
-//            while (resultSet.next()){
-//                String course_id = resultSet.getString("course_id");
-//                System.out.println(course_id);
-//                STCource.addItem(course_id);
-//            }
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//    }
 
     private void StudentTableMethod(){
         StudentTable.setModel(new DefaultTableModel(
@@ -1911,19 +1585,7 @@ public class LecturerHomePage extends JFrame {
                 new String[]{"Student TG Number","Student FName","StudentLName","Student Address","Student Email","Phone Number"}
         ));
     }
-//
-//    private void GetStudentDetailsMethod(){
-//
-//        try{
-//            StudentTableMethod();
-//            DefaultTableModel model=(DefaultTableModel)StudentTable.getModel();
-//
-//            String STDetailsQuery="select "
-//
-//        }catch (Exception e){
-//            e.printStackTrace();
-//        }
-//    }
+
 
 
     private void addMark(){
@@ -1942,7 +1604,18 @@ public class LecturerHomePage extends JFrame {
             for (JTextField field : markfields){
              if(field.getText().isEmpty() || field.getText() == null || field.getText().equals("")){
                  field.setText("0");
+                 return;
+
              }
+             if(Integer.parseInt(field.getText()) < 0){
+                 JOptionPane.showMessageDialog(null, "Mark Should greater than 0");
+                 return;
+             }
+                if(Integer.parseInt(field.getText()) >100){
+                    JOptionPane.showMessageDialog(null, "Mark Should not exceed 100");
+                    return;
+                }
+
             }
 
             int LECmarkQuiz1 = Integer.parseInt(LECMarkQuiz1.getText());
@@ -2020,7 +1693,7 @@ public class LecturerHomePage extends JFrame {
         new LecturerHomePage("lec1234");
     }
 
-    private void createUIComponents() {
+  private void createUIComponents() {
         // TODO: place custom component creation code here
     }
 }
