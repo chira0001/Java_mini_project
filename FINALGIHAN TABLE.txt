@@ -1,0 +1,1338 @@
+-- TABLE CREATION
+
+Create Database tecsys;
+use tecsys;
+
+
+CREATE TABLE undergraduate (
+id INT AUTO_INCREMENT PRIMARY KEY,
+tgno VARCHAR(10) UNIQUE,
+ugfname VARCHAR(20),
+uglname VARCHAR(20),
+ugaddress VARCHAR(100),
+ugemail VARCHAR(50),
+ugphno INT(10),
+ugpassword VARCHAR(50) default "123",
+ugProfImg VARCHAR(200),
+study_year INT(1),
+study_semester INT(1)
+);
+
+
+
+
+
+
+
+
+
+
+
+
+
+CREATE TABLE admin (
+id INT AUTO_INCREMENT PRIMARY KEY,
+adno VARCHAR(10) UNIQUE,
+adfname VARCHAR(20),
+adlname VARCHAR(20),
+adaddress VARCHAR(100),
+ademail VARCHAR(50),
+adphno INT(10),
+adpassword VARCHAR(50) default "123",
+adProfImg VARCHAR(200)
+);
+
+
+
+
+
+
+
+
+
+
+
+
+CREATE TABLE lecturer (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    lecno VARCHAR(10) UNIQUE,
+    lecfname VARCHAR(20),
+    leclname VARCHAR(20),
+    lecaddress VARCHAR(100),
+    lecemail VARCHAR(50),
+    lecphno VARCHAR(15),
+    lecpassword VARCHAR(50) DEFAULT '123',
+    lecProfImg VARCHAR(200)
+);
+
+
+
+
+
+
+
+
+CREATE TABLE technical_officer (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    tono VARCHAR(6) UNIQUE,
+    tofname VARCHAR(20),
+    tolname VARCHAR(20),
+    toaddress VARCHAR(100),
+    toemail VARCHAR(50),
+    tophno INT,
+    todepartment VARCHAR(30),
+    topassword VARCHAR(50) DEFAULT '123',
+    toProfImg VARCHAR(200)
+);
+
+
+
+
+
+
+
+create table courses(
+course_id varchar(7),
+course_name varchar(50),
+level_no int(1),
+semester_no int(1),
+status enum('theory','practical','theory/practical') default 'theory',
+quizzes_perc int(3) default 0,
+assessment_perc int(3) default 0,
+mid_term_perc int(3) default 0,
+final_theory_perc int(3) default 0,
+final_practical_perc int(3) default 0
+);
+
+
+
+
+
+
+
+
+
+CREATE TABLE lecture_course (
+    lecno VARCHAR(7),
+    course_id VARCHAR(7),
+    PRIMARY KEY (lecno, course_id)
+);
+
+
+
+
+
+
+
+
+
+
+create table notice(
+notice_no INT primary key auto_increment,
+noticeTitle varchar(75),
+noticeFilePath varchar(100)
+);
+
+
+
+
+
+
+
+
+
+CREATE TABLE timeTable(
+    time_table_id INT PRIMARY KEY AUTO_INCREMENT,
+    course_id VARCHAR(7), 
+    module_day VARCHAR(20),
+    time VARCHAR(20)
+);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+create table marks(
+mark_id INT primary key auto_increment,
+tgno varchar(6),
+course_id varchar(7),
+quiz_one int(3) default -1,
+quiz_second int(3) default -1,
+quiz_third int(3) default -1,
+quiz_fourth int(3) default -1,
+assessment_one int(3) default -1,
+assessment_second int(3) default -1,
+mid_term int(3) default -1,
+final_theory int(3) default -1,
+final_practical int(3) default -1
+);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+CREATE TABLE course_materials (
+    c_mat_no INT NOT NULL AUTO_INCREMENT,
+    c_id VARCHAR(7),
+    c_material VARCHAR(50),
+    c_material_desc VARCHAR(300),
+    c_material_location VARCHAR(300),
+    PRIMARY KEY (c_mat_no)
+);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+CREATE TABLE medical (
+    medical_no INT NOT NULL AUTO_INCREMENT,
+    tono VARCHAR(6),
+    tgno VARCHAR(6),
+    course_id VARCHAR(7),
+    week_no INT,
+    med_reason VARCHAR(100),
+    PRIMARY KEY (medical_no)
+);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+CREATE TABLE attendance (
+    atten_id INT NOT NULL AUTO_INCREMENT,
+    tono VARCHAR(6),
+    tgno VARCHAR(6),
+    course_id VARCHAR(7),
+    week_no INT,
+    course_status ENUM('theory', 'practical') DEFAULT 'theory',
+    atten_status ENUM('present', 'absent', 'medical') DEFAULT 'present',
+    med_id CHAR(6),
+    PRIMARY KEY (atten_id)
+);
+
+
+
+-- PROCEDURES 
+
+
+DELIMITER //
+
+CREATE TRIGGER trg_before_insert_undergraduate
+BEFORE INSERT ON undergraduate
+FOR EACH ROW
+BEGIN
+    DECLARE next_id INT;
+
+    SET next_id = (SELECT AUTO_INCREMENT
+                   FROM information_schema.TABLES
+                   WHERE TABLE_SCHEMA = DATABASE()
+                   AND TABLE_NAME = 'undergraduate');
+
+    SET NEW.tgno = CONCAT('tg', LPAD(next_id, 4, '0'));
+END;
+//
+
+DELIMITER ;
+
+
+
+
+
+
+
+
+
+
+
+
+DELIMITER //
+
+CREATE TRIGGER trg_before_insert_admin
+BEFORE INSERT ON admin
+FOR EACH ROW
+BEGIN
+    DECLARE next_id INT;
+
+    SET next_id = (SELECT AUTO_INCREMENT
+                   FROM information_schema.TABLES
+                   WHERE TABLE_SCHEMA = DATABASE()
+                   AND TABLE_NAME = 'admin');
+
+    SET NEW.adno = CONCAT('ad', LPAD(next_id, 4, '0'));
+END;
+//
+
+DELIMITER ;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+DELIMITER //
+
+CREATE TRIGGER trg_before_insert_lecturer
+BEFORE INSERT ON lecturer
+FOR EACH ROW
+BEGIN
+    DECLARE next_id INT;
+
+    SET next_id = (SELECT AUTO_INCREMENT
+                   FROM information_schema.TABLES
+                   WHERE TABLE_SCHEMA = DATABASE()
+                   AND TABLE_NAME = 'lecturer');
+
+    SET NEW.lecno = CONCAT('lec', LPAD(next_id, 4, '0'));
+END;
+//
+
+DELIMITER ;
+
+
+
+
+
+
+
+
+
+
+
+DELIMITER //
+
+CREATE TRIGGER trg_before_insert_technical_officer
+BEFORE INSERT ON technical_officer
+FOR EACH ROW
+BEGIN
+    DECLARE next_id INT;
+
+    SET next_id = (
+        SELECT AUTO_INCREMENT
+        FROM information_schema.TABLES
+        WHERE TABLE_SCHEMA = DATABASE()
+          AND TABLE_NAME = 'technical_officer'
+    );
+
+    SET NEW.tono = CONCAT('to', LPAD(next_id, 4, '0'));
+END;
+//
+
+DELIMITER ;
+
+
+
+
+
+
+
+
+-- VIEWS
+
+
+
+
+create view users as 
+SELECT adno AS id, adpassword as password FROM admin
+UNION
+SELECT tgno AS id, ugpassword as password FROM undergraduate
+UNION
+SELECT lecno AS id, lecpassword as password FROM lecturer
+UNION
+SELECT tono AS id, topassword as password FROM technical_officer;
+
+
+
+
+
+-- DATA INSERT
+
+
+
+
+
+
+
+
+
+
+
+INSERT INTO undergraduate (id, tgno, ugfname, uglname, ugaddress, ugemail, ugphno, ugpassword, ugProfImg, study_year, study_semester) VALUES
+(2, 'tg0002', 'Kasun', 'Perera', 'Galle', 'kasunp@gmail.com', '0771234567', 'abc123', 'Resources/ProfileImages/tg0002.jpg', 1, 2),
+(3, 'tg0003', 'Nadeesha', 'Fernando', 'Matara', 'nadeefernando@gmail.com', '0712345678', 'pass123', 'Resources/ProfileImages/tg0003.jpg', 3, 2),
+(4, 'tg0004', 'Dinuka', 'Silva', 'Colombo', 'dinuka.silva@yahoo.com', '0759876543', 'mypassword', 'Resources/ProfileImages/tg0004.jpg', 2, 2),
+(5, 'tg0005', 'Sachini', 'Gunawardena', 'Negombo', 'sachini.gun@gmail.com', '0761237890', 'sachi2024', 'Resources/ProfileImages/tg0005.jpg', 4, 2),
+(6, 'tg0006', 'Malith', 'Jayasinghe', 'Kandy', 'malithjaya@hotmail.com', '0701122334', 'malith#01', 'Resources/ProfileImages/tg0006.jpg', 1, 2),
+(7, 'tg0007', 'Ishara', 'Abeykoon', 'Kurunegala', 'ishara.abeykoon@gmail.com', '0786543210', 'ish123', 'Resources/ProfileImages/tg0007.jpg', 2, 2),
+(8, 'tg0008', 'Dulani', 'Wijeratne', 'Anuradhapura', 'dulani.wije@yahoo.com', '0743217890', 'dulanipass', 'Resources/ProfileImages/tg0008.jpg', 3, 2),
+(9, 'tg0009', 'Kavindu', 'Samarasekara', 'Gampaha', 'kavindusama@gmail.com', '0723456789', 'kavindu99', 'Resources/ProfileImages/tg0009.jpg', 2, 2),
+(10, 'tg0010', 'Sanduni', 'Ekanayake', 'Polonnaruwa', 'sandunieka@gmail.com', '0774445566', 'sand2025', 'Resources/ProfileImages/tg0010.jpg', 4, 2),
+(11, 'tg0011', 'Tharindu', 'Hettiarachchi', 'Ratnapura', 'tharindu.hett@gmail.com', '0798765432', 'thari123', 'Resources/ProfileImages/tg0011.jpg', 1, 2),
+(12, 'tg0012', 'Nimesha', 'Senanayake', 'Badulla', 'nimesha.sena@gmail.com', '0719876543', 'nime2024', 'Resources/ProfileImages/tg0012.jpg', 2, 2),
+(13, 'tg0013', 'Chamika', 'Bandara', 'Kegalle', 'chamika.ban@gmail.com', '0782345678', 'chamika01', 'Resources/ProfileImages/tg0013.jpg', 3, 2),
+(14, 'tg0014', 'Ishan', 'Ranasinghe', 'Kalutara', 'ishan.rana@hotmail.com', '0729876543', 'ishanpass', 'Resources/ProfileImages/tg0014.jpg', 4, 2),
+(15, 'tg0015', 'Yasodha', 'Karunaratne', 'Matale', 'yasodha.karu@gmail.com', '0765554433', 'yaso456', 'Resources/ProfileImages/tg0015.jpg', 1, 2),
+(16, 'tg0016', 'Hiruni', 'Rajapaksha', 'Hambantota', 'hiruni.raja@gmail.com', '0703344556', 'hiru2025', 'Resources/ProfileImages/tg0016.jpg', 2, 2),
+(17, 'tg0017', 'Isuru', 'Madushanka', 'Nuwara Eliya', 'isuru.madu@yahoo.com', '0791237890', 'isumadu', 'Resources/ProfileImages/tg0017.jpg', 3, 2),
+(18, 'tg0018', 'Pavithra', 'Abeysekara', 'Puttalam', 'pavithra.abey@gmail.com', '0789876543', 'pavi@123', 'Resources/ProfileImages/tg0018.jpg', 2, 2),
+(19, 'tg0019', 'Dhanushka', 'Dias', 'Vavuniya', 'dhanushka.dias@gmail.com', '0721112223', 'dhanupass', 'Resources/ProfileImages/tg0019.jpg', 4, 2),
+(20, 'tg0020', 'Nuwani', 'Wickramasinghe', 'Kilinochchi', 'nuwani.wick@gmail.com', '0779998887', 'nuwani12', 'Resources/ProfileImages/tg0020.jpg', 1, 2),
+(21, 'tg0021', 'Sasindu', 'Herath', 'Trincomalee', 'sasindu.herath@gmail.com', '0704455667', 'sasindu34', 'Resources/ProfileImages/tg0021.jpg', 2, 2),
+(22, 'tg0022', 'Shanika', 'Alahakoon', 'Batticaloa', 'shanika.ala@gmail.com', '0742233445', 'shani12', 'Resources/ProfileImages/tg0022.jpg', 3, 2),
+(23, 'tg0023', 'Pubudu', 'Ranawaka', 'Ampara', 'pubudu.rana@gmail.com', '0783322110', 'pubudupass', 'Resources/ProfileImages/tg0023.jpg', 4, 2),
+(24, 'tg0024', 'Vimukthi', 'Samarakoon', 'Jaffna', 'vimukthi.sam@gmail.com', '0756677889', 'vimukthi22', 'Resources/ProfileImages/tg0024.jpg', 2, 2),
+(25, 'tg0025', 'Amandi', 'Peris', 'Galle', 'amandi.peris@gmail.com', '0774433221', 'amandi56', 'Resources/ProfileImages/tg0025.jpg', 1, 2),
+(26, 'tg0026', 'Lakshan', 'Dissanayake', 'Colombo', 'lakshan.diss@gmail.com', '0719988776', 'lakshan01', 'Resources/ProfileImages/tg0026.jpg', 3, 2),
+(27, 'tg0027', 'Dilani', 'Pathirana', 'Matara', 'dilani.pathi@gmail.com', '0745678901', 'dilani@1', 'Resources/ProfileImages/tg0027.jpg', 4, 2),
+(28, 'tg0028', 'Sahan', 'Gunasekara', 'Kandy', 'sahan.guna@gmail.com', '0795556664', 'sahanpass', 'Resources/ProfileImages/tg0028.jpg', 2, 2),
+(29, 'tg0029', 'Udani', 'Kodikara', 'Kurunegala', 'udani.kodi@gmail.com', '0788877665', 'udani99', 'Resources/ProfileImages/tg0029.jpg', 2, 2),
+(30, 'tg0030', 'Ashen', 'De Silva', 'Anuradhapura', 'ashen.desilva@gmail.com', '0707788990', 'ashen123', 'Resources/ProfileImages/tg0030.jpg', 3, 2),
+(31, 'tg0031', 'Harini', 'Abeywardena', 'Colombo', 'harini.abey@gmail.com', '0775566778', 'harinipass', 'Resources/ProfileImages/tg0031.jpg', 4, 2);
+
+
+
+
+
+
+INSERT INTO admin (adfname,adlname,adaddress,ademail,adphno,adpassword,adProfImg) VALUES
+('Nimal','Fernando','789 Galle Road, Galle','nimal.fernando@example.com',712345678,'123','Resources/ProfileImages/DefaultUser.png');
+
+
+
+
+INSERT INTO lecturer (lecfname, leclname, lecaddress, lecemail, lecphno, lecpassword, lecProfImg) VALUES
+('P.K.S.C', 'Jayasinghe', 'Matara', 'subash@ictec.ruh.ac.lk', 777123456, '123', 'Resources/ProfileImages/lec0001.jpg'),
+('H.M.', 'Pushpakumara', 'Matara', 'chandanap@ictec.ruh.ac.lk', 772234567, '123', 'Resources/ProfileImages/lec0002.jpg'),
+('P.H.P.N', 'Laksiri', 'Matara', 'phpnlaksiri@ictec.ruh.ac.lk', 771345678, '123', 'Resources/ProfileImages/lec0003.jpg'),
+('D.S.', 'Vithanage', 'Matara', 'dinithi@ictec.ruh.ac.lk', 776456789, '123', 'Resources/ProfileImages/lec0004.jpg'),
+('Rumeshika', 'W. Arachi', 'Matara', 'rumeshika@ictec.ruh.ac.lk', 778567890, '123', 'Resources/ProfileImages/lec0005.jpg'),
+('Buddika', 'Gayashani', 'Matara', 'buddika@ictec.ruh.ac.lk', 775678901, '123', 'Resources/ProfileImages/lec0006.jpg'),
+('Malsha', 'Prabuddhi', 'Matara', 'malsha@ictec.ruh.ac.lk', 774789012, '123', 'Resources/ProfileImages/lec0007.jpg'),
+('Chanduni', 'Gamage', 'Matara', 'chanduni@ictec.ruh.ac.lk', 773890123, '123', 'Resources/ProfileImages/lec0008.jpg'),
+('E.H.M.P.M.', 'Wijerathna', 'Matara', 'piyumi@ictec.ruh.ac.lk', 772901234, '123', 'Resources/ProfileImages/lec0009.jpg'),
+('R.D.N.', 'Shakya', 'Matara', 'shakya@ictec.ruh.ac.lk', 779012345, '123', 'Resources/ProfileImages/lec0010.jpg'),
+('Akila', 'Brahmana', 'Matara', 'akila@ictec.ruh.ac.lk', 778123456, '123', 'Resources/ProfileImages/lec0011.jpg'),
+('A.W.A.T.', 'Dilhan', 'Matara', 'dilhan@ictec.ruh.ac.lk', 777234567, '123', 'Resources/ProfileImages/lec0012.jpg'),
+('Shashitha', 'Lakal', 'Matara', 'shashithal@ictec.ruh.ac.lk', 776345678, '123', 'Resources/ProfileImages/lec0013.jpg'),
+('Dinoo', 'Gunasekera', 'Matara', 'dinoog@ictec.ruh.ac.lk', 775456789, '123', 'Resources/ProfileImages/lec0014.jpg');
+
+
+INSERT INTO courses (course_id, course_name, level_no, semester_no, status, quizzes_perc, assessment_perc, mid_term_perc, final_theory_perc, final_practical_perc)
+VALUES
+('ENG1114', 'English I', 1, 1, 'theory', 10, 10, 20, 60, 0),
+('ICT1112', 'Essential of ICT and Computer Hardware', 1, 1, 'theory', 10, 10, 20, 60, 0),
+('ICT1122', 'Introduction to Multimedia Technologies', 1, 1, 'theory', 10, 10, 20, 60, 0),
+('ICT1132', 'Fundamentals of Computer Programming', 1, 1, 'theory', 10, 10, 20, 60, 0),
+('ICT1142', 'Programming Practicum', 1, 1, 'practical', 10, 20, 0, 0, 70),
+('ICT1153', 'Web Technologies', 1, 1, 'theory', 10, 10, 20, 60, 0),
+('ICT1161', 'Fundamentals of Information Systems', 1, 1, 'theory', 10, 10, 20, 60, 0),
+('TMS1113', 'Foundation of Mathematics', 1, 1, 'theory', 10, 10, 20, 60, 0),
+('ENG1222', 'English II', 1, 2, 'theory', 10, 10, 20, 60, 0),
+('ICT1212', 'Database Management Systems', 1, 2, 'theory', 10, 10, 20, 60, 0),
+('ICT1222', 'Database Management Systems Practicum', 1, 2, 'practical', 10, 20, 0, 0, 70),
+('ICT1233', 'Server-Side Web Development', 1, 2, 'theory', 10, 10, 20, 60, 0),
+('ICT1242', 'Computer Architecture', 1, 2, 'theory', 10, 10, 20, 60, 0),
+('ICT1253', 'Computer Networks', 1, 2, 'theory', 10, 10, 20, 60, 0),
+('TCS1212', 'Fundamentals of Management', 1, 2, 'theory', 10, 10, 20, 60, 0),
+('TMS1233', 'Discrete Mathematics', 1, 2, 'theory', 10, 10, 20, 60, 0),
+('ENG2122', 'English III', 2, 1, 'theory', 10, 10, 20, 60, 0),
+('ICT2113', 'Data Structures and Algorithms', 2, 1, 'theory', 10, 10, 20, 60, 0),
+('ICT2122', 'Object Oriented Programming', 2, 1, 'theory', 10, 10, 20, 60, 0),
+('ICT2132', 'Object Oriented Programming Practicum', 2, 1, 'practical', 10, 20, 0, 0, 70),
+('ICT2142', 'Object Oriented Analysis and Design', 2, 1, 'theory', 10, 10, 20, 60, 0),
+('ICT2152', 'E-Commerce Implementation, Management and Security', 2, 1, 'theory', 10, 10, 20, 60, 0),
+('TCS2112', 'Business Economics', 2, 1, 'theory', 10, 10, 20, 60, 0),
+('TCS2122', 'Soft Skills', 2, 1, 'theory', 10, 10, 20, 60, 0);
+
+
+
+INSERT INTO lecture_course (lecno, course_id) VALUES
+('lec0001', 'ENG1114'),
+('lec0002', 'ICT1112'),
+('lec0003', 'ICT1122'),
+('lec0004', 'ICT1132'),
+('lec0005', 'ICT1142'),
+('lec0006', 'ICT1153'),
+('lec0007', 'ICT1161'),
+('lec0008', 'TMS1113'),
+('lec0001', 'ENG1222'),
+('lec0002', 'ICT1212'),
+('lec0003', 'ICT1222'),
+('lec0004', 'ICT1233'),
+('lec0005', 'ICT1242'),
+('lec0006', 'ICT1253'),
+('lec0007', 'TCS1212'),
+('lec0008', 'TMS1233'),
+('lec0009', 'ENG2122'),
+('lec0010', 'ICT2113'),
+('lec0011', 'ICT2122'),
+('lec0012', 'ICT2132'),
+('lec0013', 'ICT2142'),
+('lec0014', 'ICT2152'),
+('lec0009', 'TCS2112'),
+('lec0010', 'TCS2122');
+
+
+
+INSERT INTO technical_officer (tofname, tolname, toaddress, toemail, tophno, todepartment, toProfImg) VALUES
+('Nimal', 'Perera', 'No. 15, Galle Road, Colombo 03', 'nimalp@example.com', 711234567, 'Computer Lab', 'images/nimal.jpg'),
+('Sunil', 'Fernando', '45/A Temple Lane, Kandy', 'sunilf@example.com', 712345678, 'Network Lab', 'images/sunil.jpg'),
+('Chathurika', 'De Silva', '89/1 Lake View, Kurunegala', 'chathurikad@example.com', 713456789, 'Software Lab', 'images/chathurika.jpg'),
+('Pradeep', 'Wijesekera', '23 Flower Road, Matara', 'pradeepw@example.com', 714567890, 'Hardware Lab', 'images/pradeep.jpg');
+
+
+
+INSERT INTO notice (noticeTitle, noticeFilePath) VALUES
+("Semester Timetable", "Resources/Notices/1.txt"),
+("Holiday Announcement", "Resources/Notices/2.txt"),
+("Workshop on AI", "Resources/Notices/3.txt"),
+("Library Renovation Notice", "Resources/Notices/4.txt"),
+("Internship Opportunities", "Resources/Notices/5.txt");
+
+
+
+INSERT INTO timeTable(course_id, module_day, time) VALUES
+('ENG1114', 'Monday', '8.00 - 10.00'),
+('ICT1112', 'Monday', '10.00 - 12.00'),
+('ICT1122', 'Tuesday', '8.00 - 10.00'),
+('ICT1132', 'Tuesday', '10.00 - 12.00'),
+('ICT1142', 'Wednesday', '8.00 - 10.00'),
+('ICT1153', 'Wednesday', '10.00 - 12.00'),
+('ICT1161', 'Thursday', '8.00 - 10.00'),
+('TMS1113', 'Thursday', '10.00 - 12.00'),
+('ENG1222', 'Monday', '1.00 - 3.00'),
+('ICT1212', 'Tuesday', '1.00 - 3.00'),
+('ICT1222', 'Tuesday', '3.00 - 5.00'),
+('ICT1233', 'Wednesday', '1.00 - 3.00'),
+('ICT1242', 'Thursday', '1.00 - 3.00'),
+('ICT1253', 'Friday', '8.00 - 10.00'),
+('TCS1212', 'Friday', '10.00 - 12.00'),
+('TMS1233', 'Friday', '1.00 - 3.00'),
+('ENG2122', 'Monday', '8.00 - 10.00'),
+('ICT2113', 'Tuesday', '8.00 - 12.00'),
+('ICT2122', 'Thursday', '1.00 - 3.00'),
+('ICT2132', 'Tuesday', '8.00 - 10.00'),
+('ICT2142', 'Monday', '8.00 - 12.00'),
+('ICT2152', 'Wednesday', '10.00 - 12.00'),
+('TCS2112', 'Thursday', '3.00 - 5.00'),
+('TCS2122', 'Friday', '3.00 - 5.00');
+
+
+
+INSERT INTO marks(tgno, course_id, quiz_one, quiz_second, quiz_third, quiz_fourth, assessment_one, assessment_second, mid_term, final_theory, final_practical) VALUES
+('tg0002', 'ICT1212', 80, 85, 78, 90, 88, 84, 79, 87, 0),
+('tg0002', 'ICT1222', 75, 80, 70, 72, 74, 77, 78, 80, 85),
+('tg0002', 'ICT1233', 85, 88, 82, 84, 87, 85, 86, 90, 0),
+('tg0002', 'ICT1242', 70, 74, 68, 72, 73, 75, 76, 78, 0),
+('tg0002', 'ICT1253', 90, 92, 88, 86, 89, 91, 90, 92, 0),
+
+('tg0006', 'ICT1212', 78, 82, 80, 81, 79, 82, 83, 84, 0),
+('tg0006', 'ICT1222', 76, 79, 75, 77, 78, 76, 79, 81, 87),
+('tg0006', 'ICT1233', 83, 85, 80, 84, 86, 83, 85, 87, 0),
+('tg0006', 'ICT1242', 69, 73, 68, 71, 72, 74, 75, 77, 0),
+('tg0006', 'ICT1253', 88, 90, 86, 87, 89, 88, 90, 92, 0),
+
+('tg0011', 'ICT1212', 79, 83, 77, 80, 82, 81, 80, 85, 0),
+('tg0011', 'ICT1222', 71, 76, 70, 72, 74, 75, 76, 79, 83),
+('tg0011', 'ICT1233', 86, 89, 85, 87, 88, 86, 87, 89, 0),
+('tg0011', 'ICT1242', 68, 72, 67, 70, 71, 73, 74, 76, 0),
+('tg0011', 'ICT1253', 87, 90, 85, 86, 88, 87, 89, 91, 0),
+
+('tg0015', 'ICT1212', 82, 85, 79, 81, 83, 84, 85, 87, 0),
+('tg0015', 'ICT1222', 78, 80, 76, 77, 79, 78, 81, 83, 90),
+('tg0015', 'ICT1233', 84, 87, 83, 85, 86, 85, 86, 88, 0),
+('tg0015', 'ICT1242', 71, 74, 70, 72, 73, 75, 77, 78, 0),
+('tg0015', 'ICT1253', 89, 91, 87, 88, 90, 89, 91, 92, 0),
+
+('tg0020', 'ICT1212', 77, 80, 75, 78, 79, 78, 80, 82, 0),
+('tg0020', 'ICT1222', 74, 77, 72, 75, 76, 74, 77, 79, 88),
+('tg0020', 'ICT1233', 81, 84, 80, 82, 83, 81, 84, 86, 0),
+('tg0020', 'ICT1242', 69, 72, 68, 70, 71, 73, 75, 77, 0),
+('tg0020', 'ICT1253', 86, 88, 84, 85, 87, 86, 88, 90, 0),
+
+('tg0025', 'ICT1212', 81, 84, 79, 82, 83, 82, 83, 85, 0),
+('tg0025', 'ICT1222', 77, 79, 75, 78, 79, 77, 79, 81, 85),
+('tg0025', 'ICT1233', 84, 87, 83, 85, 86, 85, 86, 88, 0),
+('tg0025', 'ICT1242', 70, 73, 69, 71, 72, 74, 76, 77, 0),
+('tg0025', 'ICT1253', 88, 91, 87, 89, 90, 89, 91, 92, 0),
+
+('tg0012', 'ICT2113', 80, 83, 78, 81, 82, 81, 82, 85, 0),
+('tg0012', 'ICT2122', 76, 79, 75, 77, 78, 77, 78, 80, 85),
+('tg0012', 'ICT2133', 85, 87, 84, 86, 87, 86, 87, 89, 0),
+('tg0012', 'ICT2142', 69, 72, 68, 71, 71, 70, 73, 75, 0),
+('tg0012', 'ICT2152', 87, 89, 85, 87, 88, 87, 89, 91, 0),
+
+('tg0016', 'ICT2113', 82, 85, 79, 81, 83, 82, 84, 86, 0),
+('tg0016', 'ICT2122', 78, 81, 76, 79, 80, 78, 81, 83, 88),
+('tg0016', 'ICT2133', 84, 87, 83, 85, 86, 84, 86, 88, 0),
+('tg0016', 'ICT2142', 70, 73, 68, 72, 73, 72, 74, 76, 0),
+('tg0016', 'ICT2152', 88, 91, 87, 89, 90, 89, 91, 92, 0),
+
+('tg0018', 'ICT2113', 81, 83, 80, 82, 84, 82, 83, 86, 0),
+('tg0018', 'ICT2122', 75, 78, 74, 77, 77, 76, 79, 80, 85),
+('tg0018', 'ICT2133', 83, 86, 82, 84, 85, 83, 85, 87, 0),
+('tg0018', 'ICT2142', 68, 71, 67, 70, 71, 70, 72, 74, 0),
+('tg0018', 'ICT2152', 87, 90, 86, 88, 89, 88, 90, 91, 0),
+
+('tg0021', 'ICT2113', 79, 82, 77, 80, 81, 80, 81, 83, 0),
+('tg0021', 'ICT2122', 74, 77, 72, 75, 76, 75, 78, 80, 87),
+('tg0021', 'ICT2133', 81, 84, 80, 82, 83, 81, 83, 85, 0),
+('tg0021', 'ICT2142', 67, 70, 66, 69, 69, 68, 71, 73, 0),
+('tg0021', 'ICT2152', 86, 89, 85, 87, 88, 87, 89, 90, 0),
+
+('tg0024', 'ICT2113', 80, 83, 79, 82, 83, 82, 83, 85, 0),
+('tg0024', 'ICT2122', 77, 80, 75, 78, 79, 78, 81, 83, 85),
+('tg0024', 'ICT2133', 84, 87, 83, 85, 86, 84, 86, 88, 0),
+('tg0024', 'ICT2142', 70, 73, 68, 71, 72, 71, 74, 76, 0),
+('tg0024', 'ICT2152', 88, 91, 87, 89, 90, 89, 91, 92, 0),
+
+('tg0028', 'ICT2113', 82, 85, 78, 81, 82, 81, 84, 86, 0),
+('tg0028', 'ICT2122', 75, 78, 74, 77, 77, 76, 79, 80, 85),
+('tg0028', 'ICT2133', 83, 86, 82, 84, 85, 83, 85, 87, 0),
+('tg0028', 'ICT2142', 69, 72, 67, 70, 71, 70, 73, 75, 0),
+('tg0028', 'ICT2152', 87, 90, 86, 88, 89, 88, 90, 91, 0),
+
+('tg0029', 'ICT2113', 81, 84, 80, 82, 83, 82, 83, 85, 0),
+('tg0029', 'ICT2122', 78, 80, 76, 79, 80, 79, 81, 83, 86),
+('tg0029', 'ICT2133', 85, 87, 83, 86, 87, 85, 86, 88, 0),
+('tg0029', 'ICT2142', 71, 74, 69, 71, 72, 71, 74, 76, 0),
+('tg0029', 'ICT2152', 89, 91, 87, 90, 90, 89, 91, 92, 0);
+
+
+
+
+INSERT INTO attendance(tono,tgno,course_id,week_no,course_status,atten_status,med_id) VALUES
+("to0001", "tg0001", "ICT0001", 1, "theory", "present", ""),
+("to0001", "tg0001", "ICT0001", 1, "practical", "present", ""),
+("to0001", "tg0001", "ICT0001", 2, "theory", "absent", ""),
+("to0001", "tg0001", "ICT0001", 2, "practical", "present", ""),
+("to0001", "tg0001", "ICT0001", 3, "theory", "present", ""),
+("to0001", "tg0001", "ICT0001", 3, "practical", "present", ""),
+("to0001", "tg0001", "ICT0001", 4, "theory", "present", ""),
+("to0001", "tg0001", "ICT0001", 4, "practical", "present", ""),
+("to0001", "tg0001", "ICT0001", 5, "theory", "absent", ""),
+("to0001", "tg0001", "ICT0001", 5, "practical", "present", ""),
+("to0001", "tg0001", "ICT0001", 6, "theory", "present", ""),
+("to0001", "tg0001", "ICT0001", 6, "practical", "present", ""),
+("to0001", "tg0001", "ICT0001", 7, "theory", "present", ""),
+("to0001", "tg0001", "ICT0001", 7, "practical", "present", ""),
+("to0001", "tg0001", "ICT0001", 8, "theory", "present", ""),
+("to0001", "tg0001", "ICT0001", 8, "practical", "present", ""),
+("to0001", "tg0001", "ICT0001", 9, "theory", "absent", ""),
+("to0001", "tg0001", "ICT0001", 9, "practical", "present", ""),
+("to0001", "tg0001", "ICT0001", 10, "theory", "absent", ""),
+("to0001", "tg0001", "ICT0001", 10, "practical", "absent", ""),
+("to0001", "tg0001", "ICT0001", 11, "theory", "present", ""),
+("to0001", "tg0001", "ICT0001", 11, "practical", "present", ""),
+("to0001", "tg0001", "ICT0001", 12, "theory", "absent", ""),
+("to0001", "tg0001", "ICT0001", 12, "practical", "absent", ""),
+("to0001", "tg0001", "ICT0001", 13, "theory", "absent", ""),
+("to0001", "tg0001", "ICT0001", 13, "practical", "present", ""),
+("to0001", "tg0001", "ICT0001", 14, "theory", "present", ""),
+("to0001", "tg0001", "ICT0001", 14, "practical", "absent", ""),
+("to0001", "tg0001", "ICT0001", 15, "theory", "present", ""),
+("to0001", "tg0001", "ICT0001", 15, "practical", "present", ""),
+
+("to0001", "tg0001", "ICT0002", 1, "theory", "absent", ""),
+("to0001", "tg0001", "ICT0002", 2, "theory", "present", ""),
+("to0001", "tg0001", "ICT0002", 3, "theory", "absent", ""),
+("to0001", "tg0001", "ICT0002", 4, "theory", "absent", ""),
+("to0001", "tg0001", "ICT0002", 5, "theory", "absent", ""),
+("to0001", "tg0001", "ICT0002", 6, "theory", "present", ""),
+("to0001", "tg0001", "ICT0002", 7, "theory", "absent", ""),
+("to0001", "tg0001", "ICT0002", 8, "theory", "present", ""),
+("to0001", "tg0001", "ICT0002", 9, "theory", "absent", ""),
+("to0001", "tg0001", "ICT0002", 10, "theory", "present", ""),
+("to0001", "tg0001", "ICT0002", 11, "theory", "absent", ""),
+("to0001", "tg0001", "ICT0002", 12, "theory", "absent", ""),
+("to0001", "tg0001", "ICT0002", 13, "theory", "present", ""),
+("to0001", "tg0001", "ICT0002", 14, "theory", "present", ""),
+("to0001", "tg0001", "ICT0002", 15, "theory", "present", ""),
+
+("to0001", "tg0001", "ICT0003", 1, "theory", "present", ""),
+("to0001", "tg0001", "ICT0003", 1, "practical", "absent", ""),
+("to0001", "tg0001", "ICT0003", 2, "theory", "present", ""),
+("to0001", "tg0001", "ICT0003", 2, "practical", "present", ""),
+("to0001", "tg0001", "ICT0003", 3, "theory", "present", ""),
+("to0001", "tg0001", "ICT0003", 3, "practical", "absent", ""),
+("to0001", "tg0001", "ICT0003", 4, "theory", "absent", ""),
+("to0001", "tg0001", "ICT0003", 4, "practical", "absent", ""),
+("to0001", "tg0001", "ICT0003", 5, "theory", "absent", ""),
+("to0001", "tg0001", "ICT0003", 5, "practical", "present", ""),
+("to0001", "tg0001", "ICT0003", 6, "theory", "absent", ""),
+("to0001", "tg0001", "ICT0003", 6, "practical", "absent", ""),
+("to0001", "tg0001", "ICT0003", 7, "theory", "present", ""),
+("to0001", "tg0001", "ICT0003", 7, "practical", "absent", ""),
+("to0001", "tg0001", "ICT0003", 8, "theory", "present", ""),
+("to0001", "tg0001", "ICT0003", 8, "practical", "present", ""),
+("to0001", "tg0001", "ICT0003", 9, "theory", "present", ""),
+("to0001", "tg0001", "ICT0003", 9, "practical", "present", ""),
+("to0001", "tg0001", "ICT0003", 10, "theory", "absent", ""),
+("to0001", "tg0001", "ICT0003", 10, "practical", "absent", ""),
+("to0001", "tg0001", "ICT0003", 11, "theory", "absent", ""),
+("to0001", "tg0001", "ICT0003", 11, "practical", "present", ""),
+("to0001", "tg0001", "ICT0003", 12, "theory", "absent", ""),
+("to0001", "tg0001", "ICT0003", 12, "practical", "present", ""),
+("to0001", "tg0001", "ICT0003", 13, "theory", "present", ""),
+("to0001", "tg0001", "ICT0003", 13, "practical", "present", ""),
+("to0001", "tg0001", "ICT0003", 14, "theory", "absent", ""),
+("to0001", "tg0001", "ICT0003", 14, "practical", "absent", ""),
+("to0001", "tg0001", "ICT0003", 15, "theory", "absent", ""),
+("to0001", "tg0001", "ICT0003", 15, "practical", "present", ""),
+
+("to0001", "tg0001", "ICT0004", 1, "theory", "present", ""),
+("to0001", "tg0001", "ICT0004", 1, "practical", "absent", ""),
+("to0001", "tg0001", "ICT0004", 2, "theory", "present", ""),
+("to0001", "tg0001", "ICT0004", 2, "practical", "absent", ""),
+("to0001", "tg0001", "ICT0004", 3, "theory", "absent", ""),
+("to0001", "tg0001", "ICT0004", 3, "practical", "absent", ""),
+("to0001", "tg0001", "ICT0004", 4, "theory", "present", ""),
+("to0001", "tg0001", "ICT0004", 4, "practical", "absent", ""),
+("to0001", "tg0001", "ICT0004", 5, "theory", "present", ""),
+("to0001", "tg0001", "ICT0004", 5, "practical", "present", ""),
+("to0001", "tg0001", "ICT0004", 6, "theory", "absent", ""),
+("to0001", "tg0001", "ICT0004", 6, "practical", "absent", ""),
+("to0001", "tg0001", "ICT0004", 7, "theory", "absent", ""),
+("to0001", "tg0001", "ICT0004", 7, "practical", "absent", ""),
+("to0001", "tg0001", "ICT0004", 8, "theory", "present", ""),
+("to0001", "tg0001", "ICT0004", 8, "practical", "present", ""),
+("to0001", "tg0001", "ICT0004", 9, "theory", "absent", ""),
+("to0001", "tg0001", "ICT0004", 9, "practical", "present", ""),
+("to0001", "tg0001", "ICT0004", 10, "theory", "present", ""),
+("to0001", "tg0001", "ICT0004", 10, "practical", "present", ""),
+("to0001", "tg0001", "ICT0004", 11, "theory", "present", ""),
+("to0001", "tg0001", "ICT0004", 11, "practical", "present", ""),
+("to0001", "tg0001", "ICT0004", 12, "theory", "absent", ""),
+("to0001", "tg0001", "ICT0004", 12, "practical", "present", ""),
+("to0001", "tg0001", "ICT0004", 13, "theory", "absent", ""),
+("to0001", "tg0001", "ICT0004", 13, "practical", "absent", ""),
+("to0001", "tg0001", "ICT0004", 14, "theory", "absent", ""),
+("to0001", "tg0001", "ICT0004", 14, "practical", "absent", ""),
+("to0001", "tg0001", "ICT0004", 15, "theory", "present", ""),
+("to0001", "tg0001", "ICT0004", 15, "practical", "present", ""),
+
+("to0001", "tg0001", "ICT0005", 1, "theory", "absent", ""),
+("to0001", "tg0001", "ICT0005", 2, "theory", "absent", ""),
+("to0001", "tg0001", "ICT0005", 3, "theory", "present", ""),
+("to0001", "tg0001", "ICT0005", 4, "theory", "absent", ""),
+("to0001", "tg0001", "ICT0005", 5, "theory", "absent", ""),
+("to0001", "tg0001", "ICT0005", 6, "theory", "present", ""),
+("to0001", "tg0001", "ICT0005", 7, "theory", "absent", ""),
+("to0001", "tg0001", "ICT0005", 8, "theory", "present", ""),
+("to0001", "tg0001", "ICT0005", 9, "theory", "absent", ""),
+("to0001", "tg0001", "ICT0005", 10, "theory", "present", ""),
+("to0001", "tg0001", "ICT0005", 11, "theory", "present", ""),
+("to0001", "tg0001", "ICT0005", 12, "theory", "absent", ""),
+("to0001", "tg0001", "ICT0005", 13, "theory", "present", ""),
+("to0001", "tg0001", "ICT0005", 14, "theory", "present", ""),
+("to0001", "tg0001", "ICT0005", 15, "theory", "absent", ""),
+
+("to0002", "tg0002", "ICT0001", 1, "theory", "present", ""),
+("to0002", "tg0002", "ICT0001", 1, "practical", "present", ""),
+("to0002", "tg0002", "ICT0001", 2, "theory", "absent", ""),
+("to0002", "tg0002", "ICT0001", 2, "practical", "absent", ""),
+("to0002", "tg0002", "ICT0001", 3, "theory", "present", ""),
+("to0002", "tg0002", "ICT0001", 3, "practical", "present", ""),
+("to0002", "tg0002", "ICT0001", 4, "theory", "absent", ""),
+("to0002", "tg0002", "ICT0001", 4, "practical", "absent", ""),
+("to0002", "tg0002", "ICT0001", 5, "theory", "present", ""),
+("to0002", "tg0002", "ICT0001", 5, "practical", "present", ""),
+("to0002", "tg0002", "ICT0001", 6, "theory", "present", ""),
+("to0002", "tg0002", "ICT0001", 6, "practical", "present", ""),
+("to0002", "tg0002", "ICT0001", 7, "theory", "present", ""),
+("to0002", "tg0002", "ICT0001", 7, "practical", "absent", ""),
+("to0002", "tg0002", "ICT0001", 8, "theory", "present", ""),
+("to0002", "tg0002", "ICT0001", 8, "practical", "present", ""),
+("to0002", "tg0002", "ICT0001", 9, "theory", "present", ""),
+("to0002", "tg0002", "ICT0001", 9, "practical", "absent", ""),
+("to0002", "tg0002", "ICT0001", 10, "theory", "present", ""),
+("to0002", "tg0002", "ICT0001", 10, "practical", "absent", ""),
+("to0002", "tg0002", "ICT0001", 11, "theory", "absent", ""),
+("to0002", "tg0002", "ICT0001", 11, "practical", "present", ""),
+("to0002", "tg0002", "ICT0001", 12, "theory", "present", ""),
+("to0002", "tg0002", "ICT0001", 12, "practical", "absent", ""),
+("to0002", "tg0002", "ICT0001", 13, "theory", "absent", ""),
+("to0002", "tg0002", "ICT0001", 13, "practical", "absent", ""),
+("to0002", "tg0002", "ICT0001", 14, "theory", "absent", ""),
+("to0002", "tg0002", "ICT0001", 14, "practical", "absent", ""),
+("to0002", "tg0002", "ICT0001", 15, "theory", "present", ""),
+("to0002", "tg0002", "ICT0001", 15, "practical", "present", ""),
+
+("to0002", "tg0002", "ICT0002", 1, "theory", "present", ""),
+("to0002", "tg0002", "ICT0002", 2, "theory", "present", ""),
+("to0002", "tg0002", "ICT0002", 3, "theory", "absent", ""),
+("to0002", "tg0002", "ICT0002", 4, "theory", "present", ""),
+("to0002", "tg0002", "ICT0002", 5, "theory", "present", ""),
+("to0002", "tg0002", "ICT0002", 6, "theory", "present", ""),
+("to0002", "tg0002", "ICT0002", 7, "theory", "present", ""),
+("to0002", "tg0002", "ICT0002", 8, "theory", "present", ""),
+("to0002", "tg0002", "ICT0002", 9, "theory", "present", ""),
+("to0002", "tg0002", "ICT0002", 10, "theory", "present", ""),
+("to0002", "tg0002", "ICT0002", 11, "theory", "present", ""),
+("to0002", "tg0002", "ICT0002", 12, "theory", "present", ""),
+("to0002", "tg0002", "ICT0002", 13, "theory", "absent", ""),
+("to0002", "tg0002", "ICT0002", 14, "theory", "present", ""),
+("to0002", "tg0002", "ICT0002", 15, "theory", "present", ""),
+
+("to0002", "tg0002", "ICT0003", 1, "theory", "absent", ""),
+("to0002", "tg0002", "ICT0003", 1, "practical", "absent", ""),
+("to0002", "tg0002", "ICT0003", 2, "theory", "present", ""),
+("to0002", "tg0002", "ICT0003", 2, "practical", "present", ""),
+("to0002", "tg0002", "ICT0003", 3, "theory", "absent", ""),
+("to0002", "tg0002", "ICT0003", 3, "practical", "present", ""),
+("to0002", "tg0002", "ICT0003", 4, "theory", "absent", ""),
+("to0002", "tg0002", "ICT0003", 4, "practical", "absent", ""),
+("to0002", "tg0002", "ICT0003", 5, "theory", "present", ""),
+("to0002", "tg0002", "ICT0003", 5, "practical", "present", ""),
+("to0002", "tg0002", "ICT0003", 6, "theory", "present", ""),
+("to0002", "tg0002", "ICT0003", 6, "practical", "absent", ""),
+("to0002", "tg0002", "ICT0003", 7, "theory", "absent", ""),
+("to0002", "tg0002", "ICT0003", 7, "practical", "absent", ""),
+("to0002", "tg0002", "ICT0003", 8, "theory", "absent", ""),
+("to0002", "tg0002", "ICT0003", 8, "practical", "absent", ""),
+("to0002", "tg0002", "ICT0003", 9, "theory", "present", ""),
+("to0002", "tg0002", "ICT0003", 9, "practical", "present", ""),
+("to0002", "tg0002", "ICT0003", 10, "theory", "present", ""),
+("to0002", "tg0002", "ICT0003", 10, "practical", "absent", ""),
+("to0002", "tg0002", "ICT0003", 11, "theory", "absent", ""),
+("to0002", "tg0002", "ICT0003", 11, "practical", "present", ""),
+("to0002", "tg0002", "ICT0003", 12, "theory", "present", ""),
+("to0002", "tg0002", "ICT0003", 12, "practical", "present", ""),
+("to0002", "tg0002", "ICT0003", 13, "theory", "present", ""),
+("to0002", "tg0002", "ICT0003", 13, "practical", "absent", ""),
+("to0002", "tg0002", "ICT0003", 14, "theory", "present", ""),
+("to0002", "tg0002", "ICT0003", 14, "practical", "absent", ""),
+("to0002", "tg0002", "ICT0003", 15, "theory", "present", ""),
+("to0002", "tg0002", "ICT0003", 15, "practical", "absent", ""),
+
+("to0002", "tg0002", "ICT0004", 1, "theory", "absent", ""),
+("to0002", "tg0002", "ICT0004", 1, "practical", "present", ""),
+("to0002", "tg0002", "ICT0004", 2, "theory", "present", ""),
+("to0002", "tg0002", "ICT0004", 2, "practical", "absent", ""),
+("to0002", "tg0002", "ICT0004", 3, "theory", "present", ""),
+("to0002", "tg0002", "ICT0004", 3, "practical", "present", ""),
+("to0002", "tg0002", "ICT0004", 4, "theory", "present", ""),
+("to0002", "tg0002", "ICT0004", 4, "practical", "present", ""),
+("to0002", "tg0002", "ICT0004", 5, "theory", "present", ""),
+("to0002", "tg0002", "ICT0004", 5, "practical", "present", ""),
+("to0002", "tg0002", "ICT0004", 6, "theory", "absent", ""),
+("to0002", "tg0002", "ICT0004", 6, "practical", "absent", ""),
+("to0002", "tg0002", "ICT0004", 7, "theory", "absent", ""),
+("to0002", "tg0002", "ICT0004", 7, "practical", "present", ""),
+("to0002", "tg0002", "ICT0004", 8, "theory", "absent", ""),
+("to0002", "tg0002", "ICT0004", 8, "practical", "present", ""),
+("to0002", "tg0002", "ICT0004", 9, "theory", "present", ""),
+("to0002", "tg0002", "ICT0004", 9, "practical", "absent", ""),
+("to0002", "tg0002", "ICT0004", 10, "theory", "present", ""),
+("to0002", "tg0002", "ICT0004", 10, "practical", "absent", ""),
+("to0002", "tg0002", "ICT0004", 11, "theory", "absent", ""),
+("to0002", "tg0002", "ICT0004", 11, "practical", "absent", ""),
+("to0002", "tg0002", "ICT0004", 12, "theory", "absent", ""),
+("to0002", "tg0002", "ICT0004", 12, "practical", "absent", ""),
+("to0002", "tg0002", "ICT0004", 13, "theory", "absent", ""),
+("to0002", "tg0002", "ICT0004", 13, "practical", "present", ""),
+("to0002", "tg0002", "ICT0004", 14, "theory", "present", ""),
+("to0002", "tg0002", "ICT0004", 14, "practical", "absent", ""),
+("to0002", "tg0002", "ICT0004", 15, "theory", "present", ""),
+("to0002", "tg0002", "ICT0004", 15, "practical", "present", ""),
+
+("to0002", "tg0002", "ICT0005", 1, "theory", "present", ""),
+("to0002", "tg0002", "ICT0005", 2, "theory", "absent", ""),
+("to0002", "tg0002", "ICT0005", 3, "theory", "present", ""),
+("to0002", "tg0002", "ICT0005", 4, "theory", "present", ""),
+("to0002", "tg0002", "ICT0005", 5, "theory", "absent", ""),
+("to0002", "tg0002", "ICT0005", 6, "theory", "present", ""),
+("to0002", "tg0002", "ICT0005", 7, "theory", "present", ""),
+("to0002", "tg0002", "ICT0005", 8, "theory", "present", ""),
+("to0002", "tg0002", "ICT0005", 9, "theory", "present", ""),
+("to0002", "tg0002", "ICT0005", 10, "theory", "present", ""),
+("to0002", "tg0002", "ICT0005", 11, "theory", "present", ""),
+("to0002", "tg0002", "ICT0005", 12, "theory", "present", ""),
+("to0002", "tg0002", "ICT0005", 13, "theory", "absent", ""),
+("to0002", "tg0002", "ICT0005", 14, "theory", "present", ""),
+("to0002", "tg0002", "ICT0005", 15, "theory", "present", ""),
+
+("to0003", "tg0003", "ICT0001", 1, "theory", "present", ""),
+("to0003", "tg0003", "ICT0001", 1, "practical", "present", ""),
+("to0003", "tg0003", "ICT0001", 2, "theory", "absent", ""),
+("to0003", "tg0003", "ICT0001", 2, "practical", "absent", ""),
+("to0003", "tg0003", "ICT0001", 3, "theory", "absent", ""),
+("to0003", "tg0003", "ICT0001", 3, "practical", "present", ""),
+("to0003", "tg0003", "ICT0001", 4, "theory", "absent", ""),
+("to0003", "tg0003", "ICT0001", 4, "practical", "present", ""),
+("to0003", "tg0003", "ICT0001", 5, "theory", "absent", ""),
+("to0003", "tg0003", "ICT0001", 5, "practical", "absent", ""),
+("to0003", "tg0003", "ICT0001", 6, "theory", "present", ""),
+("to0003", "tg0003", "ICT0001", 6, "practical", "absent", ""),
+("to0003", "tg0003", "ICT0001", 7, "theory", "absent", ""),
+("to0003", "tg0003", "ICT0001", 7, "practical", "absent", ""),
+("to0003", "tg0003", "ICT0001", 8, "theory", "present", ""),
+("to0003", "tg0003", "ICT0001", 8, "practical", "present", ""),
+("to0003", "tg0003", "ICT0001", 9, "theory", "absent", ""),
+("to0003", "tg0003", "ICT0001", 9, "practical", "present", ""),
+("to0003", "tg0003", "ICT0001", 10, "theory", "present", ""),
+("to0003", "tg0003", "ICT0001", 10, "practical", "present", ""),
+("to0003", "tg0003", "ICT0001", 11, "theory", "absent", ""),
+("to0003", "tg0003", "ICT0001", 11, "practical", "present", ""),
+("to0003", "tg0003", "ICT0001", 12, "theory", "absent", ""),
+("to0003", "tg0003", "ICT0001", 12, "practical", "present", ""),
+("to0003", "tg0003", "ICT0001", 13, "theory", "present", ""),
+("to0003", "tg0003", "ICT0001", 13, "practical", "absent", ""),
+("to0003", "tg0003", "ICT0001", 14, "theory", "absent", ""),
+("to0003", "tg0003", "ICT0001", 14, "practical", "present", ""),
+("to0003", "tg0003", "ICT0001", 15, "theory", "absent", ""),
+("to0003", "tg0003", "ICT0001", 15, "practical", "absent", ""),
+
+("to0003", "tg0003", "ICT0002", 1, "theory", "present", ""),
+("to0003", "tg0003", "ICT0002", 2, "theory", "absent", ""),
+("to0003", "tg0003", "ICT0002", 3, "theory", "present", ""),
+("to0003", "tg0003", "ICT0002", 4, "theory", "present", ""),
+("to0003", "tg0003", "ICT0002", 5, "theory", "absent", ""),
+("to0003", "tg0003", "ICT0002", 6, "theory", "present", ""),
+("to0003", "tg0003", "ICT0002", 7, "theory", "present", ""),
+("to0003", "tg0003", "ICT0002", 8, "theory", "present", ""),
+("to0003", "tg0003", "ICT0002", 9, "theory", "absent", ""),
+("to0003", "tg0003", "ICT0002", 10, "theory", "absent", ""),
+("to0003", "tg0003", "ICT0002", 11, "theory", "present", ""),
+("to0003", "tg0003", "ICT0002", 12, "theory", "absent", ""),
+("to0003", "tg0003", "ICT0002", 13, "theory", "present", ""),
+("to0003", "tg0003", "ICT0002", 14, "theory", "absent", ""),
+("to0003", "tg0003", "ICT0002", 15, "theory", "absent", ""),
+
+("to0003", "tg0003", "ICT0003", 1, "theory", "absent", ""),
+("to0003", "tg0003", "ICT0003", 1, "practical", "present", ""),
+("to0003", "tg0003", "ICT0003", 2, "theory", "present", ""),
+("to0003", "tg0003", "ICT0003", 2, "practical", "absent", ""),
+("to0003", "tg0003", "ICT0003", 3, "theory", "absent", ""),
+("to0003", "tg0003", "ICT0003", 3, "practical", "present", ""),
+("to0003", "tg0003", "ICT0003", 4, "theory", "present", ""),
+("to0003", "tg0003", "ICT0003", 4, "practical", "absent", ""),
+("to0003", "tg0003", "ICT0003", 5, "theory", "present", ""),
+("to0003", "tg0003", "ICT0003", 5, "practical", "absent", ""),
+("to0003", "tg0003", "ICT0003", 6, "theory", "present", ""),
+("to0003", "tg0003", "ICT0003", 6, "practical", "absent", ""),
+("to0003", "tg0003", "ICT0003", 7, "theory", "absent", ""),
+("to0003", "tg0003", "ICT0003", 7, "practical", "present", ""),
+("to0003", "tg0003", "ICT0003", 8, "theory", "present", ""),
+("to0003", "tg0003", "ICT0003", 8, "practical", "present", ""),
+("to0003", "tg0003", "ICT0003", 9, "theory", "present", ""),
+("to0003", "tg0003", "ICT0003", 9, "practical", "present", ""),
+("to0003", "tg0003", "ICT0003", 10, "theory", "absent", ""),
+("to0003", "tg0003", "ICT0003", 10, "practical", "present", ""),
+("to0003", "tg0003", "ICT0003", 11, "theory", "absent", ""),
+("to0003", "tg0003", "ICT0003", 11, "practical", "present", ""),
+("to0003", "tg0003", "ICT0003", 12, "theory", "present", ""),
+("to0003", "tg0003", "ICT0003", 12, "practical", "absent", ""),
+("to0003", "tg0003", "ICT0003", 13, "theory", "absent", ""),
+("to0003", "tg0003", "ICT0003", 13, "practical", "present", ""),
+("to0003", "tg0003", "ICT0003", 14, "theory", "absent", ""),
+("to0003", "tg0003", "ICT0003", 14, "practical", "present", ""),
+("to0003", "tg0003", "ICT0003", 15, "theory", "present", ""),
+("to0003", "tg0003", "ICT0003", 15, "practical", "present", ""),
+
+("to0003", "tg0003", "ICT0004", 1, "theory", "absent", ""),
+("to0003", "tg0003", "ICT0004", 1, "practical", "absent", ""),
+("to0003", "tg0003", "ICT0004", 2, "theory", "present", ""),
+("to0003", "tg0003", "ICT0004", 2, "practical", "present", ""),
+("to0003", "tg0003", "ICT0004", 3, "theory", "present", ""),
+("to0003", "tg0003", "ICT0004", 3, "practical", "present", ""),
+("to0003", "tg0003", "ICT0004", 4, "theory", "absent", ""),
+("to0003", "tg0003", "ICT0004", 4, "practical", "present", ""),
+("to0003", "tg0003", "ICT0004", 5, "theory", "present", ""),
+("to0003", "tg0003", "ICT0004", 5, "practical", "absent", ""),
+("to0003", "tg0003", "ICT0004", 6, "theory", "absent", ""),
+("to0003", "tg0003", "ICT0004", 6, "practical", "present", ""),
+("to0003", "tg0003", "ICT0004", 7, "theory", "absent", ""),
+("to0003", "tg0003", "ICT0004", 7, "practical", "present", ""),
+("to0003", "tg0003", "ICT0004", 8, "theory", "present", ""),
+("to0003", "tg0003", "ICT0004", 8, "practical", "absent", ""),
+("to0003", "tg0003", "ICT0004", 9, "theory", "present", ""),
+("to0003", "tg0003", "ICT0004", 9, "practical", "absent", ""),
+("to0003", "tg0003", "ICT0004", 10, "theory", "present", ""),
+("to0003", "tg0003", "ICT0004", 10, "practical", "present", ""),
+("to0003", "tg0003", "ICT0004", 11, "theory", "absent", ""),
+("to0003", "tg0003", "ICT0004", 11, "practical", "absent", ""),
+("to0003", "tg0003", "ICT0004", 12, "theory", "absent", ""),
+("to0003", "tg0003", "ICT0004", 12, "practical", "present", ""),
+("to0003", "tg0003", "ICT0004", 13, "theory", "present", ""),
+("to0003", "tg0003", "ICT0004", 13, "practical", "present", ""),
+("to0003", "tg0003", "ICT0004", 14, "theory", "present", ""),
+("to0003", "tg0003", "ICT0004", 14, "practical", "absent", ""),
+("to0003", "tg0003", "ICT0004", 15, "theory", "absent", ""),
+("to0003", "tg0003", "ICT0004", 15, "practical", "absent", ""),
+
+("to0003", "tg0003", "ICT0005", 1, "theory", "present", ""),
+("to0003", "tg0003", "ICT0005", 2, "theory", "absent", ""),
+("to0003", "tg0003", "ICT0005", 3, "theory", "absent", ""),
+("to0003", "tg0003", "ICT0005", 4, "theory", "absent", ""),
+("to0003", "tg0003", "ICT0005", 5, "theory", "absent", ""),
+("to0003", "tg0003", "ICT0005", 6, "theory", "present", ""),
+("to0003", "tg0003", "ICT0005", 7, "theory", "present", ""),
+("to0003", "tg0003", "ICT0005", 8, "theory", "absent", ""),
+("to0003", "tg0003", "ICT0005", 9, "theory", "present", ""),
+("to0003", "tg0003", "ICT0005", 10, "theory", "absent", ""),
+("to0003", "tg0003", "ICT0005", 11, "theory", "present", ""),
+("to0003", "tg0003", "ICT0005", 12, "theory", "present", ""),
+("to0003", "tg0003", "ICT0005", 13, "theory", "absent", ""),
+("to0003", "tg0003", "ICT0005", 14, "theory", "absent", ""),
+("to0003", "tg0003", "ICT0005", 15, "theory", "absent", ""),
+
+("to0004", "tg0004", "ICT0001", 1, "theory", "absent", ""),
+("to0004", "tg0004", "ICT0001", 1, "practical", "present", ""),
+("to0004", "tg0004", "ICT0001", 2, "theory", "absent", ""),
+("to0004", "tg0004", "ICT0001", 2, "practical", "present", ""),
+("to0004", "tg0004", "ICT0001", 3, "theory", "absent", ""),
+("to0004", "tg0004", "ICT0001", 3, "practical", "present", ""),
+("to0004", "tg0004", "ICT0001", 4, "theory", "absent", ""),
+("to0004", "tg0004", "ICT0001", 4, "practical", "present", ""),
+("to0004", "tg0004", "ICT0001", 5, "theory", "present", ""),
+("to0004", "tg0004", "ICT0001", 5, "practical", "absent", ""),
+("to0004", "tg0004", "ICT0001", 6, "theory", "absent", ""),
+("to0004", "tg0004", "ICT0001", 6, "practical", "present", ""),
+("to0004", "tg0004", "ICT0001", 7, "theory", "absent", ""),
+("to0004", "tg0004", "ICT0001", 7, "practical", "absent", ""),
+("to0004", "tg0004", "ICT0001", 8, "theory", "present", ""),
+("to0004", "tg0004", "ICT0001", 8, "practical", "absent", ""),
+("to0004", "tg0004", "ICT0001", 9, "theory", "absent", ""),
+("to0004", "tg0004", "ICT0001", 9, "practical", "absent", ""),
+("to0004", "tg0004", "ICT0001", 10, "theory", "absent", ""),
+("to0004", "tg0004", "ICT0001", 10, "practical", "absent", ""),
+("to0004", "tg0004", "ICT0001", 11, "theory", "absent", ""),
+("to0004", "tg0004", "ICT0001", 11, "practical", "present", ""),
+("to0004", "tg0004", "ICT0001", 12, "theory", "present", ""),
+("to0004", "tg0004", "ICT0001", 12, "practical", "absent", ""),
+("to0004", "tg0004", "ICT0001", 13, "theory", "absent", ""),
+("to0004", "tg0004", "ICT0001", 13, "practical", "present", ""),
+("to0004", "tg0004", "ICT0001", 14, "theory", "absent", ""),
+("to0004", "tg0004", "ICT0001", 14, "practical", "absent", ""),
+("to0004", "tg0004", "ICT0001", 15, "theory", "present", ""),
+("to0004", "tg0004", "ICT0001", 15, "practical", "absent", ""),
+
+("to0004", "tg0004", "ICT0002", 1, "theory", "absent", ""),
+("to0004", "tg0004", "ICT0002", 2, "theory", "present", ""),
+("to0004", "tg0004", "ICT0002", 3, "theory", "absent", ""),
+("to0004", "tg0004", "ICT0002", 4, "theory", "absent", ""),
+("to0004", "tg0004", "ICT0002", 5, "theory", "absent", ""),
+("to0004", "tg0004", "ICT0002", 6, "theory", "absent", ""),
+("to0004", "tg0004", "ICT0002", 7, "theory", "absent", ""),
+("to0004", "tg0004", "ICT0002", 8, "theory", "present", ""),
+("to0004", "tg0004", "ICT0002", 9, "theory", "absent", ""),
+("to0004", "tg0004", "ICT0002", 10, "theory", "present", ""),
+("to0004", "tg0004", "ICT0002", 11, "theory", "present", ""),
+("to0004", "tg0004", "ICT0002", 12, "theory", "absent", ""),
+("to0004", "tg0004", "ICT0002", 13, "theory", "absent", ""),
+("to0004", "tg0004", "ICT0002", 14, "theory", "present", ""),
+("to0004", "tg0004", "ICT0002", 15, "theory", "present", ""),
+
+("to0004", "tg0004", "ICT0003", 1, "theory", "absent", ""),
+("to0004", "tg0004", "ICT0003", 1, "practical", "present", ""),
+("to0004", "tg0004", "ICT0003", 2, "theory", "present", ""),
+("to0004", "tg0004", "ICT0003", 2, "practical", "present", ""),
+("to0004", "tg0004", "ICT0003", 3, "theory", "present", ""),
+("to0004", "tg0004", "ICT0003", 3, "practical", "present", ""),
+("to0004", "tg0004", "ICT0003", 4, "theory", "present", ""),
+("to0004", "tg0004", "ICT0003", 4, "practical", "absent", ""),
+("to0004", "tg0004", "ICT0003", 5, "theory", "present", ""),
+("to0004", "tg0004", "ICT0003", 5, "practical", "absent", ""),
+("to0004", "tg0004", "ICT0003", 6, "theory", "absent", ""),
+("to0004", "tg0004", "ICT0003", 6, "practical", "present", ""),
+("to0004", "tg0004", "ICT0003", 7, "theory", "absent", ""),
+("to0004", "tg0004", "ICT0003", 7, "practical", "absent", ""),
+("to0004", "tg0004", "ICT0003", 8, "theory", "absent", ""),
+("to0004", "tg0004", "ICT0003", 8, "practical", "present", ""),
+("to0004", "tg0004", "ICT0003", 9, "theory", "present", ""),
+("to0004", "tg0004", "ICT0003", 9, "practical", "present", ""),
+("to0004", "tg0004", "ICT0003", 10, "theory", "present", ""),
+("to0004", "tg0004", "ICT0003", 10, "practical", "absent", ""),
+("to0004", "tg0004", "ICT0003", 11, "theory", "present", ""),
+("to0004", "tg0004", "ICT0003", 11, "practical", "present", ""),
+("to0004", "tg0004", "ICT0003", 12, "theory", "absent", ""),
+("to0004", "tg0004", "ICT0003", 12, "practical", "present", ""),
+("to0004", "tg0004", "ICT0003", 13, "theory", "present", ""),
+("to0004", "tg0004", "ICT0003", 13, "practical", "present", ""),
+("to0004", "tg0004", "ICT0003", 14, "theory", "absent", ""),
+("to0004", "tg0004", "ICT0003", 14, "practical", "present", ""),
+("to0004", "tg0004", "ICT0003", 15, "theory", "absent", ""),
+("to0004", "tg0004", "ICT0003", 15, "practical", "absent", ""),
+
+("to0004", "tg0004", "ICT0004", 1, "theory", "absent", ""),
+("to0004", "tg0004", "ICT0004", 1, "practical", "absent", ""),
+("to0004", "tg0004", "ICT0004", 2, "theory", "absent", ""),
+("to0004", "tg0004", "ICT0004", 2, "practical", "present", ""),
+("to0004", "tg0004", "ICT0004", 3, "theory", "absent", ""),
+("to0004", "tg0004", "ICT0004", 3, "practical", "absent", ""),
+("to0004", "tg0004", "ICT0004", 4, "theory", "absent", ""),
+("to0004", "tg0004", "ICT0004", 4, "practical", "present", ""),
+("to0004", "tg0004", "ICT0004", 5, "theory", "absent", ""),
+("to0004", "tg0004", "ICT0004", 5, "practical", "absent", ""),
+("to0004", "tg0004", "ICT0004", 6, "theory", "present", ""),
+("to0004", "tg0004", "ICT0004", 6, "practical", "absent", ""),
+("to0004", "tg0004", "ICT0004", 7, "theory", "absent", ""),
+("to0004", "tg0004", "ICT0004", 7, "practical", "present", ""),
+("to0004", "tg0004", "ICT0004", 8, "theory", "absent", ""),
+("to0004", "tg0004", "ICT0004", 8, "practical", "present", ""),
+("to0004", "tg0004", "ICT0004", 9, "theory", "absent", ""),
+("to0004", "tg0004", "ICT0004", 9, "practical", "absent", ""),
+("to0004", "tg0004", "ICT0004", 10, "theory", "absent", ""),
+("to0004", "tg0004", "ICT0004", 10, "practical", "present", ""),
+("to0004", "tg0004", "ICT0004", 11, "theory", "present", ""),
+("to0004", "tg0004", "ICT0004", 11, "practical", "present", ""),
+("to0004", "tg0004", "ICT0004", 12, "theory", "present", ""),
+("to0004", "tg0004", "ICT0004", 12, "practical", "absent", ""),
+("to0004", "tg0004", "ICT0004", 13, "theory", "present", ""),
+("to0004", "tg0004", "ICT0004", 13, "practical", "present", ""),
+("to0004", "tg0004", "ICT0004", 14, "theory", "present", ""),
+("to0004", "tg0004", "ICT0004", 14, "practical", "absent", ""),
+("to0004", "tg0004", "ICT0004", 15, "theory", "absent", ""),
+("to0004", "tg0004", "ICT0004", 15, "practical", "absent", ""),
+
+("to0004", "tg0004", "ICT0005", 1, "theory", "absent", ""),
+("to0004", "tg0004", "ICT0005", 2, "theory", "absent", ""),
+("to0004", "tg0004", "ICT0005", 3, "theory", "present", ""),
+("to0004", "tg0004", "ICT0005", 4, "theory", "present", ""),
+("to0004", "tg0004", "ICT0005", 5, "theory", "absent", ""),
+("to0004", "tg0004", "ICT0005", 6, "theory", "absent", ""),
+("to0004", "tg0004", "ICT0005", 7, "theory", "present", ""),
+("to0004", "tg0004", "ICT0005", 8, "theory", "absent", ""),
+("to0004", "tg0004", "ICT0005", 9, "theory", "absent", ""),
+("to0004", "tg0004", "ICT0005", 10, "theory", "present", ""),
+("to0004", "tg0004", "ICT0005", 11, "theory", "absent", ""),
+("to0004", "tg0004", "ICT0005", 12, "theory", "absent", ""),
+("to0004", "tg0004", "ICT0005", 13, "theory", "absent", ""),
+("to0004", "tg0004", "ICT0005", 14, "theory", "absent", ""),
+("to0004", "tg0004", "ICT0005", 15, "theory", "present", ""),
+
+("to0005", "tg0005", "ICT0001", 1, "theory", "absent", ""),
+("to0005", "tg0005", "ICT0001", 1, "practical", "present", ""),
+("to0005", "tg0005", "ICT0001", 2, "theory", "absent", ""),
+("to0005", "tg0005", "ICT0001", 2, "practical", "absent", ""),
+("to0005", "tg0005", "ICT0001", 3, "theory", "absent", ""),
+("to0005", "tg0005", "ICT0001", 3, "practical", "present", ""),
+("to0005", "tg0005", "ICT0001", 4, "theory", "absent", ""),
+("to0005", "tg0005", "ICT0001", 4, "practical", "absent", ""),
+("to0005", "tg0005", "ICT0001", 5, "theory", "absent", ""),
+("to0005", "tg0005", "ICT0001", 5, "practical", "present", ""),
+("to0005", "tg0005", "ICT0001", 6, "theory", "absent", ""),
+("to0005", "tg0005", "ICT0001", 6, "practical", "present", ""),
+("to0005", "tg0005", "ICT0001", 7, "theory", "present", ""),
+("to0005", "tg0005", "ICT0001", 7, "practical", "absent", ""),
+("to0005", "tg0005", "ICT0001", 8, "theory", "present", ""),
+("to0005", "tg0005", "ICT0001", 8, "practical", "present", ""),
+("to0005", "tg0005", "ICT0001", 9, "theory", "absent", ""),
+("to0005", "tg0005", "ICT0001", 9, "practical", "present", ""),
+("to0005", "tg0005", "ICT0001", 10, "theory", "absent", ""),
+("to0005", "tg0005", "ICT0001", 10, "practical", "present", ""),
+("to0005", "tg0005", "ICT0001", 11, "theory", "present", ""),
+("to0005", "tg0005", "ICT0001", 11, "practical", "absent", ""),
+("to0005", "tg0005", "ICT0001", 12, "theory", "absent", ""),
+("to0005", "tg0005", "ICT0001", 12, "practical", "absent", ""),
+("to0005", "tg0005", "ICT0001", 13, "theory", "present", ""),
+("to0005", "tg0005", "ICT0001", 13, "practical", "absent", ""),
+("to0005", "tg0005", "ICT0001", 14, "theory", "absent", ""),
+("to0005", "tg0005", "ICT0001", 14, "practical", "absent", ""),
+("to0005", "tg0005", "ICT0001", 15, "theory", "absent", ""),
+("to0005", "tg0005", "ICT0001", 15, "practical", "absent", ""),
+
+("to0005", "tg0005", "ICT0002", 1, "theory", "absent", ""),
+("to0005", "tg0005", "ICT0002", 2, "theory", "absent", ""),
+("to0005", "tg0005", "ICT0002", 3, "theory", "present", ""),
+("to0005", "tg0005", "ICT0002", 4, "theory", "absent", ""),
+("to0005", "tg0005", "ICT0002", 5, "theory", "present", ""),
+("to0005", "tg0005", "ICT0002", 6, "theory", "present", ""),
+("to0005", "tg0005", "ICT0002", 7, "theory", "absent", ""),
+("to0005", "tg0005", "ICT0002", 8, "theory", "present", ""),
+("to0005", "tg0005", "ICT0002", 9, "theory", "present", ""),
+("to0005", "tg0005", "ICT0002", 10, "theory", "present", ""),
+("to0005", "tg0005", "ICT0002", 11, "theory", "present", ""),
+("to0005", "tg0005", "ICT0002", 12, "theory", "present", ""),
+("to0005", "tg0005", "ICT0002", 13, "theory", "present", ""),
+("to0005", "tg0005", "ICT0002", 14, "theory", "present", ""),
+("to0005", "tg0005", "ICT0002", 15, "theory", "present", ""),
+
+("to0005", "tg0005", "ICT0003", 1, "theory", "present", ""),
+("to0005", "tg0005", "ICT0003", 1, "practical", "present", ""),
+("to0005", "tg0005", "ICT0003", 2, "theory", "absent", ""),
+("to0005", "tg0005", "ICT0003", 2, "practical", "present", ""),
+("to0005", "tg0005", "ICT0003", 3, "theory", "present", ""),
+("to0005", "tg0005", "ICT0003", 3, "practical", "absent", ""),
+("to0005", "tg0005", "ICT0003", 4, "theory", "absent", ""),
+("to0005", "tg0005", "ICT0003", 4, "practical", "absent", ""),
+("to0005", "tg0005", "ICT0003", 5, "theory", "present", ""),
+("to0005", "tg0005", "ICT0003", 5, "practical", "present", ""),
+("to0005", "tg0005", "ICT0003", 6, "theory", "present", ""),
+("to0005", "tg0005", "ICT0003", 6, "practical", "absent", ""),
+("to0005", "tg0005", "ICT0003", 7, "theory", "present", ""),
+("to0005", "tg0005", "ICT0003", 7, "practical", "present", ""),
+("to0005", "tg0005", "ICT0003", 8, "theory", "absent", ""),
+("to0005", "tg0005", "ICT0003", 8, "practical", "absent", ""),
+("to0005", "tg0005", "ICT0003", 9, "theory", "absent", ""),
+("to0005", "tg0005", "ICT0003", 9, "practical", "present", ""),
+("to0005", "tg0005", "ICT0003", 10, "theory", "present", ""),
+("to0005", "tg0005", "ICT0003", 10, "practical", "present", ""),
+("to0005", "tg0005", "ICT0003", 11, "theory", "present", ""),
+("to0005", "tg0005", "ICT0003", 11, "practical", "absent", ""),
+("to0005", "tg0005", "ICT0003", 12, "theory", "present", ""),
+("to0005", "tg0005", "ICT0003", 12, "practical", "present", ""),
+("to0005", "tg0005", "ICT0003", 13, "theory", "absent", ""),
+("to0005", "tg0005", "ICT0003", 13, "practical", "absent", ""),
+("to0005", "tg0005", "ICT0003", 14, "theory", "absent", ""),
+("to0005", "tg0005", "ICT0003", 14, "practical", "present", ""),
+("to0005", "tg0005", "ICT0003", 15, "theory", "absent", ""),
+("to0005", "tg0005", "ICT0003", 15, "practical", "present", ""),
+
+("to0005", "tg0005", "ICT0004", 1, "theory", "absent", ""),
+("to0005", "tg0005", "ICT0004", 1, "practical", "absent", ""),
+("to0005", "tg0005", "ICT0004", 2, "theory", "present", ""),
+("to0005", "tg0005", "ICT0004", 2, "practical", "absent", ""),
+("to0005", "tg0005", "ICT0004", 3, "theory", "absent", ""),
+("to0005", "tg0005", "ICT0004", 3, "practical", "absent", ""),
+("to0005", "tg0005", "ICT0004", 4, "theory", "present", ""),
+("to0005", "tg0005", "ICT0004", 4, "practical", "absent", ""),
+("to0005", "tg0005", "ICT0004", 5, "theory", "present", ""),
+("to0005", "tg0005", "ICT0004", 5, "practical", "absent", ""),
+("to0005", "tg0005", "ICT0004", 6, "theory", "absent", ""),
+("to0005", "tg0005", "ICT0004", 6, "practical", "absent", ""),
+("to0005", "tg0005", "ICT0004", 7, "theory", "absent", ""),
+("to0005", "tg0005", "ICT0004", 7, "practical", "absent", ""),
+("to0005", "tg0005", "ICT0004", 8, "theory", "absent", ""),
+("to0005", "tg0005", "ICT0004", 8, "practical", "present", ""),
+("to0005", "tg0005", "ICT0004", 9, "theory", "present", ""),
+("to0005", "tg0005", "ICT0004", 9, "practical", "absent", ""),
+("to0005", "tg0005", "ICT0004", 10, "theory", "absent", ""),
+("to0005", "tg0005", "ICT0004", 10, "practical", "present", ""),
+("to0005", "tg0005", "ICT0004", 11, "theory", "absent", ""),
+("to0005", "tg0005", "ICT0004", 11, "practical", "absent", ""),
+("to0005", "tg0005", "ICT0004", 12, "theory", "absent", ""),
+("to0005", "tg0005", "ICT0004", 12, "practical", "present", ""),
+("to0005", "tg0005", "ICT0004", 13, "theory", "absent", ""),
+("to0005", "tg0005", "ICT0004", 13, "practical", "absent", ""),
+("to0005", "tg0005", "ICT0004", 14, "theory", "present", ""),
+("to0005", "tg0005", "ICT0004", 14, "practical", "absent", ""),
+("to0005", "tg0005", "ICT0004", 15, "theory", "present", ""),
+("to0005", "tg0005", "ICT0004", 15, "practical", "absent", ""),
+
+("to0005", "tg0005", "ICT0005", 1, "theory", "absent", ""),
+("to0005", "tg0005", "ICT0005", 2, "theory", "absent", ""),
+("to0005", "tg0005", "ICT0005", 3, "theory", "absent", ""),
+("to0005", "tg0005", "ICT0005", 4, "theory", "absent", ""),
+("to0005", "tg0005", "ICT0005", 5, "theory", "present", ""),
+("to0005", "tg0005", "ICT0005", 6, "theory", "present", ""),
+("to0005", "tg0005", "ICT0005", 7, "theory", "present", ""),
+("to0005", "tg0005", "ICT0005", 8, "theory", "present", ""),
+("to0005", "tg0005", "ICT0005", 9, "theory", "absent", ""),
+("to0005", "tg0005", "ICT0005", 10, "theory", "absent", ""),
+("to0005", "tg0005", "ICT0005", 11, "theory", "present", ""),
+("to0005", "tg0005", "ICT0005", 12, "theory", "absent", ""),
+("to0005", "tg0005", "ICT0005", 13, "theory", "absent", ""),
+("to0005", "tg0005", "ICT0005", 14, "theory", "absent", ""),
+("to0005", "tg0005", "ICT0005", 15, "theory", "present", "");
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
