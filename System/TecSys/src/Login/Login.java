@@ -5,9 +5,6 @@ import HomePage.AdminHomePage;
 import HomePage.LecturerHomePage;
 import HomePage.TechnicalOfficerHomePage;
 import HomePage.UndergraduateHomePage;
-import UserProfile.AdminUserProfile;
-import UserProfile.LecturerUserProfile;
-import UserProfile.TechnicalOfficerUserProfile;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -54,6 +51,15 @@ public class Login extends JFrame {
 
                 uname = textField1.getText();
                 pass = passwordField1.getText();
+
+                if(uname.isEmpty()){
+                    JOptionPane.showMessageDialog(null,"Please enter username");
+                    return;
+                }
+                if(pass.isEmpty()){
+                    JOptionPane.showMessageDialog(null,"Please enter password");
+                    return;
+                }
 
                 try{
                     char[] arr = uname.toCharArray();
@@ -138,7 +144,6 @@ public class Login extends JFrame {
             if (!(count > 0)){
                 String admin_data = "insert into users(username,password) values ('" + admin + "','" + pass + "')";
                 statement.executeUpdate(admin_data);
-                //System.out.println("data entered");
             }
         }catch (Exception e){
             e.printStackTrace();

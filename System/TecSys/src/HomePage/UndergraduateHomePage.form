@@ -1114,7 +1114,6 @@
                                 <properties>
                                   <font size="16"/>
                                   <model>
-                                    <item value=""/>
                                     <item value="1"/>
                                     <item value="2"/>
                                     <item value="3"/>
@@ -1138,7 +1137,6 @@
                                 <properties>
                                   <font size="16"/>
                                   <model>
-                                    <item value=""/>
                                     <item value="1"/>
                                     <item value="2"/>
                                   </model>
