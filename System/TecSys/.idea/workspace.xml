@@ -99,7 +99,14 @@
       <recent name="E:\E Drive\University Project\Java_mini_project\System\TecSys\Resources\ProfileImages" />
     </key>
   </component>
-  <component name="RunManager" selected="Application.Unnamed">
+  <component name="RunManager" selected="Application.Lecturer">
+    <configuration name="Lecturer" type="Application" factoryName="Application">
+      <option name="MAIN_CLASS_NAME" value="HomePage.LecturerHomePage" />
+      <module name="TecSys" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <configuration name="UG" type="Application" factoryName="Application">
       <option name="MAIN_CLASS_NAME" value="HomePage.UndergraduateHomePage" />
       <module name="TecSys" />
@@ -123,9 +130,18 @@
     </configuration>
     <list>
       <item itemvalue="Application.Unnamed" />
+      <item itemvalue="Application.Lecturer" />
       <item itemvalue="Application.UG" />
       <item itemvalue="Application.admin" />
     </list>
+  </component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-jdk-9823dce3aa75-a94e463ab2e7-intellij.indexing.shared.core-IU-243.25659.59" />
+        <option value="bundled-js-predefined-d6986cc7102b-1632447f56bf-JavaScript-IU-243.25659.59" />
+      </set>
+    </attachedChunks>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
@@ -154,7 +170,11 @@
       <workItem from="1745628654630" duration="78000" />
       <workItem from="1745657631112" duration="52727000" />
       <workItem from="1745729200365" duration="5885000" />
+      <workItem from="1745746943768" duration="934000" />
     </task>
     <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
   </component>
 </project>

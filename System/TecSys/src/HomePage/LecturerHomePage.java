@@ -487,63 +487,7 @@ public class LecturerHomePage extends JFrame {
             }
 
         });
-        STLevel.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                String level = (String) STLevel.getSelectedItem();
-                assert level != null;
-                if(level.isEmpty()){
-                    level = "0";
 
-                }
-                int levelInt= Integer.parseInt(level);
-                String semester=(String)STSem.getSelectedItem();
-                assert semester != null;
-                if(semester.isEmpty()){
-                    semester = "0";
-                }
-                int semesterInt= Integer.parseInt(semester);
-
-                getstudentdetailcourseid(userIdentity,levelInt,semesterInt);
-
-
-//                String level=(String) LevelNoGrade.getSelectedItem();
-//                assert level != null;
-//                if(level.isEmpty()){
-//                    level = "0";
-//                }
-//                int levelInt= Integer.parseInt(level);
-//                String semester=(String)MarkSemesterCombo.getSelectedItem();
-//                assert semester != null;
-//                if(semester.isEmpty()){
-//                    semester = "0";
-//                }
-//                int semesterInt= Integer.parseInt(semester);
-
-
-            }
-        });
-        STSem.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-
-                String semester = (String) STSem.getSelectedItem();
-                assert semester != null;
-                if(semester.isEmpty()){
-                    semester = "0";
-                }
-                int semesterInt= Integer.parseInt(semester);
-
-                String level=(String)STLevel.getSelectedItem();
-                assert level != null;
-                if(level.isEmpty()){
-                    level = "0";
-                }
-                int levelInt= Integer.parseInt(level);
-                getstudentdetailcourseid(userIdentity,levelInt,semesterInt);
-
-            }
-        });
         uploadMarksButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -593,6 +537,89 @@ public class LecturerHomePage extends JFrame {
 
             }
         });
+
+        StudentTableMethod();
+
+        STLevel.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                StudentTableMethod();
+
+                String level = (String) STLevel.getSelectedItem();
+                assert level != null;
+                if(level.isEmpty()){
+                    level = "0";
+
+                }
+                int levelInt= Integer.parseInt(level);
+                String semester=(String)STSem.getSelectedItem();
+                assert semester != null;
+                if(semester.isEmpty()){
+                    semester = "0";
+                }
+                int semesterInt= Integer.parseInt(semester);
+                LoaStudentDetails(levelInt,semesterInt);
+            }
+        });
+        STSem.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                StudentTableMethod();
+
+                String semester = (String) STSem.getSelectedItem();
+                assert semester != null;
+                if(semester.isEmpty()){
+                    semester = "0";
+                }
+                int semesterInt= Integer.parseInt(semester);
+
+                String level=(String)STLevel.getSelectedItem();
+                assert level != null;
+                if(level.isEmpty()){
+                    level = "0";
+                }
+                int levelInt= Integer.parseInt(level);
+
+                LoaStudentDetails(levelInt,semesterInt);
+            }
+        });
+    }
+
+    private void LoaStudentDetails(int level, int semester){
+        try{
+            DefaultTableModel model = (DefaultTableModel) StudentTable.getModel();
+
+            String loadQry = "select * from undergraduate where study_year = ? and study_semester = ?";
+
+            prepStatement = conn.prepareStatement(loadQry);
+            prepStatement.setInt(1,level);
+            prepStatement.setInt(2,semester);
+
+            ResultSet resultSet = prepStatement.executeQuery();
+            while (resultSet.next()) {
+                String tgno = resultSet.getString("tgno");
+                String ugfname = resultSet.getString("ugfname");
+                String uglname = resultSet.getString("uglname");
+                String ugaddress = resultSet.getString("ugaddress");
+                String ugemail = resultSet.getString("ugemail");
+                String ugphno = resultSet.getString("ugphno");
+
+                System.out.println(tgno + " " +ugfname + " " +uglname + " " +ugaddress + " " +ugemail + " " +ugphno);
+
+                Object[] ob = new Object[6];
+                ob[0] = tgno;
+                ob[1] = ugfname;
+                ob[2] = uglname;
+                ob[3] = ugaddress;
+                ob[4] = ugemail;
+                ob[5] = ugphno;
+
+                model.addRow(ob);
+            }
+
+        }catch (Exception e){
+            e.printStackTrace();
+        }
     }
 
 //    private void addMaterial(){
@@ -1456,33 +1483,33 @@ public class LecturerHomePage extends JFrame {
             }
         }
 
-    private void getstudentdetailcourseid(String lecno,int level,int semester){
-        System.out.println(lecno+ " " + level + " " + semester );
-
-        try{
-            MarkSubCodeCombo.removeAllItems();
-            String Query="SELECT c.course_id FROM courses c INNER JOIN lecture_course lc ON c.course_id = lc.course_id WHERE lc.lecno = ? AND c.level_no = ? AND c.semester_no = ?;";
-            prepStatement=conn.prepareStatement(Query);
-            prepStatement.setString(1, lecno);
-            prepStatement.setInt(2, level);
-            prepStatement.setInt(3, semester);
-            ResultSet resultSet = prepStatement.executeQuery();
-            while (resultSet.next()){
-                String course_id = resultSet.getString("course_id");
-                System.out.println(course_id);
-                STCource.addItem(course_id);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-//    private void StudentTableMethod(){
-//        StudentTable.setModel(new DefaultTableModel(
-//                null,
-//                new String[]{"Student TG Number","Student FName","StudentLName","Student Address","Student Email","Phone Number"}
-//        ));
+//    private void getstudentdetailcourseid(String lecno,int level,int semester){
+//        System.out.println(lecno+ " " + level + " " + semester );
+//
+//        try{
+//            MarkSubCodeCombo.removeAllItems();
+//            String Query="SELECT c.course_id FROM courses c INNER JOIN lecture_course lc ON c.course_id = lc.course_id WHERE lc.lecno = ? AND c.level_no = ? AND c.semester_no = ?;";
+//            prepStatement=conn.prepareStatement(Query);
+//            prepStatement.setString(1, lecno);
+//            prepStatement.setInt(2, level);
+//            prepStatement.setInt(3, semester);
+//            ResultSet resultSet = prepStatement.executeQuery();
+//            while (resultSet.next()){
+//                String course_id = resultSet.getString("course_id");
+//                System.out.println(course_id);
+//                STCource.addItem(course_id);
+//            }
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
 //    }
+
+    private void StudentTableMethod(){
+        StudentTable.setModel(new DefaultTableModel(
+                null,
+                new String[]{"Student TG Number","Student FName","StudentLName","Student Address","Student Email","Phone Number"}
+        ));
+    }
 //
 //    private void GetStudentDetailsMethod(){
 //
@@ -1580,7 +1607,7 @@ public class LecturerHomePage extends JFrame {
 
 
     public static void main(String[] args) {
-        new LecturerHomePage("lec5678");
+        new LecturerHomePage("lec1234");
     }
 
     private void createUIComponents() {
