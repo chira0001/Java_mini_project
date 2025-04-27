@@ -1,6 +1,7 @@
 package HomePage;
 
 import DBCONNECTION.DBCONNECTION;
+import HomePage.AD.ADNOTICES;
 import Login.Login;
 
 import javax.swing.*;
@@ -24,18 +25,18 @@ public class AdminHomePage extends JFrame {
 
     private String cardCommand;
 
-    private JButton profileButton;
-    private JButton settingsButton;
-    private JButton noticesButton;
-    private JButton timeTableButton;
-    private JButton userProfilesButton;
-    private JButton coursesButton;
-    private JLabel CardTittleLabel;
-    private JButton logoutButton;
-    private JPanel AdminHomeCard;
-    private JPanel AdminProfile;
-    private JTextField txtADNO;
-    private JTextField txtPHNO;
+    public JButton profileButton;
+    public JButton settingsButton;
+    public JButton noticesButton;
+    public JButton timeTableButton;
+    public JButton userProfilesButton;
+    public JButton coursesButton;
+    public JLabel CardTittleLabel;
+    public JButton logoutButton;
+    public JPanel AdminHomeCard;
+    public JPanel AdminProfile;
+    public JTextField txtADNO;
+    public JTextField txtPHNO;
     private JTextField txtEMAIL;
     private JTextField txtADDRESS;
     private JTextField txtLNAME;
@@ -172,9 +173,9 @@ public class AdminHomePage extends JFrame {
     private JTextField ADaddCourseMidPerc;
     private JTextField ADaddCourseFTheoryPerc;
     private JTextField ADaddCourseFPracticalPerc;
-    private JTextField textField14;
+    public JTextField textField14;
     private JButton addNoticeButton;
-    private JTextArea noticeGetArea;
+    public JTextArea noticeGetArea;
     private JLabel AdminProfImgSelectedLabel;
     private JPanel UndergraduateProfImgSelectedPanel;
     private JLabel UndergraduateProfImgSelectedLabel;
@@ -212,6 +213,7 @@ public class AdminHomePage extends JFrame {
 
     public AdminHomePage(String userIdentity){
 
+        ADNOTICES _Adnotices = new ADNOTICES(this);
         dbConnection(userIdentity);
         LoadNotices();
 
@@ -510,7 +512,7 @@ public class AdminHomePage extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 LoadNotices();
-                addNotices();
+                _Adnotices.addNotices();
             }
         });
         noticeTitleDropDown.addActionListener(new ActionListener() {
@@ -549,32 +551,32 @@ public class AdminHomePage extends JFrame {
         }
     }
 
-    private void addNotices(){
-        try{
-            String noticeTitle = textField14.getText();
-            String text = noticeGetArea.getText();
-
-            String filePath = "Resources/Notices/"+noticeTitle+".txt";
-
-            String addNoticeQuery = "Insert into notice(noticeTitle,noticeFilePath) values(?,?)";
-
-            prepStatement = conn.prepareStatement(addNoticeQuery);
-            prepStatement.setString(1,noticeTitle);
-            prepStatement.setString(2,filePath);
-
-            int resultAddNotice = prepStatement.executeUpdate();
-            if(resultAddNotice > 0){
-                writer = new BufferedWriter(new FileWriter(filePath));
-                writer.write(text);
-                writer.close();
-                JOptionPane.showMessageDialog(null,"Notice Successfully added");
-            }else{
-                JOptionPane.showMessageDialog(null,"Notice addeing failed");
-            }
-        }catch (Exception e){
-            e.printStackTrace();
-        }
-    }
+//    private void addNotices(){
+//        try{
+//            String noticeTitle = textField14.getText();
+//            String text = noticeGetArea.getText();
+//
+//            String filePath = "Resources/Notices/"+noticeTitle+".txt";
+//
+//            String addNoticeQuery = "Insert into notice(noticeTitle,noticeFilePath) values(?,?)";
+//
+//            prepStatement = conn.prepareStatement(addNoticeQuery);
+//            prepStatement.setString(1,noticeTitle);
+//            prepStatement.setString(2,filePath);
+//
+//            int resultAddNotice = prepStatement.executeUpdate();
+//            if(resultAddNotice > 0){
+//                writer = new BufferedWriter(new FileWriter(filePath));
+//                writer.write(text);
+//                writer.close();
+//                JOptionPane.showMessageDialog(null,"Notice Successfully added");
+//            }else{
+//                JOptionPane.showMessageDialog(null,"Notice addeing failed");
+//            }
+//        }catch (Exception e){
+//            e.printStackTrace();
+//        }
+//    }
 
     private void ADViewTimeTableSetModelMethod(){
         tableTimeTable.setModel(new DefaultTableModel(
