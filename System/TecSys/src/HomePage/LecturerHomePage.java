@@ -10,7 +10,9 @@ import javax.swing.table.TableColumnModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileWriter;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.sql.*;
@@ -54,10 +56,6 @@ public class LecturerHomePage extends JFrame {
     private JTextField textField1;
     private JTextField textField2;
     private JList leccourselist;
-    private JList list2;
-    private JButton addFilesButton;
-    private JButton renameFilesButton;
-    private JButton removeFilesButton;
     private JComboBox noticeTitleDropDown;
     private JTextArea noticeDisplayArea;
     private JPanel LecturerHomePageProfile;
@@ -82,26 +80,48 @@ public class LecturerHomePage extends JFrame {
     private JTable LECMedicalTable;
     private JComboBox MedicalCourseCode;
     private JPanel LECGrades;
-    private JComboBox UGSemesterNoforMarksDropDown;
-    private JComboBox UGLevelNoforMarksDropDown;
+    private JComboBox SemesterNoGrade;
+    private JComboBox LevelNoGrade;
     private JLabel lblCGPA;
     private JLabel lblSGPA;
     private JLabel UGClass;
     private JTable UGGradeTable;
     private JButton GradesButton;
-    private JComboBox comboBox1;
-    private JTextField textField3;
-    private JTextField textField4;
-    private JTextField textField5;
-    private JTextField textField6;
-    private JTextField textField10;
-    private JTextField textField11;
-    private JTextField textField12;
-    private JTextField textField13;
-    private JTextField textField14;
-    private JTextField textField15;
+    private JComboBox MarkSubCodeCombo;
+    private JTextField LECMarkTGno;
+    private JTextField LECMarkQuiz1;
+    private JTextField LECMarkQuiz2;
+    private JTextField LECMarkQuiz3;
+    private JTextField LECMarkQuiz4;
+    private JTextField LECMarkAssess1;
+    private JTextField LECMarkAssess2;
+    private JTextField LECMarkMid;
+    private JTextField theory_field;
+    private JTextField LECMarkFTheory;
+    private JTextField LECMarkFPractical;
     private JButton uploadMarksButton;
-    private JComboBox comboBox2;
+    private JComboBox MarkLevelCombo;
+    private JComboBox MarkSemesterCombo;
+    private JComboBox MarkSubStatusCombo;
+    private JComboBox GradeSubCodeCombo;
+    private JButton showStudentGradeButton;
+    private JTextField studentTGno;
+    private JButton enterButton;
+    private JComboBox LevelNoforCourses;
+    private JComboBox SemesterNoforCourses;
+    private JComboBox CourseforCourses;
+    private JTextArea DescriptionforCourseMaterial;
+    private JButton AddMaterials;
+    private JButton renameButton;
+    private JButton removeButton;
+    private JButton saveButton;
+    private JTextField Course_MaterialField;
+    private JButton StudentDetailsButtons;
+    private JPanel LECStudnetDetails;
+    private JComboBox STLevel;
+    private JComboBox STSem;
+    private JComboBox STCource;
+    private JTable StudentTable;
 
     private CardLayout cardLayout;
 
@@ -113,10 +133,10 @@ public class LecturerHomePage extends JFrame {
     private String LecPhno;
     private String LecProfImg;
 
-    private String[] cardButtons = {"Profile", "Attendance", "Time Table", "Courses", "Medical", "Notices", "Grades" ,"Marks", "Settings"};
-    private String[] cardNames = {"LECProfileCard", "LECAttendanceCard", "LECTimeTableCard", "LECCoursesCard", "LECMedicalsCard", "LECNoticesCard","LECGradesCards", "LECMarksCard", "LECSettingsCard"};
-    JButton[] btnFieldNames = {profileButton,attendanceButton,timeTableButton,coursesButton,medicalButton,noticesButton,GradesButton,marksButton,settingsButton};
-    private String[] cardTitles = {"Welcome..!", "Attendance Details", "Lecturer Time Table","Your Courses","Medical Information", "Notices", "Student Grades","Marks","Settings Configuration"};;
+    private String[] cardButtons = {"Profile","Student Details","Attendance", "Time Table", "Courses", "Medical", "Notices", "Grades" ,"Marks", "Settings"};
+    private String[] cardNames = {"LECProfileCard","LECStudentCard", "LECAttendanceCard", "LECTimeTableCard", "LECCoursesCard", "LECMedicalsCard", "LECNoticesCard","LECGradesCards", "LECMarksCard", "LECSettingsCard"};
+    JButton[] btnFieldNames = {profileButton,StudentDetailsButtons,attendanceButton,timeTableButton,coursesButton,medicalButton,noticesButton,GradesButton,marksButton,settingsButton};
+    private String[] cardTitles = {"Welcome Lecturer..!","Students Details","Student Attendance Details", "Lecturer Time Table","Your Courses","Student Medical Information", "Notices", "Student Grades","Students Marks","Your Settings Configuration"};;
 
 
     private Object[] filePathValues = new Object[4];
@@ -159,6 +179,7 @@ public class LecturerHomePage extends JFrame {
         timeTableButton.addActionListener(listener);
         attendanceButton.addActionListener(listener);
         GradesButton.addActionListener(listener);
+        StudentDetailsButtons.addActionListener(listener);
 
 
         logoutButton.addActionListener(new ActionListener() {
@@ -190,19 +211,6 @@ public class LecturerHomePage extends JFrame {
             }
         });
 
-        LECLevelComboBox.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                updateCoursesIfReady(userIdentity);
-            }
-        });
-
-        LECSemesterCombobox.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                updateCoursesIfReady(userIdentity);
-            }
-        });
 
         LevelNoDropDown.addActionListener(new ActionListener() {
             @Override
@@ -224,7 +232,7 @@ public class LecturerHomePage extends JFrame {
 
                 int SemesterNo = Integer.parseInt(semester_no);
 
-                valuesForTimeTable(LevelNo,SemesterNo);
+                valuesForTimeTable(userIdentity,LevelNo,SemesterNo);
             }
         });
 
@@ -248,7 +256,7 @@ public class LecturerHomePage extends JFrame {
                 }
                 int LevelNo = Integer.parseInt(level_no);
 
-                valuesForTimeTable(LevelNo, SemesterNo);
+                valuesForTimeTable(userIdentity,LevelNo,SemesterNo);
             }
         });
         AttendanceLevelNo.addActionListener(new ActionListener() {
@@ -370,7 +378,417 @@ public class LecturerHomePage extends JFrame {
                 LoadMedicalTable(userIdentity,medicalLevelInt,medicalSemesterInt);
             }
         });
+        MarkLevelCombo.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String marklevel=(String)MarkLevelCombo.getSelectedItem();
+                assert marklevel != null;
+                if(marklevel.isEmpty()){
+                    marklevel = "0";
+
+                }
+                String marksemester=(String)MarkSemesterCombo.getSelectedItem();
+                assert marksemester != null;
+                if(marksemester.isEmpty()){
+                    marksemester = "0";
+                }
+                int marksemesterInt= Integer.parseInt(marksemester);
+                int marklevelInt= Integer.parseInt(marklevel);
+
+
+
+            }
+        });
+        MarkSemesterCombo.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String marksemester=(String)MarkSemesterCombo.getSelectedItem();
+                assert marksemester != null;
+                if(marksemester.isEmpty()){
+                    marksemester = "0";
+                }
+                String marklevel=(String)MarkLevelCombo.getSelectedItem();
+                assert marklevel != null;
+                if(marklevel.isEmpty()){
+                    marklevel = "0";
+                }
+                int marksemesterInt= Integer.parseInt(marksemester);
+                int marklevelInt= Integer.parseInt(marklevel);
+                markgetcourseid(userIdentity,marklevelInt,marksemesterInt);
+            }
+        });
+        MarkSubStatusCombo.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String status = (String) MarkSubStatusCombo.getSelectedItem();
+                if (status != null) {
+                    if (status.equals("theory")) {
+                        LECMarkFPractical.setEnabled(false);
+                        LECMarkFTheory.setEnabled(true);
+                    } else if (status.equals("practical")) {
+                        LECMarkFTheory.setEnabled(false);
+                        LECMarkFPractical.setEnabled(true);
+                    } else {
+                        LECMarkFTheory.setEnabled(true);
+                        LECMarkFPractical.setEnabled(true);
+                    }
+                }
+            }
+        });
+
+        MarkSubCodeCombo.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String subcode=(String)MarkSubCodeCombo.getSelectedItem();
+                getMarkStatus(subcode);
+
+            }
+        });
+
+
+        LevelNoGrade.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+//                String level=(String) LevelNoGrade.getSelectedItem();
+//                assert level != null;
+//                if(level.isEmpty()){
+//                    level = "0";
+//                }
+//                int levelInt= Integer.parseInt(level);
+//                String semester=(String)MarkSemesterCombo.getSelectedItem();
+//                assert semester != null;
+//                if(semester.isEmpty()){
+//                    semester = "0";
+//                }
+//                int semesterInt= Integer.parseInt(semester);
+//
+//                getstudentdetailcourseid(userIdentity,levelInt,semesterInt);
+
+
+            }
+        });
+        SemesterNoGrade.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String semester = (String) SemesterNoGrade.getSelectedItem();
+                assert semester != null;
+                if(semester.isEmpty()){
+                    semester = "0";
+                }
+                int semesterInt= Integer.parseInt(semester);
+                String level=(String)LevelNoGrade.getSelectedItem();
+                assert level != null;
+                if(level.isEmpty()){
+                    level = "0";
+                }
+                int levelInt= Integer.parseInt(level);
+                loadCourseIDforGrade(userIdentity,levelInt,semesterInt);
+            }
+
+        });
+        STLevel.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String level = (String) STLevel.getSelectedItem();
+                assert level != null;
+                if(level.isEmpty()){
+                    level = "0";
+
+                }
+                int levelInt= Integer.parseInt(level);
+                String semester=(String)STSem.getSelectedItem();
+                assert semester != null;
+                if(semester.isEmpty()){
+                    semester = "0";
+                }
+                int semesterInt= Integer.parseInt(semester);
+
+                getstudentdetailcourseid(userIdentity,levelInt,semesterInt);
+
+
+//                String level=(String) LevelNoGrade.getSelectedItem();
+//                assert level != null;
+//                if(level.isEmpty()){
+//                    level = "0";
+//                }
+//                int levelInt= Integer.parseInt(level);
+//                String semester=(String)MarkSemesterCombo.getSelectedItem();
+//                assert semester != null;
+//                if(semester.isEmpty()){
+//                    semester = "0";
+//                }
+//                int semesterInt= Integer.parseInt(semester);
+
+
+            }
+        });
+        STSem.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+                String semester = (String) STSem.getSelectedItem();
+                assert semester != null;
+                if(semester.isEmpty()){
+                    semester = "0";
+                }
+                int semesterInt= Integer.parseInt(semester);
+
+                String level=(String)STLevel.getSelectedItem();
+                assert level != null;
+                if(level.isEmpty()){
+                    level = "0";
+                }
+                int levelInt= Integer.parseInt(level);
+                getstudentdetailcourseid(userIdentity,levelInt,semesterInt);
+
+            }
+        });
+        uploadMarksButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                addMark();
+            }
+        });
+        LevelNoforCourses.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                CoursesforLecCourse(userIdentity);
+            }
+        });
+        SemesterNoforCourses.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                CoursesforLecCourse(userIdentity);
+            }
+        });
+        AddMaterials.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                LecSelectMaterial();
+                LecSaveMaterial();
+                CourseMaterialUpdate();
+            }
+        });
+        showStudentGradeButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String levelnum= (String) STLevel.getSelectedItem();
+                assert levelnum != null;
+                if(levelnum.isEmpty()){
+                    levelnum = "0";
+
+                }
+                int levelInt= Integer.parseInt(levelnum);
+
+                String semester = (String) STSem.getSelectedItem();
+                assert semester != null;
+                if(semester.isEmpty()){
+                    semester = "0";
+                }
+
+                int semesterInt= Integer.parseInt(semester);
+
+                String subcode=(String)MarkSubCodeCombo.getSelectedItem();
+
+            }
+        });
     }
+
+//    private void addMaterial(){
+//        try{
+//            String course_id = (String) CourseforCourses.getSelectedItem();
+//            String material_name = Course_MaterialField.getText();
+//            String course_material_description = DescriptionforCourseMaterial.getText();
+//
+//            String courseMaterialDescFilePath = "Resources/CourseMaterialDesc/"+course_id+"_"+material_name+".txt";
+//
+//
+//            JFileChooser chooser = new JFileChooser();
+//            chooser.setDialogTitle("Choose a Material");
+//            if (chooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
+//                String material = chooser.getSelectedFile().getAbsolutePath();
+//                System.out.println(material);
+//                Files.copy(Path.of(material), Path.of(courseMaterialDescFilePath));
+//            }
+
+
+//            String courseMaterialDescFilePath = "Resources/CourseMaterialDesc/"+course_id+"_"+material_name+".txt";
+//            BufferedWriter writer = new BufferedWriter(new FileWriter(courseMaterialDescFilePath));
+//            writer.write(course_material_description);
+//            writer.close();
+//
+//            String addMaterialQry = "insert into course_materials(c_id,c_material,c_material_desc,c_material_location) values(?,?,?,?)";
+//            prepStatement.setString(1, course_id);
+//            prepStatement.setString(2, material_name);
+//            prepStatement.setString(3, courseMaterialDescFilePath);
+//            prepStatement.setString(4, );
+
+//        }catch (Exception e){
+//            e.printStackTrace();
+//        }
+//
+//    }
+
+
+
+
+    public void CourseMaterialUpdate(){
+        try{
+//            String UGaddress = textField7.getText();
+//            String UGemail = textField8.getText();
+//            String UGphno = textField9.getText();
+
+            String course_id = (String) CourseforCourses.getSelectedItem();
+            String material_name = Course_MaterialField.getText();
+            String course_material_description = DescriptionforCourseMaterial.getText();
+            String courseMaterialDescFilePath = "Resources/CourseMaterialDesc/"+course_id+"_"+material_name+".txt";
+            String extension = (String) filePathValues[3];
+
+            String CourseMaterialPath = "Resources/CourseMaterial/" + course_id+"_"+material_name + "." + extension;
+
+            String InsertMaterialQuery = "INSERT into course_materials(c_id,c_material,c_material_desc,c_material_location) values(?,?,?,?)";
+
+            prepStatement = conn.prepareStatement(InsertMaterialQuery);
+            prepStatement.setString(1, course_id);
+            prepStatement.setString(2, material_name);
+            prepStatement.setString(3, courseMaterialDescFilePath);
+            prepStatement.setString(4, CourseMaterialPath);
+
+            int insertResult = prepStatement.executeUpdate();
+            if(insertResult>0){
+                JOptionPane.showMessageDialog(null, "Successfully Added");
+            }else {
+                JOptionPane.showMessageDialog(null, "Failed to Add");
+            }
+
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    private void LecSaveMaterial(){
+        try{
+            Path fromFile = (Path) filePathValues[0];
+            Path toFile = (Path) filePathValues[1];
+            File UGDestinationFile = (File)filePathValues[2];
+
+            String course_id = (String) CourseforCourses.getSelectedItem();
+            String material_name = Course_MaterialField.getText();
+            String course_material_description = DescriptionforCourseMaterial.getText();
+
+            String courseMaterialDescFilePath = "Resources/CourseMaterialDesc/"+course_id+"_"+material_name+".txt";
+
+            if (UGDestinationFile.exists()){
+                UGDestinationFile.delete();
+                Files.copy(fromFile,toFile);
+            }else{
+                Files.copy(fromFile,toFile);
+            }
+
+            BufferedWriter writer = new BufferedWriter(new FileWriter(courseMaterialDescFilePath));
+            writer.write(course_material_description);
+            writer.close();
+        }catch(Exception exc){
+        }
+    }
+
+    public void LecSelectMaterial() {
+        try {
+            JFileChooser UGFileChooser = new JFileChooser();
+            UGFileChooser.setDialogTitle("Select a file");
+
+            if (UGFileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
+
+                String filename = UGFileChooser.getSelectedFile().getAbsolutePath();
+
+//                String MaterialSavePath = "Resources/ProfileImages/";
+                String MaterialSavePath = "Resources/CourseMaterial/";
+
+                File LecSaveMaterialDirectory = new File(MaterialSavePath);
+                if (!LecSaveMaterialDirectory.exists()) {
+                    LecSaveMaterialDirectory.mkdirs();
+                }
+
+            String course_id = (String) CourseforCourses.getSelectedItem();
+            String material_name = Course_MaterialField.getText();
+
+//            String course_material_description = DescriptionforCourseMaterial.getText();
+//
+//            String courseMaterialDescFilePath = "Resources/CourseMaterialDesc/"+course_id+"_"+material_name+".txt";
+
+                File LecSourceFile = null;
+
+                String extension = filename.substring(filename.lastIndexOf('.') + 1);
+
+                String newFile = course_id + "_" + material_name;
+                LecSourceFile = new File(newFile + "." + extension);
+
+                File UGDestinationFile = new File(MaterialSavePath + LecSourceFile);
+
+                Path fromFile = UGFileChooser.getSelectedFile().toPath();
+                Path toFile = UGDestinationFile.toPath();
+
+                filePathValues[0] = fromFile;
+                filePathValues[1] = toFile;
+                filePathValues[2] = UGDestinationFile;
+                filePathValues[3] = extension;
+            }
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    private void CoursesforLecCourse(String lecno){
+       try{
+           String LevelNO = (String) LevelNoforCourses.getSelectedItem();
+           if(LevelNO.isEmpty()){
+               LevelNO = "0";
+           }
+           String SemesterNO = (String) SemesterNoforCourses.getSelectedItem();
+            if(SemesterNO.isEmpty()){
+                SemesterNO = "0";
+            }
+           CourseforCourses.removeAllItems();
+
+           String getCourseQry = "select courses.course_id from courses join lecture_course on courses.course_id = lecture_course.course_id where lecno = ? and level_no = ? and semester_no = ?";
+           prepStatement = conn.prepareStatement(getCourseQry);
+
+           prepStatement.setString(1,lecno);
+           prepStatement.setInt(2,Integer.parseInt(LevelNO));
+           prepStatement.setInt(3,Integer.parseInt(SemesterNO));
+
+           ResultSet resultSet = prepStatement.executeQuery();
+           while (resultSet.next()) {
+               String courseID = resultSet.getString("course_id");
+
+               CourseforCourses.addItem(courseID);
+           }
+
+       } catch (Exception e) {
+           e.printStackTrace();
+       }
+    }
+
+
 
     public void changeBtnState(String btn, String lecno){
 
@@ -452,16 +870,17 @@ public class LecturerHomePage extends JFrame {
         timeTableColumns.getColumn(3).setCellRenderer(timeTableCells);
     }
 
-    private void valuesForTimeTable(int level_no, int semester_no){
+    private void valuesForTimeTable(String lecno,int level_no, int semester_no){
 
         System.out.println("Level " + level_no + " Semester " + semester_no);
 
-        String TimeTableValues = "select time_table_id, Courses.course_id, module_day, course_name, time from timeTable join Courses where timeTable.course_id = Courses.course_id and level_no = ? and semester_no = ? ORDER BY CASE module_day WHEN 'Monday' THEN 1 WHEN 'Tuesday' THEN 2 WHEN 'Wednesday' THEN 3 WHEN 'Thursday' THEN 4 WHEN 'Friday' THEN 5 WHEN 'Saturday' THEN 6 WHEN 'Sunday' THEN 7 END";
+        String TimeTableValues = "SELECT t.module_day,c.course_id,c.course_name,t.time FROM lecturer lec JOIN lecture_course lc ON lec.lecno = lc.lecno JOIN courses c ON lc.course_id = c.course_id JOIN timeTable t ON c.course_id = t.course_id WHERE lec.lecno = ? AND c.level_no = ? AND c.semester_no = ?;";
         DefaultTableModel tblmodel = (DefaultTableModel) tableTimeTable.getModel();
         try{
             prepStatement = conn.prepareStatement(TimeTableValues);
-            prepStatement.setInt(1,level_no);
-            prepStatement.setInt(2,semester_no);
+            prepStatement.setString(1,lecno);
+            prepStatement.setInt(2,level_no);
+            prepStatement.setInt(3,semester_no);
             ResultSet result = prepStatement.executeQuery();
             while (result.next()){
                 String courseID = result.getString("course_id");
@@ -979,14 +1398,192 @@ public class LecturerHomePage extends JFrame {
            e.printStackTrace();
         }
 
-
-
-
     }
+    private void markgetcourseid(String lecno,int level,int semester){
+            try{
+                MarkSubCodeCombo.removeAllItems();
+                String Query="SELECT c.course_id FROM courses c INNER JOIN lecture_course lc ON c.course_id = lc.course_id WHERE lc.lecno = ? AND c.level_no = ? AND c.semester_no = ?;";
+                prepStatement=conn.prepareStatement(Query);
+                prepStatement.setString(1, lecno);
+                prepStatement.setInt(2, level);
+                prepStatement.setInt(3, semester);
+                ResultSet resultSet = prepStatement.executeQuery();
+                while (resultSet.next()){
+                    String course_id = resultSet.getString("course_id");
+                    MarkSubCodeCombo.addItem(course_id);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+    }
+        private void getMarkStatus(String course_code){
+                try{
+                    MarkSubStatusCombo.removeAllItems();
+                    String CourseStatusQuery="select status from courses where course_id=?;";
+                    prepStatement=conn.prepareStatement(CourseStatusQuery);
+                    prepStatement.setString(1, course_code);
+
+                    ResultSet resultSet1 = prepStatement.executeQuery();
+                    while (resultSet1.next()){
+                        String status = resultSet1.getString("status");
+                        MarkSubStatusCombo.addItem(status);
+
+                    }
+
+                }catch(Exception e){
+                    e.printStackTrace();
+                }
+        }
+
+        private void loadCourseIDforGrade(String lecno,int level,int semester){
+            try{
+                
+                GradeSubCodeCombo.removeAllItems();
+                String loadCourceID="SELECT c.course_id FROM courses c INNER JOIN lecture_course lc ON c.course_id = lc.course_id WHERE lc.lecno = ? AND c.level_no = ? AND c.semester_no = ?;";
+                prepStatement=conn.prepareStatement(loadCourceID);
+                prepStatement.setString(1, lecno);
+                prepStatement.setInt(2, level);
+                prepStatement.setInt(3, semester);
+                ResultSet resultSet = prepStatement.executeQuery();
+                while (resultSet.next()){
+                    String course_id = resultSet.getString("course_id");
+                    GradeSubCodeCombo.addItem(course_id);
+                }
+
+            }
+            catch(Exception e){
+                e.printStackTrace();
+            }
+        }
+
+    private void getstudentdetailcourseid(String lecno,int level,int semester){
+        System.out.println(lecno+ " " + level + " " + semester );
+
+        try{
+            MarkSubCodeCombo.removeAllItems();
+            String Query="SELECT c.course_id FROM courses c INNER JOIN lecture_course lc ON c.course_id = lc.course_id WHERE lc.lecno = ? AND c.level_no = ? AND c.semester_no = ?;";
+            prepStatement=conn.prepareStatement(Query);
+            prepStatement.setString(1, lecno);
+            prepStatement.setInt(2, level);
+            prepStatement.setInt(3, semester);
+            ResultSet resultSet = prepStatement.executeQuery();
+            while (resultSet.next()){
+                String course_id = resultSet.getString("course_id");
+                System.out.println(course_id);
+                STCource.addItem(course_id);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+//    private void StudentTableMethod(){
+//        StudentTable.setModel(new DefaultTableModel(
+//                null,
+//                new String[]{"Student TG Number","Student FName","StudentLName","Student Address","Student Email","Phone Number"}
+//        ));
+//    }
+//
+//    private void GetStudentDetailsMethod(){
+//
+//        try{
+//            StudentTableMethod();
+//            DefaultTableModel model=(DefaultTableModel)StudentTable.getModel();
+//
+//            String STDetailsQuery="select "
+//
+//        }catch (Exception e){
+//            e.printStackTrace();
+//        }
+//    }
+
+
+    private void addMark(){
+        try{
+            String tg_no ="";
+            String course_id = (String) MarkSubCodeCombo.getSelectedItem();
+            String LECmarkTGno =  LECMarkTGno.getText();
+
+            JTextField[] markfields = {LECMarkQuiz1,LECMarkQuiz2,LECMarkQuiz3,LECMarkQuiz4,LECMarkAssess1,LECMarkAssess2,LECMarkMid,LECMarkFTheory,LECMarkFPractical};
+            for (JTextField field : markfields){
+             if(field.getText().isEmpty() || field.getText() == null || field.getText().equals("")){
+                 field.setText("0");
+             }
+            }
+
+            int LECmarkQuiz1 = Integer.parseInt(LECMarkQuiz1.getText());
+            int LECmarkQuiz2 = Integer.parseInt(LECMarkQuiz2.getText());
+            int LECmarkQuiz3 = Integer.parseInt(LECMarkQuiz3.getText());
+            int LECmarkQuiz4 = Integer.parseInt(LECMarkQuiz4.getText());
+            int LECmarkAssess1 = Integer.parseInt(LECMarkAssess1.getText());
+            int LECmarkAssess2 = Integer.parseInt(LECMarkAssess2.getText());
+            int LECmarkMid = Integer.parseInt(LECMarkMid.getText());
+            int LECmarkFTh = Integer.parseInt(LECMarkFTheory.getText());
+            int LECmarkFPr = Integer.parseInt(LECMarkFPractical.getText());
+
+            String checkQry = "select *from marks where tgno = ? and course_id = ?";
+            prepStatement = conn.prepareStatement(checkQry);
+            prepStatement.setString(1,LECmarkTGno);
+            prepStatement.setString(2,course_id);
+
+            ResultSet resultSet = prepStatement.executeQuery();
+            if (resultSet.next()){
+                tg_no = resultSet.getString("tgno");
+                String insertMark = "update marks set quiz_one = ?,quiz_second = ?,quiz_third = ?,quiz_fourth = ?,assessment_one = ?,assessment_second = ?,mid_term = ?,final_theory = ?,final_practical = ? where tgno = ? and course_id = ? ";
+                prepStatement = conn.prepareStatement(insertMark);
+
+                prepStatement.setInt(1,LECmarkQuiz1);
+                prepStatement.setInt(2,LECmarkQuiz2);
+                prepStatement.setInt(3,LECmarkQuiz3);
+                prepStatement.setInt(4,LECmarkQuiz4);
+                prepStatement.setInt(5,LECmarkAssess1);
+                prepStatement.setInt(6,LECmarkAssess2);
+                prepStatement.setInt(7,LECmarkMid);
+                prepStatement.setInt(8,LECmarkFTh);
+                prepStatement.setInt(9,LECmarkFPr);
+                prepStatement.setString(10,tg_no);
+                prepStatement.setString(11,course_id);
+
+                int result = prepStatement.executeUpdate();
+                if(result>0){
+                    JOptionPane.showMessageDialog(null,"Mark added successfully");
+                }else {
+                    JOptionPane.showMessageDialog(null,"Mark not added successfully");
+                }
+            }else {
+                String insertMark = "insert into marks(tgno,course_id,quiz_one,quiz_second,quiz_third,quiz_fourth,assessment_one,assessment_second,mid_term,final_theory,final_practical) values (?,?,?,?,?,?,?,?,?,?,?)";
+                prepStatement = conn.prepareStatement(insertMark);
+                prepStatement.setString(1, LECmarkTGno);
+                prepStatement.setString(2, course_id);
+                prepStatement.setInt(3, LECmarkQuiz1);
+                prepStatement.setInt(4, LECmarkQuiz2);
+                prepStatement.setInt(5, LECmarkQuiz3);
+                prepStatement.setInt(6, LECmarkQuiz4);
+                prepStatement.setInt(7, LECmarkAssess1);
+                prepStatement.setInt(8, LECmarkAssess2);
+                prepStatement.setInt(9, LECmarkMid);
+                prepStatement.setInt(10, LECmarkFTh);
+                prepStatement.setInt(11, LECmarkFPr);
+                int result = prepStatement.executeUpdate();
+                if (result > 0) {
+                    JOptionPane.showMessageDialog(null, "Mark added successfully");
+                } else {
+                    JOptionPane.showMessageDialog(null, "Mark not added successfully");
+                }
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
 
 
 
     public static void main(String[] args) {
         new LecturerHomePage("lec5678");
+    }
+
+    private void createUIComponents() {
+        // TODO: place custom component creation code here
     }
 }
