@@ -5,61 +5,27 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="eae00a62-4dab-4b09-9e2b-255c640ec556" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/src/HomePage/UG/TIMETABLE.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/HomePage/UG/TableSetMeth.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/HomePage/UG/UGATTENDANCE.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/HomePage/UG/UGCOURSE.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/HomePage/UG/UGDATABASEQUERY.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/HomePage/UG/UGGRADES.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/HomePage/UG/UGMEDICAL.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/HomePage/UG/UGNOTICE.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/HomePage/UG/UGPROFILE.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/HomePage/UG/UGSETTING.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/HomePage/AD/ADNOTICES.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Resources/ProfileImages/tg0001.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/Resources/ProfileImages/tg0001.jpg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/TecSys/HomePage/UndergraduateHomePage$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/TecSys/HomePage/UndergraduateHomePage$1.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/TecSys/HomePage/UndergraduateHomePage$2.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/TecSys/HomePage/UndergraduateHomePage$2.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/TecSys/HomePage/UndergraduateHomePage$3.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/TecSys/HomePage/UndergraduateHomePage$3.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/TecSys/HomePage/UndergraduateHomePage$4.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/TecSys/HomePage/UndergraduateHomePage$4.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Resources/ProfileImages/ad0002.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/Resources/ProfileImages/ad0002.jpg" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/out/production/TecSys/HomePage/UndergraduateHomePage.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/TecSys/HomePage/UndergraduateHomePage.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/HomePage/UndergraduateHomePage.form" beforeDir="false" afterPath="$PROJECT_DIR$/src/HomePage/UndergraduateHomePage.form" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/HomePage/UndergraduateHomePage.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/HomePage/UndergraduateHomePage.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/HomePage/AdminHomePage.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/HomePage/AdminHomePage.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/HomePage/UG/UGSETTING.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/HomePage/UG/UGSETTING.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Login/Login.form" beforeDir="false" afterPath="$PROJECT_DIR$/src/Login/Login.form" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Login/Login.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Login/Login.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
-  <component name="FileTemplateManagerImpl">
-    <option name="RECENT_TEMPLATES">
-      <list>
-        <option value="Class" />
-      </list>
-    </option>
-  </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/../.." />
   </component>
-  <component name="GitHubPullRequestSearchHistory">{
-  &quot;lastFilter&quot;: {
-    &quot;state&quot;: &quot;OPEN&quot;,
-    &quot;assignee&quot;: &quot;Dilshan0721&quot;
-  }
-}</component>
-  <component name="GithubPullRequestsUISettings">{
-  &quot;selectedUrlAndAccountId&quot;: {
-    &quot;url&quot;: &quot;https://github.com/chira0001/Java_mini_project.git&quot;,
-    &quot;accountId&quot;: &quot;eb2ad9a5-4e54-4bf1-857a-58ad15d482f7&quot;
-  }
-}</component>
-  <component name="ProblemsViewState">
-    <option name="selectedTabId" value="DEPENDENCY_CHECKER_PROBLEMS_TAB" />
-  </component>
   <component name="ProjectColorInfo">{
-  &quot;customColor&quot;: &quot;&quot;,
-  &quot;associatedIndex&quot;: 3
+  &quot;associatedIndex&quot;: 5
 }</component>
-  <component name="ProjectId" id="2vg3cqPlHG4UqD4mUpqFY4Qiy1o" />
+  <component name="ProjectId" id="2wGbBy4bWkCLEw73wLQxrjy4lcd" />
   <component name="ProjectLevelVcsManager">
     <ConfirmationsSetting value="2" id="Add" />
   </component>
@@ -146,8 +112,8 @@
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
-      <changelist id="eae00a62-4dab-4b09-9e2b-255c640ec556" name="Changes" comment="" />
-      <created>1744552981156</created>
+      <changelist id="d2f965da-cbe9-4866-985a-2310a5074238" name="Changes" comment="" />
+      <created>1745670734487</created>
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1742930417022</updated>
@@ -171,6 +137,7 @@
       <workItem from="1745657631112" duration="52727000" />
       <workItem from="1745729200365" duration="5885000" />
       <workItem from="1745746943768" duration="10812000" />
+
     </task>
     <servers />
   </component>
