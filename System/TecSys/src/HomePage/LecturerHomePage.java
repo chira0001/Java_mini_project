@@ -559,7 +559,7 @@ public class LecturerHomePage extends JFrame {
             }
         });
         GradesTableSetModelMethod();
-        a.addActionListener(new ActionListener() {
+        enterButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 GradesTableSetModelMethod();
@@ -941,9 +941,9 @@ public class LecturerHomePage extends JFrame {
     private void dbConnection(String lecno){
         try{
             String selectQuery = "select * from lecturer where lecno = '" + lecno + "'";
-            Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/javatest","root","1234");
-            Statement statement = connection.createStatement();
-            ResultSet DBresult = statement.executeQuery(selectQuery);
+
+            prepStatement = conn.prepareStatement(selectQuery);
+            ResultSet DBresult = prepStatement.executeQuery();
 
             if(DBresult.next()){
                 Lecno = DBresult.getString("lecno");
