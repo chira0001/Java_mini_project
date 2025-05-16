@@ -2,7 +2,6 @@ package HomePage;
 import DBCONNECTION.DBCONNECTION;
 import Login.Login;
 
-
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.DefaultTableCellRenderer;
@@ -17,7 +16,7 @@ import java.nio.file.Path;
 import java.sql.*;
 import java.util.Scanner;
 
-import static java.util.Arrays.sort;
+// import static java.util.Arrays.sort;
 
 public class TechnicalOfficerHomePage extends JFrame {
 
@@ -121,8 +120,8 @@ public class TechnicalOfficerHomePage extends JFrame {
 
     private Scanner input;
 
-    private int SemeterNumber;
-    private int LevelNumber;
+  /*  private int SemeterNumber;
+    private int LevelNumber;*/
 
 
     public TechnicalOfficerHomePage(String userIdentity) {
@@ -382,8 +381,7 @@ public class TechnicalOfficerHomePage extends JFrame {
         ToupdateMedicalBtn.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-
-                ToUpdatemedical();
+                ToUpdatemedical(userIdentity);
             }
         });
 
@@ -400,12 +398,12 @@ public class TechnicalOfficerHomePage extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
 
-                TOAddAttendance();
+                TOAddAttendance(userIdentity);
             }
         });
     }
 
-    private void TOAddAttendance() {
+    private void TOAddAttendance(String userIdentity) {
         try {
             String AtUpdateTG = AttenUpdateTgNo.getText();
             String AtUpdateCid = AttenUpdateCid.getText();
@@ -413,21 +411,15 @@ public class TechnicalOfficerHomePage extends JFrame {
             String AtUpdateCstatus = AttenUpdateCstatus.getText();
             String AtUpdateAttstatus = AttenUpdateAttSt.getText();
 
-            String TOAddattendanceQuery = "INSERT INTO attendance(course_status,atten_status) VALUES ( " +
-                    "course_status = '" + AtUpdateCstatus + "', " +
-                    "atten_status = '" + AtUpdateAttstatus + "' " +
-                    "WHERE tgno = '" + AtUpdateTG + "' AND " +
-                    "course_id = '" + AtUpdateCid + "' AND " +
-                    "week_no = " + AtUpdateweekno + ");";
+            String TOAddattendanceQuery = "INSERT INTO attendance(tono,tgno,course_id,week_no,course_status,atten_status) VALUES (?,?,?,?,?,?)";
+            PreparedStatement preparedStatement = conn.prepareStatement(TOAddattendanceQuery);
 
-            Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/javatest", "root", "1234");
-            PreparedStatement preparedStatement = connection.prepareStatement(TOAddattendanceQuery);
-
-            preparedStatement.setString(1, AtUpdateTG);
-            preparedStatement.setString(2, AtUpdateCid);
-            preparedStatement.setInt(3, Integer.parseInt(AtUpdateweekno));
-            preparedStatement.setString(4, AtUpdateCstatus);
-            preparedStatement.setString(5, AtUpdateAttstatus);
+            preparedStatement.setString(1, userIdentity);
+            preparedStatement.setString(2, AtUpdateTG);
+            preparedStatement.setString(3, AtUpdateCid);
+            preparedStatement.setInt(4, Integer.parseInt(AtUpdateweekno));
+            preparedStatement.setString(5, AtUpdateCstatus);
+            preparedStatement.setString(6, AtUpdateAttstatus);
 
             int resultSet = preparedStatement.executeUpdate();
 
@@ -438,7 +430,7 @@ public class TechnicalOfficerHomePage extends JFrame {
             }
 
             preparedStatement.close();
-            connection.close();
+
 
         } catch (SQLException e) {
             e.printStackTrace();
@@ -457,16 +449,25 @@ public class TechnicalOfficerHomePage extends JFrame {
 
             String extension = (String) filePathValues[3];
 
-            String TOupdateattendanceQuery = "UPDATE attendance SET " +
-                    "course_status = '" + AtUpdateCstatus + "', " +
-                    "atten_status = '" + AtUpdateAttstatus + "' " +
-                    "WHERE tgno = '" + AtUpdateTG + "' AND " +
-                    "course_id = '" + AtUpdateCid + "' AND " +
-                    "week_no = " + AtUpdateweekno;
+//            String TOupdateattendanceQuery = "UPDATE attendance SET " +
+//                    "course_status = '" + AtUpdateCstatus + "', " +
+//                    "atten_status = '" + AtUpdateAttstatus + "' " +
+//                    "WHERE tgno = '" + AtUpdateTG + "' AND " +
+//                    "course_id = '" + AtUpdateCid + "' AND " +
+//                    "week_no = " + AtUpdateweekno;
 
-            Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/javatest", "root", "1234");
-            Statement statement = connection.createStatement();
-            int resultSet = statement.executeUpdate(TOupdateattendanceQuery);
+            String TOupdateattendanceQuery = "UPDATE attendance SET course_status = ?, atten_status = ? where tgno = ? and course_id = ? and week_no = ?";
+            prepStatement = conn.prepareStatement(TOupdateattendanceQuery);
+            prepStatement.setString(1, AtUpdateCstatus);
+            prepStatement.setString(2, AtUpdateAttstatus);
+            prepStatement.setString(3, AtUpdateTG);
+            prepStatement.setString(4, AtUpdateCid);
+            prepStatement.setString(5, AtUpdateweekno);
+
+            int resultSet = prepStatement.executeUpdate();
+
+//            Statement statement = conn.createStatement();
+//            int resultSet = statement.executeUpdate(TOupdateattendanceQuery);
 
             if (resultSet > 0) {
                 //  TOsaveupdatedmedical();
@@ -497,10 +498,7 @@ public class TechnicalOfficerHomePage extends JFrame {
                     + Medical_week + ", "
                     + "'" + Medical_reason + "')";
 
-
-
-            Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/javatest", "root", "1234");
-            Statement statement = connection.createStatement();
+            Statement statement = conn.createStatement();
             int resultSet = statement.executeUpdate(TOaddMedicalQuery);
 
             if (resultSet > 0) {
@@ -516,7 +514,7 @@ public class TechnicalOfficerHomePage extends JFrame {
         }
     }
 
-    private void ToUpdatemedical() {
+    private void ToUpdatemedical(String useridentity) {
         try {
             String Medical_Tgnumber = textFieldTG.getText();
             String Medical_Cid = textFieldCid.getText();
@@ -525,23 +523,33 @@ public class TechnicalOfficerHomePage extends JFrame {
 
             String extension = (String) filePathValues[3];
 
-            String TOupdateMedicalQuery = "UPDATE medical SET "
+          /*
+          String TOupdateMedicalQuery = "UPDATE medical SET "
                     + "tgno = '" + Medical_Tgnumber + "', "
                     + "course_id = '" + Medical_Cid + "', "
                     + "week_no = " + Medical_week + ", "
                     + "med_reason = '" + Medical_reason + "' "
-                    + "WHERE tgno = '" + Medical_Tgnumber + "'";
+                    + "WHERE tgno = '" + Medical_Tgnumber +  "'and course_id = '" + Medical_Cid + "' and week_no = " + Medical_week ;
+                    */
 
+//            String TOupdateMedicalQuery = "UPDATE medical SET med_reason = ? where tgno = ? and course_id = ? and week_no = ? and tono = ?";
+            String TOupdateMedicalQuery = "update medical set med_reason = ? where tgno = ? and course_id = ? and week_no = ? and tono = ?";
+            prepStatement = conn.prepareStatement(TOupdateMedicalQuery);
 
-            Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/javatest", "root", "1234");
-            Statement statement = connection.createStatement();
-            int resultSet = statement.executeUpdate(TOupdateMedicalQuery);
+            prepStatement.setString(1, Medical_reason);
+            prepStatement.setString(2, Medical_Tgnumber);
+            prepStatement.setString(3, Medical_Cid);
+            prepStatement.setInt(4, Medical_week);
+            prepStatement.setString(5, useridentity);
+
+            int resultSet = prepStatement.executeUpdate();
 
             if (resultSet > 0) {
-              //  TOsaveupdatedmedical();
+//                TOsaveupdatedmedical();
                 JOptionPane.showMessageDialog(null, "Medical record updated successfully");
             } else {
                 JOptionPane.showMessageDialog(null, "Error in updating medical record");
+
             }
 
         } catch (Exception ex) {
@@ -603,7 +611,7 @@ private void LoadNotices() {
     private void MedicalTableSetModelMethod(){
         TOMedicalTable.setModel(new DefaultTableModel(
                 null,
-                new String[]{"Medical No","Course code","Course Name","Course Status","Week No","Medical Reason"}
+                new String[]{"Medical No","Course code","Course Name","tg no","Course Status","Week No","Medical Reason"}
         ));
     }
 
@@ -614,29 +622,34 @@ private void LoadNotices() {
 //        MedicalTableSetModelMethod();
 
         try{
-            String medLoadQuery = "select medical_no,courses.course_id,courses.course_name,course_status,medical.week_no,med_reason from attendance join medical on attendance.med_id = medical.medical_no join courses on attendance.course_id = courses.course_id where medical.tgno = ? and level_no = ? and semester_no = ?";
+            String medLoadQuery = "select medical_no,courses.course_id,courses.course_name,medical.tgno,course_status,medical.week_no,med_reason from attendance join medical on attendance.med_id = medical.medical_no join courses on attendance.course_id = courses.course_id where medical.tono = ? and level_no = ? and semester_no = ?";
             prepStatement = conn.prepareStatement(medLoadQuery);
             prepStatement.setString(1,tono);
-            prepStatement.setString(2, String.valueOf(level_no));
-            prepStatement.setString(3, String.valueOf(semester_no));
+//            prepStatement.setString(2, String.valueOf(level_no));
+            prepStatement.setInt(2, level_no);
+
+//            prepStatement.setString(3, String.valueOf(semester_no));
+            prepStatement.setInt(3,semester_no);
 
             ResultSet resultSet = prepStatement.executeQuery();
             while(resultSet.next()){
                 String med_no = resultSet.getString("medical_no");
                 String course_id = resultSet.getString("course_id");
                 String course_name = resultSet.getString("course_name");
+                String tg_no = resultSet.getString("tgno");
                 String course_status = resultSet.getString("course_status");
                 String week_no = resultSet.getString("week_no");
                 String med_reason = resultSet.getString("med_reason");
 
-                Object[] med_det = new Object[6];
+                Object[] med_det = new Object[7];
 
                 med_det[0] = med_no;
                 med_det[1] = course_id;
                 med_det[2] = course_name;
-                med_det[3] = course_status;
-                med_det[4] = week_no;
-                med_det[5] = med_reason;
+                med_det[3] = tg_no;
+                med_det[4] = course_status;
+                med_det[5] = week_no;
+                med_det[6] = med_reason;
 
                 tblmodel.addRow(med_det);
             }
@@ -885,6 +898,11 @@ private void LoadNotices() {
             String TOFname =textField2.getText();
             String TOLname =textField1.getText();
 
+            if(!TOphno.matches("[0-9]+")){
+                JOptionPane.showMessageDialog(null,"Please enter numbers only for Phone Number");
+                return;
+            }
+
             String extension = (String) filePathValues[3];
 
             String TOProfileImagePath = "Resources/ProfileImages/" + tono + "." + extension;
@@ -903,15 +921,15 @@ private void LoadNotices() {
                         + "toaddress = '" + toAddress + "', "
                         + "toemail = '" + toEmail + "', "
                         + "tophno = '" + toPhno + "', "
-                        + "toProfImg = '" + toProfImg + "', "
+                        + "toProfImg = '" + TOProfileImagePath + "', "
                         + "toFname = '" + toFname + "', "
                         + "toLname = '" + toLname + "' "
                         + "WHERE tono = '" + tono + "'";
 
             }
 
-            Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/javatest","root","1234");
-            Statement statement = connection.createStatement();
+//            Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/javatest","root","1234");
+            Statement statement = conn.createStatement();
             int resultSet = statement.executeUpdate(TOCredentialupdateQuery);
 
             if(resultSet > 0){
@@ -929,9 +947,9 @@ private void LoadNotices() {
 
     private void loadTOProfImage(String userIdentity) {
         try{
-            String UGProfImageSearchQuery = "select * from technical_officer where tono = '" + tono + "'";
-            Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/javatest","root","1234");
-            Statement statement = connection.createStatement();
+            String UGProfImageSearchQuery = "select * from technical_officer where tono = '" + userIdentity + "'";
+//            Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/javatest","root","1234");
+            Statement statement = conn.createStatement();
             ResultSet result = statement.executeQuery(UGProfImageSearchQuery);
 
             while (result.next()){

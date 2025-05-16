@@ -1,0 +1,7 @@
+ jdbc:mysql://mysql-wqh1v2.mysql.database.azure.com:3306 
+
+Host: mysql-wqh1v2.mysql.database.azure.com
+Database name: javatest
+Database user: mysqladmin
+Database password: Wqh1v2wqh1v2
+Port number: 3306

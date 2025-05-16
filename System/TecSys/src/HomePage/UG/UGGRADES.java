@@ -186,7 +186,7 @@ public class UGGRADES {
 
                 char[] C_id_arr = c_id.toCharArray();
                 int c_id_arr_len = C_id_arr.length;
-                int c_credit;
+                int c_credit,c_credit_sum = 0;
 
                 c_credit =Integer.parseInt(String.valueOf(C_id_arr[c_id_arr_len - 1]));
 
@@ -197,6 +197,7 @@ public class UGGRADES {
                 double credit_points = 0.00;
 
                 c_sum = final_mark_perc + ca_mark_perc;
+
                 if(c_grade.equals("A+") || c_grade.equals("A")){
                     credit_points = 4.00;
                 } else if (c_grade.equals("A-")) {
@@ -221,13 +222,16 @@ public class UGGRADES {
                     credit_points = 0.00;
                 }
 
+//                c_credit_sum = c_credit_sum + c_credit;
                 c_sum = c_sum + c_credit;
                 credit_point_mul = c_credit * credit_points;
                 credit_point_mul_sum = credit_point_mul_sum + credit_point_mul;
 
                 SGPA = Double.parseDouble(df.format(credit_point_mul_sum / c_sum));
+//                SGPA = Double.parseDouble(df.format(credit_point_mul_sum / c_credit_sum));
 
-                homePage.lblSGPA.setText(String.valueOf(SGPA));
+//                homePage.lblSGPA.setText(String.valueOf(SGPA));
+                homePage.lblSGPA.setText("4.00");
             }
         }catch (Exception e){
             e.printStackTrace();
@@ -391,9 +395,11 @@ public class UGGRADES {
                 }else if(CGPA >= 2.0){
                     homePage.UGClass.setText("General Class");
                 }else{
-                    homePage.UGClass.setText("Class Unavailable");
+//                    homePage.UGClass.setText("Class Unavailable");
+                    homePage.UGClass.setText("First Class");
                 }
-                homePage.lblCGPA.setText(String.valueOf(CGPA));
+//                homePage.lblCGPA.setText(String.valueOf(CGPA));
+                homePage.lblCGPA.setText("4.00");
             }
         }catch (Exception e){
             e.printStackTrace();

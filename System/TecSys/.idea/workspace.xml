@@ -4,137 +4,37 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="eae00a62-4dab-4b09-9e2b-255c640ec556" name="Changes" comment="" />
+    <list default="true" id="71133ac6-9a40-4e64-9521-ddee02cdf11d" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
-  <component name="Git.Settings">
-    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/../.." />
-  </component>
-  <component name="ProjectColorInfo">{
-  &quot;associatedIndex&quot;: 5
-}</component>
-  <component name="ProjectId" id="2wGbBy4bWkCLEw73wLQxrjy4lcd" />
-  <component name="ProjectLevelVcsManager">
-    <ConfirmationsSetting value="2" id="Add" />
-  </component>
+  <component name="ProjectColorInfo"><![CDATA[{
+  "associatedIndex": 6
+}]]></component>
+  <component name="ProjectId" id="2x7EAGpxgzwY5Pcusc8dbcrmAnC" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;Application.Lecturer.executor&quot;: &quot;Run&quot;,
-    &quot;Application.Login.executor&quot;: &quot;Run&quot;,
-    &quot;Application.Main.executor&quot;: &quot;Run&quot;,
-    &quot;Application.Unnamed.executor&quot;: &quot;Run&quot;,
-    &quot;Application.admin.executor&quot;: &quot;Run&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
-    &quot;UI_DESIGNER_EDITOR_MODE.PaletteManager.SHOW&quot;: &quot;true&quot;,
-    &quot;UI_DESIGNER_EDITOR_MODE.UIDesignerToolWindowManager.SHOW&quot;: &quot;true&quot;,
-    &quot;UI_DESIGNER_EDITOR_MODE.UIDesignerToolWindowManager.WIDTH&quot;: &quot;299&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
-    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Users/DELL/Desktop/Java Project/Java_mini_project/System/TecSys&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;project.structure.last.edited&quot;: &quot;Modules&quot;,
-    &quot;project.structure.proportion&quot;: &quot;0.0&quot;,
-    &quot;project.structure.side.proportion&quot;: &quot;0.0&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Application.Main.executor": "Run",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "UI_DESIGNER_EDITOR_MODE.UIDesignerToolWindowManager.SHOW": "true",
+    "kotlin-language-version-configured": "true"
   }
-}</component>
-  <component name="RecentsManager">
-    <key name="CopyFile.RECENT_KEYS">
-      <recent name="E:\E Drive\University Project\Java_mini_project\System\TecSys\Resources\ProfileImages" />
-    </key>
-  </component>
-  <component name="RunManager" selected="Application.Unnamed">
-    <configuration name="Lecturer" type="Application" factoryName="Application">
-      <option name="MAIN_CLASS_NAME" value="HomePage.LecturerHomePage" />
-      <module name="TecSys" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="UG" type="Application" factoryName="Application">
-      <option name="MAIN_CLASS_NAME" value="HomePage.UndergraduateHomePage" />
-      <module name="TecSys" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="Unnamed" type="Application" factoryName="Application" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="Main.Main" />
-      <module name="TecSys" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="admin" type="Application" factoryName="Application">
-      <option name="MAIN_CLASS_NAME" value="HomePage.AdminHomePage" />
-      <module name="TecSys" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <list>
-      <item itemvalue="Application.Unnamed" />
-      <item itemvalue="Application.Lecturer" />
-      <item itemvalue="Application.UG" />
-      <item itemvalue="Application.admin" />
-    </list>
-  </component>
+}]]></component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
-      <changelist id="eae00a62-4dab-4b09-9e2b-255c640ec556" name="Changes" comment="" />
-      <created>1745670734487</created>
+      <changelist id="71133ac6-9a40-4e64-9521-ddee02cdf11d" name="Changes" comment="" />
+      <created>1747280584449</created>
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
-      <updated>1742930417022</updated>
-      <workItem from="1743689430818" duration="6897000" />
-      <workItem from="1743702777442" duration="1189000" />
-      <workItem from="1743935880204" duration="1964000" />
-      <workItem from="1743938249616" duration="500000" />
-      <workItem from="1743938829301" duration="90000" />
-      <workItem from="1744185581865" duration="355000" />
-      <workItem from="1744192380189" duration="5008000" />
-      <workItem from="1745344819617" duration="737000" />
-      <workItem from="1745345579143" duration="21000" />
-      <workItem from="1745345654475" duration="29000" />
-      <workItem from="1745345998789" duration="166000" />
-      <workItem from="1745401667974" duration="15778000" />
-      <workItem from="1745423544977" duration="6756000" />
-      <workItem from="1745498225547" duration="1323000" />
-      <workItem from="1745501913996" duration="27297000" />
-      <workItem from="1745559419416" duration="38259000" />
-      <workItem from="1745628654630" duration="78000" />
-      <workItem from="1745657631112" duration="52727000" />
-      <workItem from="1745729200365" duration="5885000" />
-      <workItem from="1745746943768" duration="14399000" />
-      <workItem from="1745746943768" duration="10812000" />
+      <updated>1747280584449</updated>
     </task>
     <servers />
-  </component>
-  <component name="TypeScriptGeneratedFilesManager">
-    <option name="version" value="3" />
-  </component>
-  <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/HomePage/LecturerHomePage.java</url>
-          <line>942</line>
-          <option name="timeStamp" value="1" />
-        </line-breakpoint>
-      </breakpoints>
-    </breakpoint-manager>
   </component>
 </project>

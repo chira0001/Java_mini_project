@@ -329,7 +329,8 @@ public class LecturerHomePage extends JFrame {
             public void actionPerformed(ActionEvent e) {
 
                 String tgno = (String) StuTGnoAttendance.getSelectedItem();
-                loadattendance(tgno);
+                String course_id=(String) AttendanceSubjectCode.getSelectedItem();
+                loadattendance(course_id,tgno);
                 attendancePersentage(tgno);
                 AttendancePerengeMediLabel(tgno);
 
@@ -515,6 +516,7 @@ public class LecturerHomePage extends JFrame {
 
         StudentTableMethod();
 
+
         STLevel.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -536,6 +538,7 @@ public class LecturerHomePage extends JFrame {
                 LoaStudentDetails(levelInt,semesterInt);
             }
         });
+
         STSem.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -558,6 +561,8 @@ public class LecturerHomePage extends JFrame {
                 LoaStudentDetails(levelInt,semesterInt);
             }
         });
+
+
         GradesTableSetModelMethod();
         enterButton.addActionListener(new ActionListener() {
             @Override
@@ -1295,14 +1300,18 @@ public class LecturerHomePage extends JFrame {
         }
     }
 
-    private void loadattendance(String tgno){
+    private void loadattendance(String course_id,String tgno){
         try{
             AttendencetableMethod();
             DefaultTableModel tablemodel = (DefaultTableModel) AttendanceTable.getModel();
 
-            String loadAttendanceQuery = "select tgno,week_no,atten_status from attendance where tgno=?;";
+            tablemodel.setRowCount(0);
+
+            String loadAttendanceQuery = "select tgno,week_no,atten_status from attendance where tgno=? and course_id=?;";
             prepStatement=conn.prepareStatement(loadAttendanceQuery);
             prepStatement.setString(1,tgno);
+            prepStatement.setString(2,course_id);
+
 
             ResultSet resultSet = prepStatement.executeQuery();
             while (resultSet.next()){
@@ -1412,6 +1421,7 @@ public class LecturerHomePage extends JFrame {
             String percentageQuery="select ROUND(SUM(CASE WHEN atten_status='present' THEN 1 ELSE 0 END)*100.0/COUNT(*),2)AS attendance_percentage FROM attendance WHERE tgno=?;";
             prepStatement=conn.prepareStatement(percentageQuery);
             prepStatement.setString(1,tgno);
+
             ResultSet resultSet = prepStatement.executeQuery();
 
             if(resultSet.next()){

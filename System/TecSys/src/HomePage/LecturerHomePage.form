@@ -870,6 +870,7 @@
                                     </constraints>
                                     <properties>
                                       <font size="12"/>
+                                      <model/>
                                     </properties>
                                   </component>
                                   <component id="ea602" class="javax.swing.JLabel">

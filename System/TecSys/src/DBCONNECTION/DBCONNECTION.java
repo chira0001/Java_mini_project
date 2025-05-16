@@ -4,9 +4,13 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 
 public class DBCONNECTION {
-    private String connUrl = "jdbc:mysql://localhost:3306/tecsys";
-    private String connUsername = "root";
-    private String connPassword = "1234";
+    // private String connUrl = "jdbc:mysql://localhost:3306/mydb";
+    // private String connUsername="root";
+    // private String connPassword = "1234";
+
+    private String connUrl = "jdbc:mysql://mysql-wqh1v2.mysql.database.azure.com:3306/javatest";
+    private String connUsername = "mysqladmin";
+    private String connPassword = "Wqh1v2wqh1v2";
 
     private Connection conn = null;
 
